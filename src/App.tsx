@@ -1,4 +1,4 @@
-import { Button } from "./components/_ui/Button/Button";
+import { Button } from "./components/_common/Button/Button";
 import { GlobalReset } from "./style/GlobalReset";
 
 export const App = () => {
