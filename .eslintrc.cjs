@@ -28,7 +28,7 @@ module.exports = {
         selector: "interface",
         format: ["PascalCase"],
         custom: {
-          regex: "^(?!I.*Props$)I[A-Z].*|^(?!I)[A-Z][^I]*Props$",
+          regex: "^I.*$|^.*Props$",
           match: true,
         },
       },
