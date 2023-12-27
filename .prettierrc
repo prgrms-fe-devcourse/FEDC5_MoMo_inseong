@@ -1,0 +1,16 @@
+{
+  "tabWidth": 2,
+  "singleAttributePerLine": true,
+  "bracketSameLine": true,
+  "endOfLine": "lf",
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "@storybook*",
+    "@emotion*",
+    "^react*",
+    "^@*",
+    "^[../]",
+    "^[./]"
+  ],
+  "importOrderSortSpecifiers": true
+}
