@@ -2,6 +2,7 @@
   "tabWidth": 2,
   "singleAttributePerLine": true,
   "bracketSameLine": true,
+  "singleQuote": true,
   "endOfLine": "lf",
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
   "importOrder": [
