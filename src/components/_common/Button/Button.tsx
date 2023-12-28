@@ -23,6 +23,7 @@ export const Button = ({
   height = 48,
   label,
   handleButtonClick,
+  ...props
 }: ButtonProps) => {
   const buttonStyle = {
     width: `${width}px`,
@@ -34,7 +35,8 @@ export const Button = ({
       style={buttonStyle}
       isOutline={isOutline}
       color={color}
-      onClick={handleButtonClick}>
+      onClick={handleButtonClick}
+      {...props}>
       {label}
     </StButtonContainer>
   );
