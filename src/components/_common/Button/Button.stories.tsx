@@ -21,7 +21,7 @@ export const Alternate: StoryType = {
   render: (args) => (
     <Button
       {...args}
-      isOutlineButton={true}
+      isOutline={true}
     />
   ),
 };
