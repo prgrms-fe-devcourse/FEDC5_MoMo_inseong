@@ -3,16 +3,16 @@ import { useState, KeyboardEvent } from "react";
 
 interface InputProps {
   placeholder?: string;
-  textarea?: boolean;
-  useTags?: boolean;
+  isTextarea?: boolean;
+  hasTags?: boolean;
   tags: string[];
   image?: string;
 }
 
 export const Input = ({
   placeholder,
-  textarea,
-  useTags,
+  isTextarea,
+  hasTags,
   tags: initialTags,
   image: initialImage
 }: InputProps) => {
@@ -22,7 +22,7 @@ export const Input = ({
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && inputValue.trim()) {
-      if (useTags) {
+      if (hasTags) {
         setTags([...tags, inputValue.trim()]);
         setInputValue('');
       }
@@ -38,16 +38,16 @@ export const Input = ({
   };
 
   return (
-    <InputContainer>
-      {textarea ? (
-        <StyledTextArea
+    <StInputContainer>
+      {isTextarea ? (
+        <StTextArea
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
         />
       ) : (
-        <StyledInput
+        <StInputText
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -56,30 +56,30 @@ export const Input = ({
       )}
 
     {/* TODO: 태그 컴포넌트 병합시 진행 */}
-      {useTags && (
-        <TagsContainer>
+      {hasTags && (
+        <StTagsContainer>
           {tags.map((tag, index) => (
-            <Tag key={index}>
+            <StTag key={index}>
               {tag} 
-              <RemoveTagButton onClick={() => removeTag(index)}>x</RemoveTagButton>
-            </Tag>
+              <StTagRemoveButton onClick={() => removeTag(index)}>x</StTagRemoveButton>
+            </StTag>
           ))}
-        </TagsContainer>
+        </StTagsContainer>
       )}
       {/* TODO: Image 클릭 시 확장 어떻게 진행할지 */}
       {image && (
-        <ImageContainer>
-          <ImageTag style={{ backgroundImage: `url(${image})` }} onClick={removeImage}>
-            <DeleteImage onClick={removeImage}>x</DeleteImage>
-          </ImageTag>
-        </ImageContainer>
+        <StImageContainer>
+          <StImage style={{ backgroundImage: `url(${image})` }} onClick={removeImage}>
+            <StImageDeleteButton onClick={removeImage}>x</StImageDeleteButton>
+          </StImage>
+        </StImageContainer>
       )}
-    </InputContainer>
+    </StInputContainer>
   );
 };
 
 // TODO: color 변수로 수정하기
-const InputContainer = styled.div`
+const StInputContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -92,7 +92,7 @@ const InputContainer = styled.div`
   }
 `;
 
-const StyledInput = styled.input`
+const StInputText = styled.input`
   border: none;
   outline: none;
   width: 100%;
@@ -100,7 +100,7 @@ const StyledInput = styled.input`
   font-size: 16px;
 `;
 
-const StyledTextArea = styled.textarea`
+const StTextArea = styled.textarea`
   border: none;
   outline: none;
   width: 100%;
@@ -114,14 +114,14 @@ const StyledTextArea = styled.textarea`
   }
 `;
 
-const TagsContainer = styled.div`
+const StTagsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   padding-top: 10px;
 `;
 
 // TODO: color 통일
-const Tag = styled.div`
+const StTag = styled.div`
   background: #EEE;
   margin-right: 10px;
   margin-bottom: 10px;
@@ -131,18 +131,18 @@ const Tag = styled.div`
   align-items: center;
 `;
 
-const RemoveTagButton = styled.button`
+const StTagRemoveButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
   margin-left: 4px;
 `;
 
-const ImageContainer = styled.div`
+const StImageContainer = styled.div`
   margin-top: 10px;
 `;
 
-const ImageTag = styled.div`
+const StImage = styled.div`
   position: relative;
   width: 50px;
   height: 50px;
@@ -153,7 +153,7 @@ const ImageTag = styled.div`
 `;
 
 // TODO: X 아이콘 컴포넌트 병합시 진행
-const DeleteImage = styled.span`
+const StImageDeleteButton = styled.span`
   position: absolute;
   top: 4px;
   right: 4px;
