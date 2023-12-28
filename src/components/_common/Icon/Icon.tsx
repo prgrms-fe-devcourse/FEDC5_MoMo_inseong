@@ -8,51 +8,47 @@ interface IconProps {
   name: keyof typeof icons;
   size?: number;
   strokeWidth?: number;
-  color?: string;
   style?: CSSProperties;
-  isBackground?: boolean;
+  showCircleBackground?: boolean;
+  isIconFill?: boolean;
+  iconFillColor?: string;
+}
+
+interface IStIconWrapper {
+  size: number;
 }
 
 export const Icon = ({
   name,
-  size = 24,
+  size = 16,
   strokeWidth = 2,
-  color = 'black',
-  isBackground = false,
+  showCircleBackground = false,
+  isIconFill = false,
+  iconFillColor = '',
   ...props
 }: IconProps) => {
   const [iconName, setIconName] = useState(name);
-  const [isHeartSelected, setIsHeartSelected] = useState(false);
 
   useEffect(() => {
+    if (isIconFill && !iconFillColor) {
+      console.error('iconFillColor를 입력해주세요.');
+      return;
+    }
     setIconName(name);
-  }, [name]);
-
-  const onIconClick = () => {
-    handleHeartClick();
-    handleThemeIconClick();
-  };
-  const handleHeartClick = () => {
-    if (iconName !== 'heart') return;
-    setIsHeartSelected(!isHeartSelected);
-  };
-  const handleThemeIconClick = () => {
-    if (iconName !== 'sun' && iconName !== 'moon') return;
-    iconName === 'sun' ? setIconName('moon') : setIconName('sun');
-  };
+  }, [name, isIconFill, iconFillColor]);
 
   const shapeStyle = {
     width: size,
     height: size,
     borderRadius: '50%',
-    backgroundColor: isBackground ? LIGHT_GREY : 'transparent',
+    backgroundColor: showCircleBackground ? LIGHT_GREY : 'transparent',
   };
   const iconStyle = {
-    'stroke-width': strokeWidth,
-    stroke: color,
+    'stroke-width': isIconFill ? 0 : strokeWidth,
+    stroke: 'black',
     width: size,
     height: size,
-    fill: isHeartSelected ? 'black' : 'transparent',
+    fill: isIconFill ? iconFillColor : 'transparent',
   };
 
   const icon = icons[iconName];
@@ -61,7 +57,7 @@ export const Icon = ({
 
   return (
     <StIconWrapper
-      onClick={onIconClick}
+      size={size}
       {...props}
       style={{ ...props.style, ...shapeStyle }}>
       <img
@@ -72,9 +68,10 @@ export const Icon = ({
   );
 };
 
-const StIconWrapper = styled.i`
+const StIconWrapper = styled.i<IStIconWrapper>`
+  cursor: pointer;
+  padding: ${({ size }) => (size / 3) * 2}px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  padding: 12px;
 `;
