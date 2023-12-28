@@ -1,44 +1,63 @@
 import styled from "@emotion/styled";
 import { useState, KeyboardEvent } from "react";
+import InputUpload from "./InputUpload";
 
 interface InputProps {
-  placeholder?: string;
+  width?: string;
+  height?: string;
+  placeholder: string;
   isTextarea?: boolean;
   hasTags?: boolean;
-  tags: string[];
+  tags?: string[];
+  hasImage?: boolean;
   image?: string;
 }
 
+interface IInputStyle{
+  width: string;
+  height: string;
+}
+
 export const Input = ({
+  width = '100%',
+  height = 'auto',
   placeholder,
-  isTextarea,
-  hasTags,
-  tags: initialTags,
-  image: initialImage
+  isTextarea = false,
+  hasTags = false,
+  tags: initialTags = [],
+  hasImage = false,
+  image: initialImage,
 }: InputProps) => {
   const [inputValue, setInputValue] = useState("");
   const [tags, setTags] = useState(initialTags);
   const [image, setImage] = useState<string | null>(initialImage || null);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    if (event.key === 'Enter' && inputValue.trim()) {
-      if (hasTags) {
-        setTags([...tags, inputValue.trim()]);
-        setInputValue('');
-      }
+    if (event.key === 'Enter' && inputValue.trim() && hasTags) {
+      setTags([...tags, inputValue.trim()]);
+      setInputValue('');
     }
   };
 
-  const removeTag = (indexToRemove: number) => {
+  // TODO: 추후 데이터 관련하여 다시 확인..
+  const handleImageChange = (uploadedFile: File) => {
+    setImage(URL.createObjectURL(uploadedFile));
+  };
+
+  const handleTagRemove = (indexToRemove: number) => {
     setTags(tags.filter((_, index) => index !== indexToRemove));
   };
 
-  const removeImage = () => {
+  const handleImageRemove = () => {
     setImage(null);
   };
 
+  const handleImageZoom = () => {
+    // TODO: 이미지 확대
+  };
+
   return (
-    <StInputContainer>
+    <StInputContainer width={width} height={height}>
       {isTextarea ? (
         <StTextArea
           value={inputValue}
@@ -55,31 +74,41 @@ export const Input = ({
         />
       )}
 
-    {/* TODO: 태그 컴포넌트 병합시 진행 */}
+      {/* TODO: 태그 컴포넌트 병합시 진행 */}
       {hasTags && (
         <StTagsContainer>
           {tags.map((tag, index) => (
             <StTag key={index}>
-              {tag} 
-              <StTagRemoveButton onClick={() => removeTag(index)}>x</StTagRemoveButton>
+              {tag}
+              <StTagRemoveButton onClick={() => handleTagRemove(index)}>x</StTagRemoveButton>
             </StTag>
           ))}
         </StTagsContainer>
       )}
+
       {/* TODO: Image 클릭 시 확장 어떻게 진행할지 */}
-      {image && (
-        <StImageContainer>
-          <StImage style={{ backgroundImage: `url(${image})` }} onClick={removeImage}>
-            <StImageDeleteButton onClick={removeImage}>x</StImageDeleteButton>
-          </StImage>
-        </StImageContainer>
+      {hasImage && (
+        !image ? (
+          <StImageContainer>
+            <StyledUpload>
+              <InputUpload onChange={handleImageChange}>+</InputUpload>
+            </StyledUpload>
+          </StImageContainer>
+        ) : (
+          <StImageContainer>
+            <StImage style={{ backgroundImage: `url(${image})` }} onClick={handleImageZoom}>
+              <StImageDeleteButton onClick={handleImageRemove}>x</StImageDeleteButton>
+            </StImage>
+          </StImageContainer>
+        )
       )}
+
     </StInputContainer>
   );
 };
 
 // TODO: color 변수로 수정하기
-const StInputContainer = styled.div`
+const StInputContainer = styled.div<IInputStyle>`
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -87,6 +116,9 @@ const StInputContainer = styled.div`
   border-radius: 8px;
   min-height: 50px;
   padding: 15px 24px;
+  width: ${({ width }) => width};
+  height: ${({ height }) => height};
+  
   &:focus-within {
     border-color: #228BB4;
   }
@@ -166,4 +198,15 @@ const StImageDeleteButton = styled.span`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+`;
+
+const StyledUpload = styled.div`
+  width: 50px; 
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid #EDEDED;
+  border-radius: 8px;
 `;
