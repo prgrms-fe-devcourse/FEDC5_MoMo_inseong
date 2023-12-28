@@ -5,11 +5,12 @@ import { icons } from 'feather-icons';
 const meta: Meta<typeof Icon> = {
   component: Icon,
   args: {
-    name: 'moon',
+    name: 'activity',
     size: 16,
     strokeWidth: 2,
-    color: 'black',
-    isBackground: true,
+    showCircleBackground: false,
+    isIconFill: false,
+    iconFillColor: '',
   },
   argTypes: {
     name: { control: 'text' },
@@ -17,20 +18,20 @@ const meta: Meta<typeof Icon> = {
     strokeWidth: {
       control: { type: 'range', min: 2, max: 6 },
     },
-    color: { control: 'color' },
   },
 };
 
 export default meta;
 
-interface IStyleIcon {
+interface IconProps {
   name: keyof typeof icons;
   size: number;
   strokeWidth: number;
-  color: string;
-  isBackground: boolean;
+  showCircleBackground: boolean;
+  isIconFill: boolean;
+  iconFillColor: string;
 }
 
 export const Primary = {
-  render: (args: IStyleIcon) => <Icon {...args} />,
+  render: (args: IconProps) => <Icon {...args} />,
 };
