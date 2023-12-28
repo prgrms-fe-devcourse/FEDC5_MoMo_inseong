@@ -4,7 +4,7 @@ import { Input } from "./Input";
 interface InputProps {
   placeholder?: string;
   textarea?: boolean;
-  useTags?: boolean;
+  hasTags?: boolean;
   tags: string[];
   image?: string;
 }
@@ -17,8 +17,8 @@ const meta: Meta<typeof Input> = {
   },
   argTypes: {
     placeholder: { control: 'text' },
-    textarea: { control: 'boolean' },
-    useTags: { control: 'boolean' },
+    isTextarea: { control: 'boolean' },
+    hasTags: { control: 'boolean' },
     tags: { control: 'array' },
     image: { control: 'text' }
   },
@@ -35,7 +35,7 @@ export const Default: StoryObj<InputProps> = {
 export const TagsInput: StoryObj<InputProps> = {
   args: {
     placeholder: "placeholder",
-    useTags: true,
+    hasTags: true,
     tags: ["Tag1", "Tag2", "Tag3","Tag4", "Tag5", "Tag6","Tag7", "Tag8", "Tag9","Tag10"],
   },
 };
