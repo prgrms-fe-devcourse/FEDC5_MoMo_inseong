@@ -5,7 +5,7 @@ interface CardProps {
   title: string;
   cardId: string;
   author: string;
-  status: string;
+  status: "모집 중" | "모임 예정" | "모임 종료";
   tags: string[];
   meetDate?: string;
   isLiked: boolean; //
@@ -25,7 +25,7 @@ const meta: Meta<typeof Card> = {
     },
   },
   argTypes: {
-    status: { control: "text" },
+    status: { control: "radio" },
     isLiked: { control: "boolean" },
   },
 };

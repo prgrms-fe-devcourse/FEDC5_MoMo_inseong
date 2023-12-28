@@ -11,7 +11,7 @@ interface CardProps {
   title: string;
   cardId: string;
   author: string;
-  status: string;
+  status: "모집 중" | "모임 예정" | "모임 종료";
   tags: string[];
   meetDate?: string;
   isLiked: boolean; //
@@ -75,7 +75,7 @@ const StCardContainer = styled.div<{ status: string }>`
     cursor: pointer;
     background-color: #f1f2f3;
   }
-  opacity: ${({ status }) => status === "모임 완료" && 0.5};
+  opacity: ${({ status }) => status === "모임 종료" && 0.5};
 `;
 const StCardStatus = styled.div<{ children: string }>`
   position: absolute;
