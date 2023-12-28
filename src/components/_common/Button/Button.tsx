@@ -9,7 +9,7 @@ import {
 
 interface ButtonProps {
   color: 'BLUE' | 'NAVY';
-  isOutlinebutton: boolean;
+  isOutlineButton: boolean;
   width: number;
   height: number;
   label: string;
@@ -18,7 +18,7 @@ interface ButtonProps {
 
 export const Button = ({
   color = 'BLUE',
-  isOutlinebutton = false, //true시 테두리만 있는 버튼
+  isOutlineButton = false, //true시 테두리만 있는 버튼
   width = 200,
   height = 48,
   label,
@@ -32,7 +32,7 @@ export const Button = ({
   return (
     <StButtonContainer
       style={buttonStyle}
-      isOutlinebutton={isOutlinebutton}
+      isOutlineButton={isOutlineButton}
       color={color}
       onClick={handleButtonClick}>
       {label}
@@ -46,25 +46,25 @@ const colorBlueNavy = {
 };
 
 const StButtonContainer = styled.button<{
-  isOutlinebutton: boolean;
+  isOutlineButton: boolean;
   color: 'BLUE' | 'NAVY';
 }>`
   border: 1px solid ${({ color }) => colorBlueNavy[color]};
-  color: ${({ color, isOutlinebutton }) =>
-    isOutlinebutton ? colorBlueNavy[color] : 'white'};
+  color: ${({ color, isOutlineButton }) =>
+    isOutlineButton ? colorBlueNavy[color] : 'white'};
   border-radius: 8px;
   font-size: 14px;
-  background-color: ${({ color, isOutlinebutton }) =>
+  background-color: ${({ color, isOutlineButton }) =>
     color === 'BLUE'
-      ? isOutlinebutton
+      ? isOutlineButton
         ? 'white'
         : `${PRIMARY_BLUE}`
-      : isOutlinebutton
+      : isOutlineButton
         ? 'white'
         : `${SECONDARY_NAVY}`};
   &:hover {
-    background-color: ${({ color, isOutlinebutton }) =>
-      isOutlinebutton
+    background-color: ${({ color, isOutlineButton }) =>
+      isOutlineButton
         ? `${BRIGHT_GREY}`
         : color === 'BLUE'
           ? `${PRIMARY_BLUE_HOVER}`
