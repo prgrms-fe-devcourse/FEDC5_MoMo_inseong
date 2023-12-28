@@ -1,32 +1,27 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Card } from "./Card";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Card } from './Card';
+import { PostTitleCustomProps } from '@/api/_types/apiModels';
 
-interface CardProps {
-  title: string;
-  cardId: string;
-  author: string;
-  status: "모집 중" | "모임 예정" | "모임 종료";
-  tags: string[];
-  meetDate?: string;
-  isLiked: boolean; //
+interface CardProps extends PostTitleCustomProps {
   handleCardClick: (cardId: string) => void;
   handleHeartClick: (cardId: string) => void;
 }
 const meta: Meta<typeof Card> = {
   component: Card,
   args: {
-    title: "인성팀 밤코어타임",
-    cardId: "1",
-    status: "모집 중",
-    meetDate: "Wed Dec 27 2023",
-    tags: ["#모각코", "#강남"],
+    title: '인성팀 밤코어타임',
+    cardId: '1',
+    status: 'Opened',
+    meetDate: 'Wed Dec 27 2023',
+    tags: ['#모각코', '#강남'],
+    author: '이에진',
     handleCardClick: (cardId) => {
       console.log(`${cardId}번 카드 누름`);
     },
   },
   argTypes: {
-    status: { control: "radio" },
-    isLiked: { control: "boolean" },
+    status: { control: 'radio' },
+    isLiked: { control: 'boolean' },
   },
 };
 
