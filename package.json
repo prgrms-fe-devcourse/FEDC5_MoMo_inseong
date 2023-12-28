@@ -15,8 +15,11 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@reduxjs/toolkit": "^2.0.1",
+    "@types/feather-icons": "^4.29.4",
     "axios": "^1.6.2",
+    "buffer": "^6.0.3",
     "emotion-reset": "^3.0.1",
+    "feather-icons": "^4.29.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.0.4"
