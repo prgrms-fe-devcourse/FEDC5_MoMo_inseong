@@ -34,12 +34,12 @@ export const Tooltip = memo(
   ({
     children,
     content,
-    position = 'bottom',
+    position,
     width = 200,
     height = 300,
     shadowColor = '#0000006f',
-    gap = 8,
-    offset = 0,
+    gap,
+    offset,
     ...props
   }: TooltipProps) => {
     const [isVisible, setIsVisible] = useState(false);
@@ -118,7 +118,11 @@ const StContentBox = styled.div<IStWrapper>`
 `;
 
 /* utils */
-const getPositionStyles = ({ position, gap, offset }: IGetPosition) => {
+const getPositionStyles = ({
+  position = 'bottom',
+  gap = 8,
+  offset = 0,
+}: IGetPosition) => {
   switch (position) {
     case 'top':
       return {
