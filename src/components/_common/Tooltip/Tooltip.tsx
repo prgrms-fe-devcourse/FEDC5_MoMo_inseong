@@ -43,7 +43,6 @@ export const Tooltip = memo(
     ...props
   }: TooltipProps) => {
     const [isVisible, setIsVisible] = useState(false);
-    const tooltipRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
 
     const positionStyles = useMemo(
@@ -74,11 +73,10 @@ export const Tooltip = memo(
 
     return (
       <StWrapper
-        ref={tooltipRef}
         onClick={handleInsideClick}
         {...props}>
         {children}
-        {isVisible && (
+        <StTransitionBox isVisible={isVisible}>
           <StContentBox
             ref={contentRef}
             width={width}
@@ -87,7 +85,7 @@ export const Tooltip = memo(
             style={positionStyles}>
             {content}
           </StContentBox>
-        )}
+        </StTransitionBox>
       </StWrapper>
     );
   },
@@ -97,7 +95,17 @@ export const Tooltip = memo(
 const StWrapper = styled.div`
   position: relative;
   display: inline-block;
+
   cursor: pointer;
+`;
+
+const StTransitionBox = styled.div<{ isVisible: boolean }>`
+  transition:
+    opacity 0.1s ease-in-out,
+    visibility 0.1s ease-in-out;
+
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+  visibility: ${({ isVisible }) => (isVisible ? 'visible' : 'hidden')};
 `;
 
 const StContentBox = styled.div<IStWrapper>`
