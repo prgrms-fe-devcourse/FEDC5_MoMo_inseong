@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { LIGHT_GREY, SECONDARY_NAVY } from '@/style/colorConstants';
+import { DARK_GREY, LIGHT_GREY, SECONDARY_NAVY } from '@/style/colorConstants';
 
 export interface TabProps {
   label: string;
@@ -14,13 +14,15 @@ export const Tab = ({
   isActive,
   justify,
   handleTabClick,
+  ...props
 }: TabProps) => {
   return (
     <StTabContainer
       width={width}
       isActive={isActive}
       justify={justify}
-      onClick={handleTabClick}>
+      onClick={handleTabClick}
+      {...props}>
       {label}
     </StTabContainer>
   );
@@ -36,9 +38,14 @@ const StTabContainer = styled.div<{
   font-size: 14px;
   border-bottom: 2px solid
     ${({ isActive }) => (isActive ? SECONDARY_NAVY : LIGHT_GREY)};
-  color: black;
+  color: ${({ isActive }) => (isActive ? 'black' : DARK_GREY)};
   display: flex;
   justify-content: ${({ justify }) => justify && 'center'};
   align-items: center;
   box-sizing: content-box;
+
+  &: hover {
+    cursor: pointer;
+    color: black;
+  }
 `;
