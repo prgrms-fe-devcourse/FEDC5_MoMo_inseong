@@ -10,7 +10,7 @@ interface IconProps {
   strokeWidth?: number;
   style?: CSSProperties;
   showCircleBackground?: boolean;
-  isIconFill?: boolean;
+  isFill?: boolean;
   iconFillColor?: string;
 }
 
@@ -22,20 +22,20 @@ export const Icon = ({
   name,
   size = 16,
   strokeWidth = 2,
-  showCircleBackground = false,
-  isIconFill = false,
+  showCircleBackground = true,
+  isFill = false,
   iconFillColor = '',
   ...props
 }: IconProps) => {
   const [iconName, setIconName] = useState(name);
 
   useEffect(() => {
-    if (isIconFill && !iconFillColor) {
+    if (isFill && !iconFillColor) {
       console.error('iconFillColor를 입력해주세요.');
       return;
     }
     setIconName(name);
-  }, [name, isIconFill, iconFillColor]);
+  }, [name, isFill, iconFillColor]);
 
   const shapeStyle = {
     width: size,
@@ -44,11 +44,11 @@ export const Icon = ({
     backgroundColor: showCircleBackground ? LIGHT_GREY : 'transparent',
   };
   const iconStyle = {
-    'stroke-width': isIconFill ? 0 : strokeWidth,
+    'stroke-width': isFill ? 0 : strokeWidth,
     stroke: 'black',
     width: size,
     height: size,
-    fill: isIconFill ? iconFillColor : 'transparent',
+    fill: isFill ? iconFillColor : 'transparent',
   };
 
   const icon = icons[iconName];
