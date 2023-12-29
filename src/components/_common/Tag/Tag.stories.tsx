@@ -3,12 +3,12 @@ import { Tag } from './Tag';
 
 interface TagProps {
   name: string;
-  height: number;
-  backgroundColor: string;
-  fontSize: number;
-  borderRadius: number;
-  padding: number;
-  marginRight: number;
+  height?: number;
+  fontSize?: number;
+  padding?: number;
+  marginRight?: number;
+  color: string;
+  hasMouseCursor: boolean;
 }
 
 const meta: Meta<typeof Tag> = {
@@ -16,9 +16,7 @@ const meta: Meta<typeof Tag> = {
   args: {
     name: 'FAVORITE',
     height: 32,
-    backgroundColor: '#7954DA',
     fontSize: 12,
-    borderRadius: 16,
     padding: 16,
     marginRight: 8,
   },
