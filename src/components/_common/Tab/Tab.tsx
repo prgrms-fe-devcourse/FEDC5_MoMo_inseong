@@ -5,14 +5,14 @@ export interface TabProps {
   label: string;
   width: number;
   isActive: boolean;
-  justify: boolean;
+  isJustify: boolean;
   handleTabClick: () => void;
 }
 export const Tab = ({
   label,
   width,
   isActive,
-  justify,
+  isJustify,
   handleTabClick,
   ...props
 }: TabProps) => {
@@ -20,7 +20,7 @@ export const Tab = ({
     <StTabContainer
       width={width}
       isActive={isActive}
-      justify={justify}
+      isJustify={isJustify}
       onClick={handleTabClick}
       {...props}>
       {label}
@@ -31,7 +31,7 @@ export const Tab = ({
 const StTabContainer = styled.div<{
   width: number;
   isActive: boolean;
-  justify: boolean;
+  isJustify: boolean;
 }>`
   width: ${({ width }) => width}px;
   height: 32px;
@@ -40,11 +40,11 @@ const StTabContainer = styled.div<{
     ${({ isActive }) => (isActive ? SECONDARY_NAVY : LIGHT_GREY)};
   color: ${({ isActive }) => (isActive ? 'black' : DARK_GREY)};
   display: flex;
-  justify-content: ${({ justify }) => justify && 'center'};
+  justify-content: ${({ isJustify }) => isJustify && 'center'};
   align-items: center;
   box-sizing: content-box;
 
-  &: hover {
+  &:hover {
     cursor: pointer;
     color: black;
   }
