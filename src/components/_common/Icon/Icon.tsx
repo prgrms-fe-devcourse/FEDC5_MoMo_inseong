@@ -69,9 +69,9 @@ export const Icon = ({
 };
 
 const StIconWrapper = styled.i<IStIconWrapper>`
-  cursor: pointer;
-  padding: ${({ size }) => (size / 3) * 2}px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  padding: ${({ size }) => (size / 3) * 2}px;
+  cursor: pointer;
 `;
