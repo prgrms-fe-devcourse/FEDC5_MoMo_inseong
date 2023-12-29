@@ -9,7 +9,7 @@ const meta: Meta<typeof Icon> = {
     size: 16,
     strokeWidth: 2,
     showCircleBackground: false,
-    isIconFill: false,
+    isFill: false,
     iconFillColor: '',
   },
   argTypes: {
@@ -28,7 +28,7 @@ interface IconProps {
   size: number;
   strokeWidth: number;
   showCircleBackground: boolean;
-  isIconFill: boolean;
+  isFill: boolean;
   iconFillColor: string;
 }
 
