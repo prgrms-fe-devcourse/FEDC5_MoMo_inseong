@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
 import { BEIGE } from '@/style/colorConstants';
 
 interface TagProps {
@@ -31,14 +30,6 @@ export const Tag = ({
   padding = 16,
   marginRight = 8,
 }: TagProps) => {
-  const [isVisible, setIsVisible] = useState(true);
-
-  const handleDeleteClick = () => {
-    setIsVisible((prev) => !prev);
-  };
-
-  if (!isVisible) return null;
-
   const tagStyle = {
     height,
     backgroundColor,
@@ -52,9 +43,6 @@ export const Tag = ({
   return (
     <StTagContainer>
       <StTag {...tagStyle}>{`#${name}`}</StTag>
-
-      {/* 아래 span 지우고, Icon 컴포넌트 name으로 X 를 넣을 것. */}
-      <span onClick={handleDeleteClick}>X</span>
     </StTagContainer>
   );
 };
