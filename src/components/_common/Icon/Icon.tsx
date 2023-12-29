@@ -11,7 +11,6 @@ interface IconProps {
   style?: CSSProperties;
   showCircleBackground?: boolean;
   isFill?: boolean;
-  iconFillColor?: string;
 }
 
 interface IStIconWrapper {
@@ -24,18 +23,13 @@ export const Icon = ({
   strokeWidth = 2,
   showCircleBackground = true,
   isFill = false,
-  iconFillColor = '',
   ...props
 }: IconProps) => {
   const [iconName, setIconName] = useState(name);
 
   useEffect(() => {
-    if (isFill && !iconFillColor) {
-      console.error('iconFillColor를 입력해주세요.');
-      return;
-    }
     setIconName(name);
-  }, [name, isFill, iconFillColor]);
+  }, [name]);
 
   const shapeStyle = {
     width: size,
@@ -48,7 +42,7 @@ export const Icon = ({
     stroke: 'black',
     width: size,
     height: size,
-    fill: isFill ? iconFillColor : 'transparent',
+    fill: isFill ? '' : 'transparent',
   };
 
   const icon = icons[iconName];

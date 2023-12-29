@@ -10,7 +10,6 @@ const meta: Meta<typeof Icon> = {
     strokeWidth: 2,
     showCircleBackground: false,
     isFill: false,
-    iconFillColor: '',
   },
   argTypes: {
     name: { control: 'text' },
@@ -29,7 +28,6 @@ interface IconProps {
   strokeWidth: number;
   showCircleBackground: boolean;
   isFill: boolean;
-  iconFillColor: string;
 }
 
 export const Primary = {
