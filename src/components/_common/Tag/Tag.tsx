@@ -20,6 +20,7 @@ interface IStTag {
   hasMouseCursor?: boolean;
 }
 
+// TODO: 해시태그인지 멘션인지에 따라 # 넣고 말고 결정하기
 export const Tag = ({
   name,
   height = 32,
@@ -62,5 +63,5 @@ const StTag = styled.div<IStTag>`
   font-size: ${({ fontSize }) => fontSize}px;
   letter-spacing: 0.96px;
   color: ${({ color }) => color};
-  cursor: ${({ hasMouseCursor }) => (hasMouseCursor ? 'pointer' : 'default')};
+  cursor: ${({ hasMouseCursor }) => (hasMouseCursor ? 'pointer' : 'inherit')};
 `;
