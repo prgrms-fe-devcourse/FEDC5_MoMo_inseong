@@ -10,7 +10,7 @@ interface IconProps {
   size?: number;
   strokeWidth?: number;
   style?: CSSProperties;
-  showCircleBackground?: boolean;
+  showBackground?: boolean;
   isFill?: boolean;
   onIconClick: () => void;
 }
@@ -24,7 +24,7 @@ export const Icon = ({
   stroke = 'black', // 테두리 색상
   size = 16,
   strokeWidth = 2,
-  showCircleBackground = true,
+  showBackground = false,
   isFill = false,
   onIconClick,
   ...props
@@ -39,7 +39,7 @@ export const Icon = ({
     width: size,
     height: size,
     borderRadius: '50%',
-    backgroundColor: showCircleBackground ? LIGHT_GREY : 'transparent',
+    backgroundColor: showBackground ? LIGHT_GREY : 'transparent',
   };
   const iconStyle = {
     'stroke-width': isFill ? 0 : strokeWidth,
