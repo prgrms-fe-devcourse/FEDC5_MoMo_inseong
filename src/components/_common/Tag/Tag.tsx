@@ -8,7 +8,7 @@ interface TagProps {
   padding?: number;
   marginRight?: number;
   color?: string;
-  hasMouseCursor: boolean;
+  hasMouseCursor?: boolean;
 }
 
 interface IStTag {
@@ -17,7 +17,7 @@ interface IStTag {
   padding: number;
   marginRight: number;
   color?: string;
-  hasMouseCursor: boolean;
+  hasMouseCursor?: boolean;
 }
 
 export const Tag = ({
