@@ -32,7 +32,7 @@ export const Comment = ({
         {isMine && <StIcon>X</StIcon>}
       </StCommentInfo>
       <StCommentMessage>
-        <p>{comment}</p>
+        <pre>{comment}</pre>
       </StCommentMessage>
     </StCommentContainer>
   );
