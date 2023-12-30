@@ -1,7 +1,7 @@
 export const theme = {
   // 미디어 쿼리
   mediaQueries: {
-    small: '@media (max-width: 640px)',
+    small: '@media (max-width: 480px)',
     medium: '@media (max-width: 768px)',
     large: '@media (max-width: 1024px)',
   },
@@ -31,12 +31,15 @@ export const theme = {
       dark: '#333333',
     },
   },
-  // 기본 padding, 헤더 높이 등
+  // 기본 padding, 헤더 높이, z-index 등
   space: {
     padding: '16px',
   },
   sizes: {
     headerHeight: '60px',
+  },
+  zIndex: {
+    tooltip: '100',
   },
   // 유틸리티 스타일
   utils: {
