@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import useAxios from '@/api/useAxios';
 import {
   BRIGHT_GREY,
   PRIMARY_BLUE,
@@ -8,14 +9,13 @@ import {
 } from '@/style/colorConstants';
 
 interface ButtonProps {
-  color: 'BLUE' | 'NAVY';
-  isOutline: boolean;
-  width: number;
-  height: number;
+  color?: 'BLUE' | 'NAVY';
+  isOutline?: boolean;
+  width?: number;
+  height?: number;
   label: string;
-  handleButtonClick: () => void;
+  handleButtonClick?: () => void;
 }
-
 export const Button = ({
   color = 'BLUE',
   isOutline = false, //true시 테두리만 있는 버튼
@@ -24,6 +24,16 @@ export const Button = ({
   label,
   handleButtonClick,
 }: ButtonProps) => {
+  const { response, loading, error, sendData } = useAxios(
+    {
+      method: 'get',
+      url: `/users/get-users?offset=0&limit=10`,
+    },
+    '',
+  );
+  if (response) {
+    console.log('응답 data', response.data);
+  }
   const buttonStyle = {
     width: `${width}px`,
     height: `${height}px`,
