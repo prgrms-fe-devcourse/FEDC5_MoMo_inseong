@@ -45,7 +45,6 @@ export const Alert: StoryType = {
         height: '100vh',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
       }}>
       <Tooltip {...args} />
     </div>
