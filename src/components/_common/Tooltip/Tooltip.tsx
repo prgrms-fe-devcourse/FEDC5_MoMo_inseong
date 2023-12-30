@@ -100,6 +100,7 @@ const StWrapper = styled.div`
 `;
 
 const StTransitionBox = styled.div<{ isVisible: boolean }>`
+  position: relative;
   transition:
     opacity 0.1s ease-in-out,
     visibility 0.1s ease-in-out;
@@ -110,7 +111,7 @@ const StTransitionBox = styled.div<{ isVisible: boolean }>`
 
 const StContentBox = styled.div<IStWrapper>`
   position: absolute;
-  z-index: 1000;
+  z-index: ${(props) => props.theme.zIndex.tooltip};
   padding: 1rem;
 
   width: ${({ width }) => width}px;
