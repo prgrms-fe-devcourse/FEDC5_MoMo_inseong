@@ -1,12 +1,20 @@
-import styled from "@emotion/styled";
-import { useState } from "react";
+import styled from '@emotion/styled';
+import { useState } from 'react';
+import { LIGHT_GREY } from '@/style/colorConstants';
 
 interface ProfileProps {
   image: string;
   fullName: string;
   imageSize?: number;
   fontSize?: number;
+  width?: number;
   _id: string;
+  status: 'Profile' | 'ProfileImage' | 'ProfileName';
+}
+
+interface IImageStyle {
+  image: string;
+  imageSize: number;
 }
 
 export const Profile = ({
@@ -14,50 +22,55 @@ export const Profile = ({
   fullName,
   imageSize = 48,
   fontSize = 18,
-  _id
+  _id,
+  width = 300,
+  status = 'Profile',
 }: ProfileProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   // TODO: 링크 추가
   const handleUserClick = () => {
-    console.log(_id)
-  }
+    console.log(_id);
+  };
 
   return (
-    <StProfileContainer imageSize={imageSize}>
-      <StProfileImage
-        image={image}
-        size={imageSize}
-        style={{ opacity: isLoaded ? 0 : 1 }}
-        onLoad={() => setIsLoaded(true)}
-      />
-      <StProfileName 
-        fontSize={fontSize} 
-        onClick={handleUserClick}>
-          {fullName}
-      </StProfileName>
+    <StProfileContainer
+      width={width}
+      onClick={handleUserClick}>
+      {(status === 'Profile' || status === 'ProfileImage') && (
+        <StProfileImage
+          image={image}
+          imageSize={imageSize}
+          style={{ opacity: isLoaded ? 0 : 1 }}
+          onLoad={() => setIsLoaded(true)}
+        />
+      )}
+      {(status === 'Profile' || status === 'ProfileName') && (
+        <StProfileName fontSize={fontSize}>{fullName}</StProfileName>
+      )}
     </StProfileContainer>
   );
 };
 
-const StProfileContainer = styled.div<{ imageSize: number }>`
+const StProfileContainer = styled.div<{ width: number }>`
   display: flex;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
+  width: ${({ width }) => width}px;
 `;
 
-// TODO: border-color 수정
-const StProfileImage = styled.div<{ image: string; size: number }>`
+const StProfileImage = styled.div<IImageStyle>`
   background-image: url(${({ image }) => image});
   background-size: cover;
   background-position: center;
   border-radius: 50%;
-  border: 1px solid #EDEDED;
-  width: ${({ size }) => `${size}px`};
-  height: ${({ size }) => `${size}px`};
+  border: 1px solid ${LIGHT_GREY};
+  width: ${({ imageSize }) => imageSize}px;
+  height: ${({ imageSize }) => imageSize}px;
   transition: opacity 0.3s ease-in-out;
 `;
 
 const StProfileName = styled.span<{ fontSize: number }>`
-  font-size: ${({ fontSize }) => `${fontSize}px`};
+  font-size: ${({ fontSize }) => fontSize}px;
 `;
