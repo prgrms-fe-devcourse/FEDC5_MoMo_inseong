@@ -6,11 +6,13 @@ import { icons } from 'feather-icons';
 
 interface IconProps {
   name: keyof typeof icons;
+  stroke?: string;
   size?: number;
   strokeWidth?: number;
   style?: CSSProperties;
   showCircleBackground?: boolean;
   isFill?: boolean;
+  onIconClick: () => void;
 }
 
 interface IStIconWrapper {
@@ -19,10 +21,12 @@ interface IStIconWrapper {
 
 export const Icon = ({
   name,
+  stroke = 'black', // 테두리 색상
   size = 16,
   strokeWidth = 2,
   showCircleBackground = true,
   isFill = false,
+  onIconClick,
   ...props
 }: IconProps) => {
   const [iconName, setIconName] = useState(name);
@@ -39,7 +43,7 @@ export const Icon = ({
   };
   const iconStyle = {
     'stroke-width': isFill ? 0 : strokeWidth,
-    stroke: 'black',
+    stroke,
     width: size,
     height: size,
     fill: isFill ? '' : 'transparent',
@@ -51,6 +55,7 @@ export const Icon = ({
 
   return (
     <StIconWrapper
+      onClick={onIconClick}
       size={size}
       {...props}
       style={{ ...props.style, ...shapeStyle }}>
