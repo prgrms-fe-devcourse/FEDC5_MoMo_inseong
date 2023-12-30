@@ -23,9 +23,9 @@
     /* path alias */
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"],
+      "@common/*": ["components/_common/*"],
       "@ui/*": ["components/_ui/*"],
-      "@common/*": ["components/_common/*"]
+      "@/*": ["./*"]
     }
   },
   "include": ["src"],
