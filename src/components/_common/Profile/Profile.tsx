@@ -25,6 +25,7 @@ export const Profile = ({
   _id,
   width = 300,
   status = 'Profile',
+  ...props
 }: ProfileProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -36,12 +37,13 @@ export const Profile = ({
   return (
     <StProfileContainer
       width={width}
-      onClick={handleUserClick}>
+      onClick={handleUserClick}
+      {...props}>
       {(status === 'Profile' || status === 'ProfileImage') && (
         <StProfileImage
           image={image}
           imageSize={imageSize}
-          style={{ opacity: isLoaded ? 0 : 1 }}
+          style={{ backgroundColor: isLoaded ? '' : LIGHT_GREY }}
           onLoad={() => setIsLoaded(true)}
         />
       )}
