@@ -55,4 +55,23 @@ export const theme = {
       display: 'block',
     },
   },
+  // 스크롤바
+  scrollBar: {
+    default: `
+      &::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        height: 30%;
+        background: #228BB4;
+
+        border-radius: 10px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #EDEDED;
+      }
+    `,
+  },
 };
