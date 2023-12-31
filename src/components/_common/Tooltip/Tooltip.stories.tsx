@@ -31,7 +31,7 @@ export const Alert: StoryType = {
       'ul',
       null,
       Array.from({ length: 5 }, (_, i) =>
-        createElement('li', null, `${i + 1}번째 알람`),
+        createElement('li', { key: i }, `${i + 1}번째 알람`),
       ),
     ),
     position: 'bottom',

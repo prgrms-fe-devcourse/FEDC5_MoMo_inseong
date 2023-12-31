@@ -20,8 +20,10 @@ interface IGetPosition {
 }
 
 interface IStWrapper {
-  width?: number;
-  height?: number;
+  width?: number | string;
+  height?: number | string;
+  maxWidth?: number | string;
+  maxHeight?: number | string;
   shadowColor?: string;
 }
 
@@ -35,14 +37,17 @@ export const Tooltip = memo(
     children,
     content,
     position,
-    width = 200,
-    height = 300,
+    width,
+    height,
+    maxWidth = 200,
+    maxHeight = 300,
     shadowColor = '#0000006f',
     gap,
     offset,
     ...props
   }: TooltipProps) => {
     const [isVisible, setIsVisible] = useState(false);
+    const tooltipRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
 
     const positionStyles = useMemo(
@@ -51,13 +56,11 @@ export const Tooltip = memo(
     );
 
     const handleOutsideClick = useCallback((event: MouseEvent) => {
-      if (isTargetContains(event, contentRef)) return null;
+      if (isTargetContains(event, tooltipRef)) return null;
       setIsVisible(false);
     }, []);
 
     const handleInsideClick = useCallback((event: ReactMouseEvent) => {
-      event.stopPropagation();
-
       if (isTargetContains(event, contentRef)) return null;
       setIsVisible((old) => !old);
     }, []);
@@ -73,6 +76,7 @@ export const Tooltip = memo(
 
     return (
       <StWrapper
+        ref={tooltipRef}
         onClick={handleInsideClick}
         {...props}>
         {children}
@@ -81,6 +85,8 @@ export const Tooltip = memo(
             ref={contentRef}
             width={width}
             height={height}
+            maxWidth={maxWidth}
+            maxHeight={maxHeight}
             shadowColor={shadowColor}
             style={positionStyles}>
             {content}
@@ -112,10 +118,13 @@ const StTransitionBox = styled.div<{ isVisible: boolean }>`
 const StContentBox = styled.div<IStWrapper>`
   position: absolute;
   z-index: ${(props) => props.theme.zIndex.tooltip};
-  padding: 1rem;
 
-  width: ${({ width }) => width}px;
-  height: ${({ height }) => height}px;
+  width: ${({ width }) => (typeof width === 'number' ? width + 'px' : width)};
+  height: ${({ height }) =>
+    typeof height === 'number' ? height + 'px' : height};
+
+  max-width: ${({ maxWidth }) => maxWidth}px;
+  max-height: ${({ maxHeight }) => maxHeight}px;
 
   border-radius: 8px;
   box-shadow: 0 0 0.6rem ${({ shadowColor }) => shadowColor};
@@ -123,7 +132,12 @@ const StContentBox = styled.div<IStWrapper>`
   overflow-x: hidden;
   overflow-y: auto;
 
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+
   cursor: default;
+
+  ${({ theme }) => theme.scrollBar.default}
 `;
 
 /* utils */
