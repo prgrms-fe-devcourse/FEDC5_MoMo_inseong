@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { SECONDARY_NAVY } from '@/style/colorConstants';
+import { theme } from '@/style/theme';
 
 interface TagProps {
   name: string;
@@ -9,6 +10,7 @@ interface TagProps {
   marginRight?: number;
   color?: string;
   hasMouseCursor?: boolean;
+  backgroundColor?: string;
 }
 
 interface IStTag {
@@ -16,11 +18,11 @@ interface IStTag {
   fontSize: number;
   padding: number;
   marginRight: number;
-  color?: string;
-  hasMouseCursor?: boolean;
+  color: string;
+  hasMouseCursor: boolean;
+  backgroundColor: string;
 }
 
-// TODO: 해시태그인지 멘션인지에 따라 # 넣고 말고 결정하기
 export const Tag = ({
   name,
   height = 32,
@@ -29,6 +31,7 @@ export const Tag = ({
   marginRight = 8,
   color = SECONDARY_NAVY,
   hasMouseCursor = false,
+  backgroundColor = theme.colors.primaryBlue.transparent,
 }: TagProps) => {
   const tagStyle = {
     height,
@@ -37,11 +40,12 @@ export const Tag = ({
     marginRight,
     color,
     hasMouseCursor,
+    backgroundColor,
   };
 
   return (
     <StTagContainer>
-      <StTag {...tagStyle}>{`#${name}`}</StTag>
+      <StTag {...tagStyle}>{name}</StTag>
     </StTagContainer>
   );
 };
@@ -58,7 +62,7 @@ const StTag = styled.div<IStTag>`
   height: ${({ height }) => height}px;
   margin-right: ${({ marginRight }) => marginRight}px;
   padding: 2px ${({ padding }) => padding}px;
-  border: ${({ color }) => color} 1px solid;
+  background-color: ${({ backgroundColor }) => backgroundColor};
   border-radius: 8px;
   font-size: ${({ fontSize }) => fontSize}px;
   letter-spacing: 0.96px;
