@@ -1,35 +1,20 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { Menu } from './Menu/Menu';
 
 //FIXME: 실제 isLogin은 리덕스로 관리되어야 함
 interface HeaderProps {
   isLogin: boolean;
-  initialTheme: 'dark' | 'light';
+  initialMode: 'dark' | 'light';
 }
 
-export const Header = ({ isLogin, initialTheme }: HeaderProps) => {
-  const [theme, setTheme] = useState(initialTheme); // 초기 테마 상태
-
-  // 테마 토글 함수
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  };
-
+export const Header = ({ isLogin, initialMode }: HeaderProps) => {
   return (
     <StWrapper>
       <StFixedContainer>
         <StContainer>
           <StLogo>MoMo</StLogo>
           {isLogin ? (
-            <StMenuBox>
-              <ToggleButton
-                theme={theme}
-                onClick={toggleTheme}>
-                <IconContainer theme={theme} />
-              </ToggleButton>
-              <button>🔔</button>
-              <button>👤</button>
-            </StMenuBox>
+            <Menu initialMode={initialMode} />
           ) : (
             <StLoginButton>로그인</StLoginButton>
           )}
@@ -71,13 +56,7 @@ const StLogo = styled.a`
   display: inline-block;
   padding: 0.8rem 1.2rem;
   background-color: #fd6b6b5e;
-`;
-
-const StMenuBox = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  padding: 0.8rem 1.2rem;
+  cursor: pointer;
 `;
 
 //FIXME: Button 공통 컴포넌트 사용
@@ -87,31 +66,4 @@ const StLoginButton = styled.button`
   background-color: #1374d5;
   color: white;
   font-size: 14px;
-`;
-
-//FIXME: 다크모드 토글 버튼
-const ToggleButton = styled.div`
-  cursor: pointer;
-  width: 50px;
-  height: 25px;
-  border-radius: 25px;
-  background-color: ${({ theme }) => (theme === 'light' ? '#FFD580' : '#333')};
-  position: relative;
-  transition: background-color 0.3s ease;
-`;
-
-//FIXME: 다크모드 아이콘
-const IconContainer = styled.div`
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  top: -10%;
-  left: ${({ theme }) => (theme === 'light' ? '25px' : '0px')};
-  transition: left 0.3s ease;
-
-  &::before {
-    content: ${({ theme }) => (theme === 'light' ? '"🌞"' : '"🌜"')};
-    position: absolute;
-    font-size: 20px;
-  }
 `;
