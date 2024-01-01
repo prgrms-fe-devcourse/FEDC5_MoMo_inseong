@@ -8,8 +8,10 @@ const meta: Meta<typeof Icon> = {
     name: 'activity',
     size: 16,
     strokeWidth: 2,
-    showCircleBackground: false,
+    showBackground: false,
     isFill: false,
+    stroke: 'red',
+    onIconClick: () => {},
   },
   argTypes: {
     name: { control: 'text' },
@@ -24,10 +26,12 @@ export default meta;
 
 interface IconProps {
   name: keyof typeof icons;
+  stroke: string;
   size: number;
   strokeWidth: number;
-  showCircleBackground: boolean;
+  showBackground: boolean;
   isFill: boolean;
+  onIconClick: () => void;
 }
 
 export const Primary = {
