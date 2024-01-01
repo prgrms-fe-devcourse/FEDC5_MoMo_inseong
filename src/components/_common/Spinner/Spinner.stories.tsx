@@ -1,6 +1,6 @@
 import type { Meta } from '@storybook/react';
 import { Spinner } from './Spinner';
-import { DARK_GREY } from '@/style/colorConstants';
+import { theme } from '@/style/theme';
 
 interface SpinnerProps {
   size?: number;
@@ -11,7 +11,7 @@ const meta: Meta<typeof Spinner> = {
   component: Spinner,
   args: {
     size: 24,
-    color: DARK_GREY,
+    color: theme.colors.grey.dark,
   },
   argTypes: {
     size: { control: 'range' },

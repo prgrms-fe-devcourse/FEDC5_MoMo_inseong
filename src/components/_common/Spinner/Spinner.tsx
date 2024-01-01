@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { DARK_GREY } from '@/style/colorConstants';
+import { theme } from '@/style/theme';
 
 interface SpinnerProps {
   size?: number;
@@ -8,7 +8,7 @@ interface SpinnerProps {
 
 export const Spinner = ({
   size = 24,
-  color = DARK_GREY,
+  color = theme.colors.grey.dark,
   ...props
 }: SpinnerProps) => {
   const sizeStyle = {
