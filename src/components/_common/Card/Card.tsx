@@ -1,13 +1,14 @@
 import styled from '@emotion/styled';
-import { PostTitleCustomProps } from '@/api/_types/apiModels';
+import { IPostTitleCustom } from '@/api/_types/apiModels';
 import { useHover } from '@/hooks/useHover';
 import { theme } from '@/style/theme';
 import { Icon } from '@common/Icon/Icon';
 import { Profile } from '@common/Profile/Profile';
 import { Tag } from '@common/Tag/Tag';
 
-interface CardProps extends PostTitleCustomProps {
+interface CardProps extends IPostTitleCustom {
   handleCardClick: (cardId: string) => void;
+  image: string;
 }
 const statusValue = {
   Opened: '모집 중',
@@ -17,7 +18,7 @@ const statusValue = {
 
 export const Card = (cardData: CardProps) => {
   const {
-    title,
+    postTitle,
     cardId,
     author,
     status,
@@ -25,6 +26,7 @@ export const Card = (cardData: CardProps) => {
     meetDate,
     isLiked,
     handleCardClick,
+    image = 'https://picsum.photos/200',
   } = cardData;
   const { hoverRef, isHovered } = useHover();
 
@@ -51,8 +53,8 @@ export const Card = (cardData: CardProps) => {
         ) : (
           <StCardProfileWrapper>
             <Profile
-              image="https://picsum.photos/200"
-              fullName="ㅇㅇㅈ"
+              image={image}
+              fullName={author}
               _id="1"
               status="Profile"
               fontSize={12}
@@ -62,10 +64,16 @@ export const Card = (cardData: CardProps) => {
           </StCardProfileWrapper>
         )}
 
-        <StCardTitle style={colorStyle}>{title}</StCardTitle>
+        <StCardTitle style={colorStyle}>{postTitle}</StCardTitle>
         <StCardDate style={colorStyle}>
-          <Icon name="calendar" />
-          {meetDate && meetDate}
+          {meetDate.length === 1 ? (
+            <>
+              <Icon name="calendar" />
+              {meetDate}
+            </>
+          ) : (
+            ''
+          )}
         </StCardDate>
         <StCardBottom>
           <StCardBottomTagsWrap>
