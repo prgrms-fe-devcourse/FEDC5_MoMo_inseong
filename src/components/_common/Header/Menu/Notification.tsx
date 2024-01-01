@@ -65,65 +65,82 @@ export const Notification = ({ data }: NotificationProps) => {
   return (
     <StContainer>
       <StTitle>알림</StTitle>
-      <StContents>
-        {data.length > 0 &&
-          data.map(({ type, _id, fullName, when, details }) => (
-            <StContentBox key={_id}>
-              {type === 'COMMENT' ? (
-                <>
-                  <StSummary>{`${details.postTitle} 모임에 새로운 댓글이 있습니다.`}</StSummary>
-                  <StContent>{`${fullName}: ${details.comment}`}</StContent>
-                </>
-              ) : type === 'LIKE' ? (
-                <StSummary>{`${fullName}님이 ${details.postTitle} 모임을 북마크 등록했습니다.`}</StSummary>
-              ) : type === 'FOLLOW' ? (
-                details.isCancel ? null : (
-                  <StSummary>{`${fullName}님이 팔로우 하였습니다.`}</StSummary>
-                )
-              ) : type === 'MESSAGE' ? (
-                <>
-                  <StSummary>{`${fullName}님으로부터 메세지가 도착했습니다.`}</StSummary>
-                  <StContent>{`${details.message}`}</StContent>
-                </>
-              ) : type === 'MENTION' ? (
-                <StSummary>{`${fullName}님이 ${details.postTitle} 모임에 멘션하였습니다.`}</StSummary>
-              ) : null}
-              <StDate>{when}</StDate>
-            </StContentBox>
-          ))}
-      </StContents>
+      <StContentScrollWrapper>
+        <StContents>
+          {data.length > 0 &&
+            data.map(({ type, _id, fullName, when, details }) => (
+              <StContentBox
+                key={_id}
+                title={subTitleOf(type)}>
+                {type === 'COMMENT' ? (
+                  <>
+                    <StSummary>{`${details.postTitle} 모임에 새로운 댓글이 있습니다.`}</StSummary>
+                    <StContent>{`${fullName}: ${details.comment}`}</StContent>
+                  </>
+                ) : type === 'LIKE' ? (
+                  <StSummary>{`${fullName}님이 ${details.postTitle} 모임을 북마크 등록했습니다.`}</StSummary>
+                ) : type === 'FOLLOW' ? (
+                  details.isCancel ? null : (
+                    <StSummary>{`${fullName}님이 팔로우 하였습니다.`}</StSummary>
+                  )
+                ) : type === 'MESSAGE' ? (
+                  <>
+                    <StSummary>{`${fullName}님으로부터 메세지가 도착했습니다.`}</StSummary>
+                    <StContent>{`${details.message}`}</StContent>
+                  </>
+                ) : type === 'MENTION' ? (
+                  <StSummary>{`${fullName}님이 ${details.postTitle} 모임에 멘션하였습니다.`}</StSummary>
+                ) : null}
+                <StDate>{when}</StDate>
+              </StContentBox>
+            ))}
+        </StContents>
+      </StContentScrollWrapper>
     </StContainer>
   );
 };
 
 /* style */
-const StContainer = styled.article`
+const StContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 8px;
+  height: 100%;
+  overflow: hidden;
 `;
 
 const StTitle = styled.header`
   font-weight: bold;
   color: black;
-  padding: 1rem 8px 0 8px;
+  background-color: ${({ theme }) => theme.colors.background.default};
+  padding: 1rem 8px 1rem 8px;
+  border-bottom: 2px solid #dfdfdf;
+`;
+
+const StContentScrollWrapper = styled.article`
+  display: block;
+  overflow: hidden;
+  max-height: calc(100% - ${({ theme }) => theme.sizes.notificationHeader});
 `;
 
 const StContents = styled.ul`
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 8px;
+  height: 100%;
+
+  overflow-y: auto;
+
+  ${({ theme }) => theme.scrollBar.default}
 `;
 
-const StContentBox = styled.li`
+const StContentBox = styled.li<{ title: string }>`
   display: flex;
   flex-direction: column;
-  padding: 6px 8px 0 8px;
-  gap: 6px;
+  gap: 8px;
+  padding: 8px 12px 8px 12px;
 
-  border-top: 2px solid ${({ theme }) => theme.colors.grey.light};
+  border-bottom: 2px solid ${({ theme }) => theme.colors.grey.light};
 
   transition: background-color 0.2s ease;
 
@@ -131,12 +148,23 @@ const StContentBox = styled.li`
     background-color: ${({ theme }) => theme.colors.grey.bright};
   }
 
+  :last-child {
+    border-bottom: none;
+    padding-bottom: 1rem;
+  }
+
+  ::before {
+    content: '${({ title }) => title + ' 알림'}';
+    font-size: 14px;
+    font-weight: bold;
+  }
+
   cursor: pointer;
 `;
 
-const StSummary = styled.h2`
-  font-size: 14px;
-  font-weight: bold;
+const StSummary = styled.p`
+  font-size: 13px;
+  font-weight: 500;
   color: ${({ theme }) => theme.colors.secondaryNavy.default};
 `;
 
@@ -158,3 +186,26 @@ const StDate = styled.p`
   font-size: 10px;
   color: ${({ theme }) => theme.colors.grey.dark};
 `;
+
+/* util */
+const subTitleOf = (type: ContentType['type']) => {
+  switch (type) {
+    case 'COMMENT': {
+      return '댓글';
+    }
+    case 'FOLLOW': {
+      return '팔로우';
+    }
+    case 'LIKE': {
+      return '북마크';
+    }
+    case 'MESSAGE': {
+      return '메세지';
+    }
+    case 'MENTION': {
+      return '멘션';
+    }
+    default:
+      return '';
+  }
+};
