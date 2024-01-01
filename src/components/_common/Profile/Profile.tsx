@@ -75,4 +75,5 @@ const StProfileImage = styled.div<IImageStyle>`
 
 const StProfileName = styled.span<{ fontSize: number }>`
   font-size: ${({ fontSize }) => fontSize}px;
+  line-height: ${({ fontSize }) => fontSize + 8}px;
 `;
