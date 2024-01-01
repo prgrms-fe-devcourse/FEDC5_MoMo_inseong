@@ -26,6 +26,7 @@ export const Header = ({ isLogin, initialMode }: HeaderProps) => {
 
 const StWrapper = styled.div`
   position: relative;
+  height: ${({ theme }) => theme.sizes.headerHeight};
 `;
 
 const StFixedContainer = styled.div`
@@ -33,7 +34,9 @@ const StFixedContainer = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  height: 64px;
+  height: ${({ theme }) => theme.sizes.headerHeight};
+  background-color: ${({ theme }) => theme.colors.background.default};
+  border-bottom: 2px solid #dfdfdf;
 
   display: flex;
   justify-content: center;

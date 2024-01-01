@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { memo } from 'react';
 import { Icon } from '@common/Icon/Icon';
 import { Profile } from '@common/Profile/Profile';
 
@@ -8,50 +9,50 @@ export interface PopupProfileProps {
   image: string;
 }
 
-export const PopupProfile = ({
-  userId,
-  image,
-  fullName,
-}: PopupProfileProps) => {
-  return (
-    <StContainer>
-      <StTitle>내 정보</StTitle>
-      <StRouter>
-        <Profile
-          image={image}
-          fullName={fullName}
-          _id={userId}
-          status={'Profile'}
-          fontSize={16}
-        />
-      </StRouter>
-      <StRouter>
-        <StIconBox content={'"설정"'}>
-          <Icon
-            name="settings"
-            strokeWidth={2}
-            showBackground={false}
+export const PopupProfile = memo(
+  ({ userId, image, fullName }: PopupProfileProps) => {
+    return (
+      <StContainer>
+        <StTitle>내 정보</StTitle>
+        <StRouter>
+          <Profile
+            image={image}
+            fullName={fullName}
+            _id={userId}
+            status={'Profile'}
+            fontSize={16}
           />
-        </StIconBox>
-      </StRouter>
-      <StRouter>
-        <StIconBox content={'"로그아웃"'}>
-          <Icon
-            name="log-out"
-            strokeWidth={2}
-            showBackground={false}
-          />
-        </StIconBox>
-      </StRouter>
-    </StContainer>
-  );
-};
+        </StRouter>
+        <StRouter>
+          <StIconBox content={'"설정"'}>
+            <Icon
+              name="settings"
+              strokeWidth={2}
+              showBackground={false}
+            />
+          </StIconBox>
+        </StRouter>
+        <StRouter>
+          <StIconBox content={'"로그아웃"'}>
+            <Icon
+              name="log-out"
+              strokeWidth={2}
+              showBackground={false}
+            />
+          </StIconBox>
+        </StRouter>
+      </StContainer>
+    );
+  },
+);
 
 /* style */
 const StContainer = styled.article`
   display: flex;
   flex-direction: column;
   width: 100%;
+
+  background-color: ${({ theme }) => theme.colors.background.default};
 `;
 
 const StTitle = styled.header`
