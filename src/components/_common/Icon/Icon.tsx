@@ -12,7 +12,7 @@ interface IconProps {
   style?: CSSProperties;
   showBackground?: boolean;
   isFill?: boolean;
-  onIconClick: () => void;
+  onIconClick?: () => void;
 }
 
 interface IStIconWrapper {
@@ -67,7 +67,7 @@ export const Icon = ({
   );
 };
 
-const StIconWrapper = styled.i<IStIconWrapper>`
+const StIconWrapper = styled.span<IStIconWrapper>`
   display: inline-flex;
   justify-content: center;
   align-items: center;
