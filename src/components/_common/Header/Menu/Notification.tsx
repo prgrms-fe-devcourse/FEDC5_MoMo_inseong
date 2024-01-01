@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { memo } from 'react';
 
 // 팔로우 알림, 댓글 알림, 좋아요 알림(북마크), 메세지 알림, 멘션 알림(커스텀)
 
@@ -61,7 +62,7 @@ interface NotificationProps {
   data: NotificationExtractType[];
 }
 
-export const Notification = ({ data }: NotificationProps) => {
+export const Notification = memo(({ data }: NotificationProps) => {
   return (
     <StContainer>
       <StTitle>알림</StTitle>
@@ -98,7 +99,7 @@ export const Notification = ({ data }: NotificationProps) => {
       </StContentScrollWrapper>
     </StContainer>
   );
-};
+});
 
 /* style */
 const StContainer = styled.div`

@@ -27,9 +27,7 @@ export const Menu = ({ initialMode }: MenuProps) => {
   const [mode, setMode] = useState(initialMode); // 초기 테마 상태
 
   // 테마 토글 함수
-  const handleToggleMode = () => {
-    setMode(mode === 'light' ? 'dark' : 'light');
-  };
+  const handleToggleMode = () => setMode(mode === 'light' ? 'dark' : 'light');
 
   //FIXME: 비동기 함수는 따로 추상화 필요
   useEffect(() => {
