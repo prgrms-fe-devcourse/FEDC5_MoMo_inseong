@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import React from 'react';
 import { CSSProperties, useEffect, useState } from 'react';
 import { LIGHT_GREY } from '@/style/colorConstants';
 import { Buffer } from 'buffer';
@@ -12,7 +13,7 @@ interface IconProps {
   style?: CSSProperties;
   showBackground?: boolean;
   isFill?: boolean;
-  onIconClick?: () => void;
+  onIconClick?: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 interface IStIconWrapper {

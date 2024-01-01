@@ -118,7 +118,6 @@ const StTransitionBox = styled.div<{ isVisible: boolean }>`
 const StContentBox = styled.div<IStWrapper>`
   position: absolute;
   z-index: ${(props) => props.theme.zIndex.tooltip};
-
   width: ${({ width }) => (typeof width === 'number' ? width + 'px' : width)};
   height: ${({ height }) =>
     typeof height === 'number' ? height + 'px' : height};
@@ -130,12 +129,10 @@ const StContentBox = styled.div<IStWrapper>`
 
   border-radius: 8px;
   box-shadow: 0 0 0.6rem ${({ shadowColor }) => shadowColor};
-
   overflow: hidden;
 
   overscroll-behavior: contain;
   scroll-behavior: smooth;
-
   cursor: default;
 `;
 

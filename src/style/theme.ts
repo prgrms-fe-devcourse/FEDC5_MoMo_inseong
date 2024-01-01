@@ -58,6 +58,7 @@ export const theme = {
       display: 'block',
     },
   },
+
   // 스크롤바
   scrollBar: {
     default: `
