@@ -39,6 +39,7 @@ export const theme = {
   },
   sizes: {
     headerHeight: '60px',
+    notificationHeader: '43px',
   },
   zIndex: {
     tooltip: '100',
