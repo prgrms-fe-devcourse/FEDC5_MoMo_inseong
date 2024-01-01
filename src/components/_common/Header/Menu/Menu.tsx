@@ -27,7 +27,7 @@ export const Menu = ({ initialMode }: MenuProps) => {
   const [mode, setMode] = useState(initialMode); // 초기 테마 상태
 
   // 테마 토글 함수
-  const toggleMode = () => {
+  const handleToggleMode = () => {
     setMode(mode === 'light' ? 'dark' : 'light');
   };
 
@@ -61,7 +61,7 @@ export const Menu = ({ initialMode }: MenuProps) => {
       <StTooltipWrapper>
         <ToggleButton
           mode={mode}
-          onClick={toggleMode}>
+          onClick={handleToggleMode}>
           <IconContainer mode={mode} />
         </ToggleButton>
       </StTooltipWrapper>
@@ -69,12 +69,11 @@ export const Menu = ({ initialMode }: MenuProps) => {
         <Tooltip
           content={<Notification data={notifications} />}
           width={300}
-          height={'fit-content'}
-          maxWidth={'fit-content'}
+          height={300}
           offset={-100}>
           <Icon
             name="bell"
-            showCircleBackground={false}
+            showBackground={false}
             strokeWidth={3}
             size={18}
           />
@@ -83,7 +82,7 @@ export const Menu = ({ initialMode }: MenuProps) => {
       <StTooltipWrapper>
         <Tooltip
           content={<PopupProfile {...popupProfile} />}
-          height={200}
+          height={'fit-content'}
           offset={-90}>
           <Profile
             image={popupProfile.image}
