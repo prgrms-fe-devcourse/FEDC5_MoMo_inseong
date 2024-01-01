@@ -68,7 +68,7 @@ export const Icon = ({
 };
 
 const StIconWrapper = styled.i<IStIconWrapper>`
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   padding: ${({ size }) => (size / 3) * 2}px;
