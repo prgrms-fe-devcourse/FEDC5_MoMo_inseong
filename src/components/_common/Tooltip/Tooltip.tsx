@@ -37,10 +37,10 @@ export const Tooltip = memo(
     children,
     content,
     position,
-    width,
-    height,
-    maxWidth = 200,
-    maxHeight = 300,
+    width = 200,
+    height = 300,
+    maxWidth = 'none',
+    maxHeight = 'none',
     shadowColor = '#0000006f',
     gap,
     offset,
@@ -123,21 +123,20 @@ const StContentBox = styled.div<IStWrapper>`
   height: ${({ height }) =>
     typeof height === 'number' ? height + 'px' : height};
 
-  max-width: ${({ maxWidth }) => maxWidth}px;
-  max-height: ${({ maxHeight }) => maxHeight}px;
+  max-width: ${({ maxWidth }) =>
+    typeof maxWidth === 'number' ? maxWidth + 'px' : maxWidth};
+  max-height: ${({ maxHeight }) =>
+    typeof maxHeight === 'number' ? maxHeight + 'px' : maxHeight};
 
   border-radius: 8px;
   box-shadow: 0 0 0.6rem ${({ shadowColor }) => shadowColor};
 
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
 
   overscroll-behavior: contain;
   scroll-behavior: smooth;
 
   cursor: default;
-
-  ${({ theme }) => theme.scrollBar.default}
 `;
 
 /* utils */
