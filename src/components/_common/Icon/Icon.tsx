@@ -6,11 +6,13 @@ import { icons } from 'feather-icons';
 
 interface IconProps {
   name: keyof typeof icons;
+  stroke?: string;
   size?: number;
   strokeWidth?: number;
   style?: CSSProperties;
-  showCircleBackground?: boolean;
+  showBackground?: boolean;
   isFill?: boolean;
+  onIconClick: () => void;
 }
 
 interface IStIconWrapper {
@@ -19,10 +21,12 @@ interface IStIconWrapper {
 
 export const Icon = ({
   name,
+  stroke = 'black', // 테두리 색상
   size = 16,
   strokeWidth = 2,
-  showCircleBackground = true,
+  showBackground = false,
   isFill = false,
+  onIconClick,
   ...props
 }: IconProps) => {
   const [iconName, setIconName] = useState(name);
@@ -35,11 +39,11 @@ export const Icon = ({
     width: size,
     height: size,
     borderRadius: '50%',
-    backgroundColor: showCircleBackground ? LIGHT_GREY : 'transparent',
+    backgroundColor: showBackground ? LIGHT_GREY : 'transparent',
   };
   const iconStyle = {
     'stroke-width': isFill ? 0 : strokeWidth,
-    stroke: 'black',
+    stroke,
     width: size,
     height: size,
     fill: isFill ? '' : 'transparent',
@@ -51,6 +55,7 @@ export const Icon = ({
 
   return (
     <StIconWrapper
+      onClick={onIconClick}
       size={size}
       {...props}
       style={{ ...props.style, ...shapeStyle }}>
@@ -63,7 +68,7 @@ export const Icon = ({
 };
 
 const StIconWrapper = styled.i<IStIconWrapper>`
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   padding: ${({ size }) => (size / 3) * 2}px;

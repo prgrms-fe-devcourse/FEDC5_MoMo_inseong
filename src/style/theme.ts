@@ -12,10 +12,12 @@ export const theme = {
     primaryBlue: {
       default: '#228BB4',
       hover: '#1E779A',
+      transparent: '#228BB41A',
     },
     secondaryNavy: {
       default: '#364954',
       hover: '#232E34',
+      transparent: '#3649541A',
     },
     grey: {
       bright: '#F8F9FA',

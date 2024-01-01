@@ -8,7 +8,7 @@ interface TagProps {
   padding?: number;
   marginRight?: number;
   color: string;
-  hasMouseCursor: boolean;
+  hasMouseCursor?: boolean;
 }
 
 const meta: Meta<typeof Tag> = {
