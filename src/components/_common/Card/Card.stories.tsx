@@ -13,7 +13,7 @@ const meta: Meta<typeof Card> = {
     cardId: '1',
     status: 'Opened',
     meetDate: 'Wed Dec 27 2023',
-    tags: ['#모각코', '#강남'],
+    tags: ['#모각코', '#강남', '#강남', '#강남'],
     author: '이에진',
     handleCardClick: (cardId) => {
       console.log(`${cardId}번 카드 누름`);

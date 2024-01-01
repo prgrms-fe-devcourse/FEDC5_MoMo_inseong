@@ -1,12 +1,9 @@
 import styled from '@emotion/styled';
 import { PostTitleCustomProps } from '@/api/_types/apiModels';
-import {
-  BEIGE,
-  LIGHT_GREY,
-  PRIMARY_BLUE,
-  SECONDARY_NAVY,
-  SEMI_WHITE,
-} from '@/style/colorConstants';
+import { theme } from '@/style/theme';
+import { Icon } from '@common/Icon/Icon';
+import { Profile } from '@common/Profile/Profile';
+import { Tag } from '@common/Tag/Tag';
 
 interface CardProps extends PostTitleCustomProps {
   handleCardClick: (cardId: string) => void;
@@ -32,7 +29,10 @@ export const Card = (cardData: CardProps) => {
   } = cardData;
 
   const colorStyle = {
-    color: status === 'Opened' ? `${PRIMARY_BLUE}` : `${SECONDARY_NAVY}`,
+    color:
+      status === 'Opened'
+        ? theme.colors.primaryBlue.default
+        : theme.colors.secondaryNavy.default,
   };
   return (
     <>
@@ -42,24 +42,34 @@ export const Card = (cardData: CardProps) => {
         <StCardStatus>{statusValue[status]}</StCardStatus>
         <StCardTitle style={colorStyle}>{title}</StCardTitle>
         <StCardDate style={colorStyle}>
-          {/* <Icon name="calender"/> 와야함*/}
+          <Icon name="calendar" />
           {meetDate && meetDate}
         </StCardDate>
         <StCardBottom>
-          <div onClick={() => handleHeartClick(cardId)}>하트</div>
+          <div onClick={() => handleHeartClick(cardId)}>
+            <Icon name="heart" />
+          </div>
           {/* isLiked값에 따라 하트 boolean */}
           <StCardBottomTagsWrap>
-            {tags.map((tag, idx) => (
-              <StCardBottomTags key={idx}>
-                {tag}
-                {/* 태그컴포넌트로 와야함 */}
-              </StCardBottomTags>
-            ))}
+            <Tag
+              name={tags[0]}
+              height={20}
+              fontSize={12}
+              padding={8}
+            />
+            {tags.length > 1 && <span>...</span>}
           </StCardBottomTagsWrap>
-          <div data-id={author}>
-            {author}
-            {/* <유저컴포넌트> 로 와야함*/}
-          </div>
+          {/* <div data-id={author}> */}
+          <Profile
+            image="https://picsum.photos/200"
+            fullName="ㅇㅇㅈ"
+            _id="1"
+            status="Profile"
+            fontSize={12}
+            imageSize={14}
+            width={62}
+          />
+          {/* </div> */}
         </StCardBottom>
       </StCardContainer>
     </>
@@ -74,8 +84,8 @@ const StCardContainer = styled.div<{ status: string }>`
   height: 94px;
   display: flex;
   flex-direction: column;
-  border: 1px solid ${LIGHT_GREY};
-  background-color: ${SEMI_WHITE};
+  border: 1px solid ${({ theme }) => theme.colors.grey.light};
+  background-color: ${({ theme }) => theme.colors.semiWhite};
   border-radius: 8px;
   padding: 10px 14px;
   box-sizing: border-box;
@@ -95,9 +105,11 @@ const StCardStatus = styled.div<{ children: string }>`
   border-radius: 0px 8px 0px 0px;
   justify-content: center;
   align-items: center;
-  background-color: ${({ children }) =>
-    children === '모집 중' ? PRIMARY_BLUE : SECONDARY_NAVY};
-  color: ${BEIGE};
+  background-color: ${({ theme, children }) =>
+    children === '모집 중'
+      ? theme.colors.primaryBlue.default
+      : theme.colors.secondaryNavy.default};
+  color: ${(props) => props.theme.colors.beige};
   font-size: 14px;
 `;
 const StCardTitle = styled.div`
@@ -106,7 +118,9 @@ const StCardTitle = styled.div`
 const StCardDate = styled.div`
   font-size: 12px;
   flex-grow: 1;
-  padding-top: 4px;
+  padding: 4px 0px;
+  display: flex;
+  align-items: center;
 `;
 const StCardBottom = styled.div`
   display: flex;
@@ -115,7 +129,5 @@ const StCardBottom = styled.div`
 const StCardBottomTagsWrap = styled.div`
   display: flex;
   flex-grow: 1;
-`;
-const StCardBottomTags = styled.div`
-  // flex-grow: 1;
+  color: ${({ theme }) => theme.colors.secondaryNavy};
 `;
