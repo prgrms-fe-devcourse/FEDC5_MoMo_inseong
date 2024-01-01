@@ -11,8 +11,8 @@ const meta: Meta<typeof Card> = {
   args: {
     postTitle: '인성팀 밤코어타임',
     cardId: '1',
-    status: 'Opened',
-    meetDate: ['Wed Dec 27 2023', 'Wed Dec 27 2023'],
+    status: 'Scheduled',
+    meetDate: ['Wed Dec 27 2023'],
     // meetDate: ['Wed Dec 27 2023'],
     tags: ['#모각코', '#강남', '#강남', '#강남'],
     author: '이에진',

@@ -68,7 +68,14 @@ export const Card = (cardData: CardProps) => {
         <StCardDate style={colorStyle}>
           {meetDate.length === 1 ? (
             <>
-              <Icon name="calendar" />
+              <Icon
+                name="calendar"
+                stroke={
+                  status === 'Opened'
+                    ? theme.colors.primaryBlue.default
+                    : theme.colors.secondaryNavy.default
+                }
+              />
               {meetDate}
             </>
           ) : (
@@ -108,7 +115,7 @@ export const Card = (cardData: CardProps) => {
 const StCardContainer = styled.div<{ status: string }>`
   position: relative;
   width: 274px;
-  height: 94px;
+  height: 110px;
   display: flex;
   flex-direction: column;
   border: 1px solid ${({ theme }) => theme.colors.grey.light};
@@ -151,6 +158,10 @@ const StCardStatus = styled.div<{ children: string }>`
 `;
 const StCardTitle = styled.div`
   font-size: 16px;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 const StCardDate = styled.div`
   font-size: 12px;
