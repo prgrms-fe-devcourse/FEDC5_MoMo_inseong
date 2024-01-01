@@ -33,14 +33,11 @@ const meta: Meta<typeof Input> = {
 export default meta;
 
 export const Default: StoryObj<InputProps> = {
-  args: {
-    placeholder: 'placeholder',
-  },
+  args: {},
 };
 
 export const TagsInput: StoryObj<InputProps> = {
   args: {
-    placeholder: 'placeholder',
     hasTags: true,
     tags: [
       'Tag1',
@@ -59,7 +56,6 @@ export const TagsInput: StoryObj<InputProps> = {
 
 export const ImageInput: StoryObj<InputProps> = {
   args: {
-    placeholder: 'placeholder',
     hasImage: true,
     image: 'https://picsum.photos/200',
   },

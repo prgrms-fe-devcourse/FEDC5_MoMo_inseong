@@ -2,6 +2,8 @@ import styled from '@emotion/styled';
 import { KeyboardEvent, useState } from 'react';
 import InputUpload from './InputUpload';
 import { LIGHT_GREY, PRIMARY_BLUE } from '@/style/colorConstants';
+import { Icon } from '@common/Icon/Icon';
+import { Tag } from '@common/Tag/Tag';
 
 interface InputProps {
   fontSize?: number;
@@ -83,15 +85,20 @@ export const Input = ({
         />
       )}
 
-      {/* TODO: 태그 컴포넌트 병합시 진행 */}
       {hasTags && (
         <StTagsContainer hasTags={tags.length > 0}>
           {tags.map((tag, index) => (
-            <StTag key={index}>
-              {tag}
-              <StTagRemoveButton onClick={() => handleTagRemove(index)}>
-                x
-              </StTagRemoveButton>
+            <StTag key={`tag-${index}`}>
+              <Tag
+                key={index}
+                name={tag}
+                marginRight={4}
+              />
+
+              <Icon
+                name="x"
+                onIconClick={() => handleTagRemove(index)}
+              />
             </StTag>
           ))}
         </StTagsContainer>
@@ -102,7 +109,9 @@ export const Input = ({
         (!image ? (
           <StImageContainer>
             <StyledUpload>
-              <InputUpload onChange={handleImageChange}>+</InputUpload>
+              <InputUpload onChange={handleImageChange}>
+                <Icon name="plus" />
+              </InputUpload>
             </StyledUpload>
           </StImageContainer>
         ) : (
@@ -110,9 +119,11 @@ export const Input = ({
             <StImage
               style={{ backgroundImage: `url(${image})` }}
               onClick={handleImageZoom}>
-              <StImageDeleteButton onClick={handleImageRemove}>
-                x
-              </StImageDeleteButton>
+              <Icon
+                name="x"
+                showBackground={true}
+                onIconClick={handleImageRemove}
+              />
             </StImage>
           </StImageContainer>
         ))}
@@ -120,7 +131,6 @@ export const Input = ({
   );
 };
 
-// TODO: color 변수로 수정하기
 const StInputContainer = styled.div<IInputStyle>`
   display: flex;
   flex-direction: column;
@@ -166,22 +176,12 @@ const StTagsContainer = styled.div<{ hasTags: boolean }>`
   padding-top: ${({ hasTags }) => (hasTags ? '10px' : '0')};
 `;
 
-// TODO: color 통일
 const StTag = styled.div`
-  background: #eee;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  padding: 4px 8px;
-  border-radius: 4px;
+  margin-right: 5px;
+  margin-bottom: 5px;
   display: flex;
   align-items: center;
-`;
-
-const StTagRemoveButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  margin-left: 4px;
+  justify-content: 'center';
 `;
 
 const StImageContainer = styled.div`
@@ -195,22 +195,6 @@ const StImage = styled.div`
   border-radius: 8px;
   background-size: cover;
   background-position: center;
-  cursor: pointer;
-`;
-
-// TODO: X 아이콘 컴포넌트 병합시 진행
-const StImageDeleteButton = styled.span`
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 20px;
-  height: 20px;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
 `;
 
