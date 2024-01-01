@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { PostTitleCustomProps } from '@/api/_types/apiModels';
+import { useHover } from '@/hooks/useHover';
 import { theme } from '@/style/theme';
 import { Icon } from '@common/Icon/Icon';
 import { Profile } from '@common/Profile/Profile';
@@ -7,7 +8,6 @@ import { Tag } from '@common/Tag/Tag';
 
 interface CardProps extends PostTitleCustomProps {
   handleCardClick: (cardId: string) => void;
-  handleHeartClick: (cardId: string) => void;
 }
 const statusValue = {
   Opened: '모집 중',
@@ -25,9 +25,15 @@ export const Card = (cardData: CardProps) => {
     meetDate,
     isLiked,
     handleCardClick,
-    handleHeartClick,
   } = cardData;
+  const { hoverRef, isHovered } = useHover();
 
+  const handleIconClick = (
+    event: React.MouseEvent<HTMLElement, MouseEvent>,
+  ) => {
+    event.stopPropagation();
+    console.log('하트클릭');
+  };
   const colorStyle = {
     color:
       status === 'Opened'
@@ -38,18 +44,30 @@ export const Card = (cardData: CardProps) => {
     <>
       <StCardContainer
         onClick={() => handleCardClick(cardId)}
-        status={status}>
-        <StCardStatus>{statusValue[status]}</StCardStatus>
+        status={status}
+        ref={hoverRef}>
+        {isHovered ? (
+          <StCardStatus>{statusValue[status]}</StCardStatus>
+        ) : (
+          <StCardProfileWrapper>
+            <Profile
+              image="https://picsum.photos/200"
+              fullName="ㅇㅇㅈ"
+              _id="1"
+              status="Profile"
+              fontSize={12}
+              imageSize={14}
+              width={62}
+            />
+          </StCardProfileWrapper>
+        )}
+
         <StCardTitle style={colorStyle}>{title}</StCardTitle>
         <StCardDate style={colorStyle}>
           <Icon name="calendar" />
           {meetDate && meetDate}
         </StCardDate>
         <StCardBottom>
-          <div onClick={() => handleHeartClick(cardId)}>
-            <Icon name="heart" />
-          </div>
-          {/* isLiked값에 따라 하트 boolean */}
           <StCardBottomTagsWrap>
             <Tag
               name={tags[0]}
@@ -59,17 +77,18 @@ export const Card = (cardData: CardProps) => {
             />
             {tags.length > 1 && <span>...</span>}
           </StCardBottomTagsWrap>
-          {/* <div data-id={author}> */}
-          <Profile
-            image="https://picsum.photos/200"
-            fullName="ㅇㅇㅈ"
-            _id="1"
-            status="Profile"
-            fontSize={12}
-            imageSize={14}
-            width={62}
-          />
-          {/* </div> */}
+          {isLiked ? (
+            <Icon
+              name="heart"
+              onIconClick={handleIconClick}
+            />
+          ) : (
+            <Icon
+              name="heart"
+              isFill={true}
+              onIconClick={handleIconClick}
+            />
+          )}
         </StCardBottom>
       </StCardContainer>
     </>
@@ -94,6 +113,16 @@ const StCardContainer = styled.div<{ status: string }>`
     background-color: #f1f2f3;
   }
   opacity: ${({ status }) => status === 'Closed' && 0.5};
+`;
+const StCardProfileWrapper = styled.div`
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 74px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
 `;
 const StCardStatus = styled.div<{ children: string }>`
   position: absolute;
