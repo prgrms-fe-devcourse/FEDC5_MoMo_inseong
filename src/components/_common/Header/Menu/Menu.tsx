@@ -88,7 +88,6 @@ export const Menu = ({ initialMode }: MenuProps) => {
             _id={popupProfile.userId}
             status={'ProfileImage'}
             imageSize={32}
-            width={32}
           />
         </Tooltip>
       </StTooltipWrapper>

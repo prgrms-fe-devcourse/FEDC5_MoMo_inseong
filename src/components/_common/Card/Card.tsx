@@ -59,7 +59,7 @@ export const Card = (cardData: CardProps) => {
               status="Profile"
               fontSize={12}
               imageSize={14}
-              width={62}
+              maxWidth={55}
             />
           </StCardProfileWrapper>
         )}
@@ -132,12 +132,13 @@ const StCardContainer = styled.div<{ status: string }>`
 const StCardProfileWrapper = styled.div`
   position: absolute;
   right: 0px;
-  top: 0px;
+  top: 7px;
   width: 74px;
   height: 30px;
   display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: hidden;
 `;
 const StCardStatus = styled.div<{ children: string }>`
   position: absolute;
