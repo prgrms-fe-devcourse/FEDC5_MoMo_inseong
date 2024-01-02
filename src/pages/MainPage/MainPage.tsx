@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { MainArea } from './MainArea';
+// import { MainArea } from './MainArea';
 import { OnlineUsers } from './OnlineUsers';
 import { SearchBox } from './SearchBox';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
@@ -12,9 +12,7 @@ export const MainPage = () => {
           <OnlineUsers></OnlineUsers>
           <SearchBox></SearchBox>
         </StMainSide>
-        <StMainArea>
-          <MainArea></MainArea>
-        </StMainArea>
+        <StMainArea>{/* <MainArea></MainArea> */}</StMainArea>
       </StMainWrapper>
     </StSideMarginWrapper>
   );
