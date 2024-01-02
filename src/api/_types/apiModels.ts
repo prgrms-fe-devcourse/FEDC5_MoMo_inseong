@@ -31,6 +31,7 @@ export interface IChannel {
   description: string;
   createdAt: string;
   updatedAt: string;
+  __v: number;
 }
 
 export interface ILike {
@@ -96,6 +97,7 @@ export interface IPost {
   author: IUser | string;
   createdAt: string;
   updatedAt: string;
+  __v?: number;
 }
 
 //Post 모델 중 title 필드 커스텀값
@@ -104,8 +106,8 @@ export interface IPostTitleCustom {
   contents: string; // '본문'
   status: 'Opened' | 'Scheduled' | 'Closed'; // 모집 중 | 모임 예정 | 모임 종료
   tags: string[]; // ['tag1','tag2','tag3','tag4']
-  mentions: IMentionedUser[]; // [{id: '23', fullName: 'MinSuKim'}]
-  meetDate: [Date, Date]; // 변경 // 투표 시작,끝 날짜 ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ'])
+  mentions: IMentionedUser[] | []; // [{id: '23', fullName: 'MinSuKim'}]
+  meetDate: string[]; // 변경 // 투표 시작,끝 날짜 ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ'])
   peopleLimit: number;
 
   vote: IVote[]; // [{id: 'dfnkdflad', votedDate: ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ']}] <== 날짜 아니라 타임테이블 배열 인덱스
@@ -115,12 +117,12 @@ export interface IPostTitleCustom {
   isLiked: boolean; // 포스트 좋아요는 포스트 likes 중에서 user로 필터링해서 찾아야합니다
 }
 
-interface IMentionedUser {
+export interface IMentionedUser {
   _id: string;
   fullName: string;
 }
 
-interface IVote {
+export interface IVote {
   id: string;
   fullName: string;
   votedDate: string[]; //[ '2023-12-12 22:00', '2023-12-12 22:30', '2023-12-12 23:00', '2023-12-12 22:00', '2023-12-12 22:00', '2023-12-12 22:00' ]

@@ -5,15 +5,15 @@ export interface TabProps {
   label: string;
   width: number;
   isActive: boolean;
-  isJustify: boolean;
-  handleTabClick: () => void;
+  isJustify?: boolean;
+  handleTabClick?: () => void;
 }
 export const Tab = ({
   label,
   width,
   isActive,
-  isJustify,
-  handleTabClick,
+  isJustify = true,
+  handleTabClick = () => '',
   ...props
 }: TabProps) => {
   return (
@@ -36,7 +36,7 @@ const StTabContainer = styled.div<{
   width: ${({ width }) => width}px;
   height: 32px;
   font-size: 14px;
-  border-bottom: 2px solid
+  border-bottom: 1px solid
     ${({ isActive }) => (isActive ? SECONDARY_NAVY : LIGHT_GREY)};
   color: ${({ isActive }) => (isActive ? 'black' : DARK_GREY)};
   display: flex;
