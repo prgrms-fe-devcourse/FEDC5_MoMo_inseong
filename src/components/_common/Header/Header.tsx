@@ -36,11 +36,12 @@ const StFixedContainer = styled.div`
   right: 0;
   height: ${({ theme }) => theme.sizes.headerHeight};
   background-color: ${({ theme }) => theme.colors.background.default};
-  border-bottom: 2px solid #dfdfdf;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.grey.light};
 
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 99;
 `;
 
 const StContainer = styled.div`
