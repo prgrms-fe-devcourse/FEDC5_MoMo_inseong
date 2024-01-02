@@ -7,13 +7,13 @@ export interface IUser {
   emailVerified: boolean; // 사용되지 않음
   banned: boolean; // 사용되지 않음
   isOnline: boolean;
-  posts: IPost[] | string[]; // string[]으로오는데..?
-  likes: ILike[] | string[]; // string[]으로오는데..?
+  posts: IPost[] | string[]; //
+  likes: ILike[] | string[]; //
   comments: string[] | [];
   followers: string[] | [];
   following: string[] | [];
-  notifications: INotification[] | string[]; // string[]..
-  messages: IMessage[] | string[]; // string[]으로오는데..?
+  notifications: INotification[] | string[]; //
+  messages: IMessage[] | string[]; //
   _id: string;
   fullName: string;
   username?: string;
@@ -22,15 +22,6 @@ export interface IUser {
   updatedAt: string;
   __v?: number;
 }
-
-// export interface IFollowInfo {
-//   _id: string;
-//   user: string;
-//   follower: string;
-//   createdAt: string;
-//   updatedAt: string;
-//   __v: number;
-// };
 
 export interface IChannel {
   authRequired: boolean; // 사용되지 않음
@@ -93,15 +84,16 @@ export interface IMessage {
 // }
 
 // Post 모델
+
 export interface IPost {
-  likes: ILike[];
-  comments: IComment[];
+  likes?: ILike[] | string[];
+  comments: IComment[] | string[];
   _id: string;
   image?: string;
   imagePublicId?: string;
   title: string;
-  channel: IChannel;
-  author: IUser;
+  channel: IChannel | string;
+  author: IUser | string;
   createdAt: string;
   updatedAt: string;
 }
@@ -113,7 +105,7 @@ export interface IPostTitleCustom {
   status: 'Opened' | 'Scheduled' | 'Closed'; // 모집 중 | 모임 예정 | 모임 종료
   tags: string[]; // ['tag1','tag2','tag3','tag4']
   mentions: IMentionedUser[]; // [{id: '23', fullName: 'MinSuKim'}]
-  meetDate: string[]; // 투표 시작,끝 날짜 ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ'])
+  meetDate: [Date, Date]; // 변경 // 투표 시작,끝 날짜 ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ'])
   peopleLimit: number;
 
   vote: IVote[]; // [{id: 'dfnkdflad', votedDate: ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ']}] <== 날짜 아니라 타임테이블 배열 인덱스
