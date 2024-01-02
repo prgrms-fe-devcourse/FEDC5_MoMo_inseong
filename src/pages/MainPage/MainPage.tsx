@@ -23,7 +23,7 @@ export const MainPage = () => {
 const StMainWrapper = styled.div`
   display: flex;
   gap: 100px;
-  padding-top: 20px;
+  padding: 20px 0px;
   box-sizing: border-box;
 `;
 const StMainSide = styled.div`
@@ -31,5 +31,4 @@ const StMainSide = styled.div`
 `;
 const StMainArea = styled.div`
   flex-grow: 1;
-  background: pink;
 `;

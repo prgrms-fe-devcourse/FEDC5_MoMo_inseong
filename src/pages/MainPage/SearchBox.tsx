@@ -25,7 +25,6 @@ export const SearchBox = () => {
         <Input
           placeholder="검색"
           width="100%"
-          height={19}
           fontSize={14}
           style={{
             padding: '8px 36px',
