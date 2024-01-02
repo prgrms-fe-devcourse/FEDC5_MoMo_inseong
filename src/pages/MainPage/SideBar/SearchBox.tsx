@@ -4,7 +4,7 @@ import {
   StSideBlockWrapper,
   StSideTitle,
 } from './OnlineUsers';
-import searchDummy from './SearchedPostDummy.json';
+import { searchDummy } from './SearchedPostDummy';
 import { IPost, IUser } from '@/api/_types/apiModels';
 import { theme } from '@/style/theme';
 import { Icon } from '@common/Icon/Icon';

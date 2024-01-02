@@ -1,13 +1,13 @@
 // 언제모일까 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
-import cardDetailDummy from './CardDetailDummy.json';
-import cardsDummy from './CardsDummy.json';
+import { cardDetailDummy } from './CardDetailDummy';
+import { cardsDummy } from './CardsDummy';
 import { IPost, IPostTitleCustom } from '@/api/_types/apiModels';
 import { Card } from '@common/Card/Card';
 
 export const WhenCards = () => {
   const dummy: IPost[] = cardsDummy;
-  const detailDummy: IPostTitleCustom = cardDetailDummy as IPostTitleCustom; // ??????
+  const detailDummy: IPostTitleCustom = cardDetailDummy;
   return (
     <CardsWrapper>
       {dummy.map((post, idx) => {

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import userDummy from './UserDummy.json';
+import { userDummy } from './UserDummy';
 import { IUser } from '@/api/_types/apiModels';
 import { theme } from '@/style/theme';
 import { Icon } from '@common/Icon/Icon';
@@ -20,7 +20,6 @@ export const OnlineUsers = () => {
         <Input
           placeholder="검색"
           width="100%"
-          height={19}
           fontSize={14}
           style={{
             padding: '8px 36px',

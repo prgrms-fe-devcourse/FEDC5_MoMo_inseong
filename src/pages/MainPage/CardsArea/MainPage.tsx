@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
+import { OnlineUsers } from '../SideBar/OnlineUsers';
+import { SearchBox } from '../SideBar/SearchBox';
 import { MainArea } from './MainArea';
-import { OnlineUsers } from './OnlineUsers';
-import { SearchBox } from './SearchBox';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 
 export const MainPage = () => {
