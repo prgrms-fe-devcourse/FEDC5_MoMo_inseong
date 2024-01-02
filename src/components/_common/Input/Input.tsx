@@ -4,6 +4,7 @@ import InputUpload from './InputUpload';
 import { LIGHT_GREY, PRIMARY_BLUE } from '@/style/colorConstants';
 
 interface InputProps {
+  type?: string;
   fontSize?: number;
   width?: string | number;
   placeholder: string;
@@ -12,8 +13,7 @@ interface InputProps {
   tags?: string[];
   hasImage?: boolean;
   image?: string;
-  height: number | string; /////// min-height를 스타일에 주지 말고 필수로 값을 받는게 필요합니다..
-  style?: CSSProperties; ///////////////////////////////
+  style?: CSSProperties;
 }
 
 interface IInputStyle {
@@ -22,6 +22,7 @@ interface IInputStyle {
 }
 
 export const Input = ({
+  type = 'text',
   fontSize = 16,
   width = 300,
   placeholder,
@@ -81,6 +82,7 @@ export const Input = ({
         />
       ) : (
         <StInputText
+          type={type}
           fontSize={fontSize}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
@@ -134,7 +136,6 @@ const StInputContainer = styled.div<IInputStyle>`
   position: relative;
   border: 1px solid ${LIGHT_GREY};
   border-radius: 8px;
-  // min-height: 50px; ///////////////
   padding: 15px 24px;
   width: ${({ width, hasTags }) =>
     hasTags ? '100%' : typeof width === 'number' ? `${width}px` : width};
