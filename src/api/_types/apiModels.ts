@@ -1,22 +1,26 @@
 export interface IUser {
-  coverImage: string; // 커버 이미지
-  image: string; // 프로필 이미지
+  coverImage?: string; // 커버 이미지
+  image?: string; // 프로필 이미지
+  imagePublicId?: string;
+  coverImagePublicId?: string;
   role: string;
   emailVerified: boolean; // 사용되지 않음
   banned: boolean; // 사용되지 않음
   isOnline: boolean;
-  posts: IPost[];
-  likes: ILike[];
-  comments: string[];
-  followers: string[];
-  following: string[];
-  notifications: INotification[];
-  messages: IMessage[];
+  posts: IPost[] | string[]; // string[]으로오는데..?
+  likes: ILike[] | string[]; // string[]으로오는데..?
+  comments: string[] | [];
+  followers: string[] | [];
+  following: string[] | [];
+  notifications: INotification[] | string[]; // string[]..
+  messages: IMessage[] | string[]; // string[]으로오는데..?
   _id: string;
   fullName: string;
+  username?: string;
   email: string;
   createdAt: string;
   updatedAt: string;
+  __v?: number;
 }
 
 // export interface IFollowInfo {
