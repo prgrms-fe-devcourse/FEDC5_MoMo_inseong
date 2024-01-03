@@ -16,7 +16,7 @@ export const SearchBox = () => {
   const dummy: (IUser | IPost)[] = searchDummy;
 
   return (
-    <StSideBlockWrapper style={{ marginTop: '15px' }}>
+    <StSideBlockWrapper style={{ marginTop: '15px', top: '357px' }}>
       <StSideTitle>검색 결과</StSideTitle>
       <div style={{ position: 'relative' }}>
         <StSearchIconWrapper>
