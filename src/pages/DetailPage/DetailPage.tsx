@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { DetailMeetDescription } from './DetailMeetDescription';
+import { DetailPost } from './DetailPost/DetailPost';
 import { DetailTab } from './DetailTab';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 
@@ -20,6 +21,9 @@ export const DetailPage = () => {
           isPostPage={isPostPage}
           handleTabClick={handleTabClick}
         />
+        {/* 본문 내용 */}
+        <DetailPost isPostPage={isPostPage} />
+        <hr />
       </StDetailContainer>
     </StSideMarginWrapper>
   );
