@@ -29,7 +29,6 @@ export const Card = (cardData: CardProps) => {
     image = 'https://picsum.photos/200',
   } = cardData;
   const { hoverRef, isHovered } = useHover();
-
   const handleIconClick = (
     event: React.MouseEvent<HTMLElement, MouseEvent>,
   ) => {
@@ -42,6 +41,7 @@ export const Card = (cardData: CardProps) => {
         ? theme.colors.primaryBlue.default
         : theme.colors.secondaryNavy.default,
   };
+
   return (
     <>
       <StCardContainer
@@ -76,7 +76,7 @@ export const Card = (cardData: CardProps) => {
                     : theme.colors.secondaryNavy.default
                 }
               />
-              {meetDate}
+              {meetDate[0].slice(0, 16)}
             </>
           ) : (
             ''

@@ -1,15 +1,16 @@
 // 언제모일까 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
 import { cardDetailDummy } from './CardDetailDummy';
-import { cardsDummy } from './CardsDummy';
+import { postsChannelChannelId } from './CardsDummy';
 import { IPost, IPostTitleCustom } from '@/api/_types/apiModels';
 import { Card } from '@common/Card/Card';
+import { Icon } from '@common/Icon/Icon';
 
 export const WhenCards = () => {
-  const dummy: IPost[] = cardsDummy;
+  const dummy: IPost[] = postsChannelChannelId;
   const detailDummy: IPostTitleCustom = cardDetailDummy;
   return (
-    <CardsWrapper>
+    <StCardsWrapper>
       {dummy.map((post, idx) => {
         // TODO : 디테일 정보 요청
         // const postDetail = customaxios.get(post ~~)
@@ -27,7 +28,7 @@ export const WhenCards = () => {
           peopleLimit,
           vote,
         } = postDetail;
-        console.log(postDetail);
+        // console.log(postDetail);
         return (
           <Card
             key={idx}
@@ -47,13 +48,26 @@ export const WhenCards = () => {
           />
         );
       })}
-    </CardsWrapper>
+      <StAddWrapper>
+        <Icon
+          name="plus"
+          size={20}
+          onIconClick={() => console.log('모임생성 모달 연결')}
+        />
+      </StAddWrapper>
+    </StCardsWrapper>
   );
 };
 
-const CardsWrapper = styled.div`
+const StCardsWrapper = styled.div`
   margin-top: 23px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
+  justify-items: center;
+`;
+const StAddWrapper = styled.button`
+  margin: 0 auto;
+  padding: 20px;
+  margin-bottom: 20px;
 `;
