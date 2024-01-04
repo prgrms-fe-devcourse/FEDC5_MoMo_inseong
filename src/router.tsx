@@ -1,5 +1,6 @@
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 import { App } from './App';
+import { DetailPage } from './pages/DetailPage/DetailPage';
 import { Header } from '@common/Header/Header';
 
 export const router = createBrowserRouter([
@@ -24,7 +25,7 @@ export const router = createBrowserRouter([
           },
           {
             path: '/details', // 상세 페이지
-            element: <div>details</div>,
+            element: <DetailPage />,
           },
           {
             path: '/profile', // 프로필 페이지
