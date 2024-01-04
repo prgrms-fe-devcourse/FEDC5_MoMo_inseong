@@ -6,8 +6,8 @@ import { theme } from './style/theme';
 export const App = () => {
   return (
     <ThemeProvider theme={theme}>
-        <GlobalReset />
-        <Outlet />
+      <GlobalReset />
+      <Outlet />
     </ThemeProvider>
   );
 };
