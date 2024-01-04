@@ -60,7 +60,7 @@ const StLoginFormContainer = styled.div`
 `;
 
 const StFormTitle = styled.h1`
-  font-size: 36px;
+  font-size: 18px;
   font-weight: bold;
   margin-bottom: 20px;
 `;
