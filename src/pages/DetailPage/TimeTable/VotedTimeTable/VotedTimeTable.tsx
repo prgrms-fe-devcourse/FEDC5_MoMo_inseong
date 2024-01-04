@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { RefObject, forwardRef, useImperativeHandle, useRef } from 'react';
+import { RefObject, forwardRef } from 'react';
 import { IVote } from '../TimeTable';
 
 interface VotedTimeTableProps {
@@ -11,22 +11,10 @@ export interface IVotedTimeTableRefs {
   voteItemsRef: RefObject<HTMLDivElement[][]>;
 }
 
-export const VotedTimeTable = forwardRef(
-  ({ meetDate, vote }: VotedTimeTableProps, ref) => {
-    const voteItemsRef = useRef<HTMLDivElement[][]>(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      Array(meetDate.length)
-        .fill(null)
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        .map(() => Array(Object.keys(vote[meetDate[0]]).length).fill(null)),
-    );
-
-    useImperativeHandle(ref, () => ({
-      voteItemsRef: voteItemsRef.current,
-    }));
-
+export const VotedTimeTable = forwardRef<HTMLDivElement, VotedTimeTableProps>(
+  ({ meetDate, vote }, ref) => {
     return (
-      <StTable>
+      <StTable ref={ref}>
         {meetDate.map((date, i) => (
           <StTableColumn
             key={date}
@@ -34,13 +22,11 @@ export const VotedTimeTable = forwardRef(
             {Object.entries(vote[date]).map(([time, users], j) => (
               <StCell
                 key={date + time}
-                ref={(element) =>
-                  (voteItemsRef.current[i][j] = element as HTMLDivElement)
-                }
                 data-time={time}
                 data-users={users.map(({ fullName }) => fullName).join(' ')}
                 data-col={i}
                 data-row={j}
+                onClick={(e) => console.log(e.target)}
               />
             ))}
           </StTableColumn>
@@ -51,6 +37,7 @@ export const VotedTimeTable = forwardRef(
 );
 
 const StTable = styled.div`
+  padding: 36px 16px 16px 36px;
   display: flex;
   flex-direction: row;
 `;
@@ -61,7 +48,39 @@ const StTableColumn = styled.div`
 `;
 
 const StCell = styled.div`
-  border: 1px solid black;
-  padding: 10px;
+  position: relative;
+  border: 1px solid ${({ theme }) => theme.colors.grey.default};
+  border-radius: 4px;
+  padding: 6px 16px;
   cursor: pointer;
+
+  &:hover {
+    filter: brightness(120%);
+    border-color: ${({ theme }) => theme.colors.beige};
+    box-shadow: 0 0 2px 1px olive;
+  }
+
+  &.voted-0 {
+    background-color: rgb(255, 222, 222);
+  }
+
+  &.voted-1 {
+    background-color: #00ffff20;
+  }
+
+  &.voted-2 {
+    background-color: #00ffff40;
+  }
+
+  &.voted-3 {
+    background-color: #00ffff60;
+  }
+
+  &.voted-4 {
+    background-color: #00ffff80;
+  }
+
+  &.voted-mine {
+    box-shadow: 0 0 2px 1px olive;
+  }
 `;

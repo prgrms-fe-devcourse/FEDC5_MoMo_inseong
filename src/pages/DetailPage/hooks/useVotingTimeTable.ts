@@ -8,115 +8,84 @@ interface IuseVotingTimeTable {
 }
 
 export const useVotingTimeTable = ({ vote, userId }: IuseVotingTimeTable) => {
-  const dragItemsRef = useRef<HTMLDivElement[][]>(null);
-  const voteItemsRef = useRef<HTMLDivElement[][]>(null);
+  const voteAreaRef = useRef<HTMLDivElement>(null);
   const dragStartPoint = useRef([0, 0]);
 
   const prevVotes = useRef<boolean[][]>([[]]); //FIXME: 이전 투표값 받아와야 됨
 
-  const onMouseMove = useCallback(
-    (event: MouseEvent) => {
-      if (
-        event.target instanceof HTMLDivElement &&
-        event.target.hasAttribute('data-time')
-      ) {
-        //FIXME: 콘솔
-        console.log('onMouseMove:', event);
+  const checkSelectionRange = useCallback((target: HTMLDivElement) => {
+    const [startY, startX] = dragStartPoint.current;
+    const isSelected = prevVotes.current[startY][startX];
+    const endY = Number(target.dataset.col);
+    const endX = Number(target.dataset.row);
+    const minY = Math.min(startY, endY);
+    const maxY = Math.max(startY, endY);
+    const minX = Math.min(startX, endX);
+    const maxX = Math.max(startY, endY);
 
-        const [startY, startX] = dragStartPoint.current;
-        const isSelected = prevVotes.current[startY][startX];
-        const endY = Number(event.target.dataset.col);
-        const endX = Number(event.target.dataset.row);
-        const minY = Math.min(startY, endY);
-        const maxY = Math.max(startY, endY);
-        const minX = Math.min(startX, endX);
-        const maxX = Math.max(startY, endY);
+    const isOver = (col: number, row: number) =>
+      col >= minY && col <= maxY && row >= minX && row <= maxX;
 
-        dragItemsRef.current?.forEach((column, i) =>
-          column.forEach((_, j) => {
-            if (voteItemsRef.current && dragItemsRef.current) {
-              const col = i;
-              const row = j;
+    const isStart = startY === endY && startX === endX;
 
-              const isOver =
-                col >= minY && col <= maxY && row >= minX && row <= maxX;
+    return { isSelected, isStart, isOver };
+  }, []);
 
-              //FIXME: 배경색 변경
-              dragItemsRef.current[i][j].style.backgroundColor = isOver
-                ? isSelected
-                  ? 'deepskyblue'
-                  : 'transparent'
-                : dragItemsRef.current[i][j].style.backgroundColor;
+  const onMouseMove = useCallback((event: MouseEvent) => {
+    if (isTargetContains(event, dragAreaRef.current)) {
+      //FIXME: 콘솔
+      console.log('onMouseMove:', event.target);
 
-              voteItemsRef.current[i][j].style.backgroundColor = isOver
-                ? isSelected
-                  ? 'skyblue'
-                  : 'transparent'
-                : voteItemsRef.current[i][j].style.backgroundColor;
+      const { isSelected, isStart, isOver } = checkSelectionRange(event.target);
 
-              if (isOver) {
-                if (col === minY && isSelected) {
-                  voteItemsRef.current[i][j].style.borderTop = '1px solid aqua';
-                  dragItemsRef.current[i][j].style.borderTop = '1px solid aqua';
-                } else {
-                  voteItemsRef.current[i][j].style.borderTop =
-                    '1px solid black';
-                  dragItemsRef.current[i][j].style.borderTop =
-                    '1px solid black';
-                }
-                if (col === maxY && isSelected) {
-                  voteItemsRef.current[i][j].style.borderBottom =
-                    '1px solid aqua';
-                  dragItemsRef.current[i][j].style.borderBottom =
-                    '1px solid aqua';
-                } else {
-                  voteItemsRef.current[i][j].style.borderBottom =
-                    '1px solid black';
-                  dragItemsRef.current[i][j].style.borderBottom =
-                    '1px solid black';
-                }
+      if (isStart) return;
 
-                if (row === minX && isSelected) {
-                  voteItemsRef.current[i][j].style.borderLeft =
-                    '1px solid aqua';
-                  dragItemsRef.current[i][j].style.borderLeft =
-                    '1px solid aqua';
-                } else {
-                  voteItemsRef.current[i][j].style.borderLeft =
-                    '1px solid black';
-                  dragItemsRef.current[i][j].style.borderLeft =
-                    '1px solid black';
-                }
-                if (row === maxX && isSelected) {
-                  voteItemsRef.current[i][j].style.borderRight =
-                    '1px solid aqua';
-                  dragItemsRef.current[i][j].style.borderRight =
-                    '1px solid aqua';
-                } else {
-                  voteItemsRef.current[i][j].style.borderRight =
-                    '1px solid black';
-                  dragItemsRef.current[i][j].style.borderRight =
-                    '1px solid black';
-                }
-              }
-            }
-          }),
-        );
-      }
-    },
-    [voteItemsRef],
-  );
+      const myTable = getChildArray(dragAreaRef.current?.childNodes).map(
+        (column) => getChildArray(column?.childNodes),
+      );
+      const voteTable = getChildArray(voteAreaRef.current?.childNodes).map(
+        (column) => getChildArray(column?.childNodes),
+      );
+
+      myTable.forEach((myColumn, i) =>
+        myColumn.forEach((myCell, j) => {
+          const voteCell = voteTable[i][j];
+
+          if (
+            myCell instanceof HTMLDivElement &&
+            voteCell instanceof HTMLDivElement
+          ) {
+            const col = Number(myCell.dataset.col);
+            const row = Number(myCell.dataset.row);
+
+            //FIXME: 콘솔
+            console.log(myCell);
+
+            myCell.classList.toggle('selected', isOver(col, row) && isSelected); // 내 투표테이블 색상 변경
+            voteCell.classList.toggle(
+              `voted-mine`,
+              isOver(col, row) && isSelected,
+            ); // 전체 투표테이블 색상 변경
+          }
+        }),
+      );
+    }
+  }, []);
 
   const onMouseDown = useCallback(
     (event: MouseEvent) => {
       if (event.target instanceof HTMLDivElement) {
         //FIXME: 콘솔
-        console.log('onMouseDown:', event);
+        console.log('onMouseDown:', event.target);
+        console.log('prevVotes:', prevVotes.current);
 
         const y = Number(event.target.dataset.col);
         const x = Number(event.target.dataset.row);
 
         dragStartPoint.current = [y, x];
+
+        //FIXME: 콘솔
+        console.log('y:', y, 'x:', x);
 
         prevVotes.current[y][x] = !prevVotes.current[y][x];
 
@@ -127,26 +96,15 @@ export const useVotingTimeTable = ({ vote, userId }: IuseVotingTimeTable) => {
   );
 
   const onMouseUp = useCallback((event: MouseEvent) => {
-    if (
-      event.target instanceof HTMLDivElement &&
-      event.target.hasAttribute('data-time')
-    ) {
+    if (isTargetContains(event, dragAreaRef.current)) {
       //FIXME: 콘솔
       console.log('onMouseUp:', event);
 
-      const [startY, startX] = dragStartPoint.current;
-      const isSelected = prevVotes.current[startY][startX];
-      const endY = Number(event.target.dataset.col);
-      const endX = Number(event.target.dataset.row);
-      const minY = Math.min(startY, endY);
-      const maxY = Math.max(startY, endY);
-      const minX = Math.min(startX, endX);
-      const maxX = Math.max(startY, endY);
+      const { isSelected, isOver } = checkSelectionRange(event.target);
 
       prevVotes.current = prevVotes.current.map((col, i) =>
         col.map((row, j) => {
-          const isOver = i >= minY && i <= maxY && j >= minX && j <= maxX;
-          return isOver ? isSelected : row;
+          return isOver(i, j) ? isSelected : row;
         }),
       );
     }
@@ -163,14 +121,41 @@ export const useVotingTimeTable = ({ vote, userId }: IuseVotingTimeTable) => {
   useEffect(() => {
     const dates = Object.values(vote);
 
+    //FIXME: 콘솔
+    console.log('dates:', dates);
+
+    const dragArray = getChildArray(dragAreaRef.current?.childNodes).map(
+      (column) => getChildArray(column.childNodes),
+    );
+
+    const voteArray = getChildArray(voteAreaRef.current?.childNodes).map(
+      (column) => getChildArray(column.childNodes),
+    );
+
+    //FIXME: 콘솔
+    console.log(voteArray);
+
     dates.forEach((timeMap, i) => {
       const times = Object.values(timeMap);
       if (!prevVotes.current[i]) {
         prevVotes.current[i] = [];
       }
-      for (let j = 0; j < times.length; j++) {
-        prevVotes.current[i][j] = times[j].some(({ id }) => userId === id);
-      }
+      times.forEach((users, j) => {
+        prevVotes.current[i][j] = users.some(({ id }) => userId === id);
+
+        const myNode = dragArray[i][j];
+
+        if (myNode instanceof HTMLDivElement) {
+          myNode.classList.toggle('selected', prevVotes.current[i][j]);
+        }
+
+        const voteNode = voteArray[i][j];
+
+        if (voteNode instanceof HTMLDivElement) {
+          const voteCount = users.filter(({ id }) => userId !== id).length;
+          voteNode.classList.add(`voted-${voteCount}`);
+        }
+      });
     });
   }, []);
 
@@ -181,5 +166,23 @@ export const useVotingTimeTable = ({ vote, userId }: IuseVotingTimeTable) => {
     onMouseLeave,
   });
 
-  return { dragAreaRef, dragItemsRef, voteItemsRef };
+  return { dragAreaRef, voteAreaRef };
+};
+
+/* utils */
+const isTargetContains = (
+  event: MouseEvent,
+  dragArea: HTMLDivElement | null,
+): event is MouseEvent & { target: HTMLDivElement } => {
+  return Boolean(
+    event.target instanceof HTMLDivElement &&
+      event.target.hasAttribute('data-time') &&
+      dragArea?.contains(event.target as Node),
+  );
+};
+
+const getChildArray = (nodes: NodeListOf<ChildNode> | undefined) => {
+  const result: ChildNode[] = [];
+  nodes?.forEach((el) => result.push(el));
+  return result;
 };

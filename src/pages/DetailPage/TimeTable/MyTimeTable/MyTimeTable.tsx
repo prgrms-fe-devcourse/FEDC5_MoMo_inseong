@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { RefObject, forwardRef, useImperativeHandle, useRef } from 'react';
+import { forwardRef } from 'react';
 import { IVote } from '../TimeTable';
 
 interface MyTimeTableProps {
@@ -7,35 +7,12 @@ interface MyTimeTableProps {
   vote: IVote;
 }
 
-export interface IMyTimeTableRefs {
-  dragAreaRef: RefObject<HTMLDivElement>;
-  dragItemsRef: RefObject<HTMLDivElement[][]>;
-}
-
-export const MyTimeTable = forwardRef(
-  ({ meetDate, vote }: MyTimeTableProps, refs) => {
-    const dragAreaRef = useRef<HTMLDivElement>(null);
-    const dragItemsRef = useRef<HTMLDivElement[][]>(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      Array(meetDate.length)
-        .fill(null)
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        .map(() => Array(Object.keys(vote[meetDate[0]]).length).fill(null)),
-    );
-
-    useImperativeHandle(refs, () => ({
-      dragAreaRef: dragAreaRef.current,
-      dragItemsRef: dragItemsRef.current,
-    }));
-
+export const MyTimeTable = forwardRef<HTMLDivElement, MyTimeTableProps>(
+  ({ meetDate, vote }, ref) => {
     return (
       <StTable
-        ref={dragAreaRef}
-        onClick={() =>
-          console.log(
-            dragAreaRef.current !== null && dragAreaRef.current.onmousedown,
-          )
-        }>
+        ref={ref}
+        onClick={() => console.log(ref)}>
         {meetDate.map((date, i) => (
           <StTableColumn
             key={date}
@@ -43,12 +20,8 @@ export const MyTimeTable = forwardRef(
             {Object.entries(vote[date]).map(([time, users], j) => (
               <StCell
                 key={date + time}
-                ref={(element) => {
-                  dragItemsRef.current[i][j] = element as HTMLDivElement;
-                }}
-                // onClick={() =>
-                //   console.log(dragItemsRef.current[i][j].onmousedown)
-                // }
+                data-col={i}
+                data-row={j}
                 data-time={time}
                 data-users={users.map(({ fullName }) => fullName).join(' ')}
               />
@@ -61,6 +34,7 @@ export const MyTimeTable = forwardRef(
 );
 
 const StTable = styled.div`
+  padding: 36px 16px 16px 36px;
   display: flex;
   flex-direction: row;
 `;
@@ -68,10 +42,54 @@ const StTable = styled.div`
 const StTableColumn = styled.div`
   display: flex;
   flex-direction: column;
+  /* 
+  &:first-child :nth-child(2n + 2) {
+    &::before {
+      font-size: 12px;
+      position: absolute;
+      display: block;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: orange;
+    }
+    border-color: red;
+  } */
 `;
 
 const StCell = styled.div`
-  border: 1px solid black;
-  padding: 10px;
+  position: relative;
+  background-color: rgb(255, 222, 222);
+  border: 1px solid rgb(82, 157, 255);
+  border-radius: 4px;
+  padding: 6px 16px;
   cursor: pointer;
+
+  /* :first-of-type::before {
+    content: 'gd';
+  } */
+
+  /* :first::before {
+    content: 'gd';
+  }
+
+  :first-child::before {
+    content: 'gd';
+  } */
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.beige};
+    border-color: whitesmoke;
+    box-shadow: 0 0 2px 1px olive;
+  }
+
+  &.selected {
+    &:hover {
+      filter: brightness(120%);
+      border-color: ${({ theme }) => theme.colors.beige};
+      box-shadow: 0 0 2px 1px aquamarine;
+    }
+    background-color: ${({ theme }) => theme.colors.primaryBlue.default};
+  }
 `;

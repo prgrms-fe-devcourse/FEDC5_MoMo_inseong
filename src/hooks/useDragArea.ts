@@ -45,10 +45,9 @@ export const useDragArea = ({
   }, []);
 
   useEffect(() => {
-    const dragAreaElement = dragAreaRef.current;
-    if (dragAreaElement) {
-      dragAreaElement.addEventListener('mousedown', handleMouseDown);
-      dragAreaElement.addEventListener('mouseleave', handleMouseLeave);
+    if (dragAreaRef.current) {
+      dragAreaRef.current.addEventListener('mousedown', handleMouseDown);
+      dragAreaRef.current.addEventListener('mouseleave', handleMouseLeave);
 
       // 마우스 이동과 마우스 뗄 때 이벤트 리스너를 전역(window)에 추가합니다.
       window.addEventListener('mousemove', handleMouseMove);
@@ -57,9 +56,9 @@ export const useDragArea = ({
 
     // 컴포넌트가 언마운트될 때 이벤트 리스너를 정리합니다.
     return () => {
-      if (dragAreaElement) {
-        dragAreaElement.removeEventListener('mousedown', handleMouseDown);
-        dragAreaElement.removeEventListener('mouseleave', handleMouseLeave);
+      if (dragAreaRef.current) {
+        dragAreaRef.current.removeEventListener('mousedown', handleMouseDown);
+        dragAreaRef.current.removeEventListener('mouseleave', handleMouseLeave);
       }
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);

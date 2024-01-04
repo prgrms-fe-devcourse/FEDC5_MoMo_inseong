@@ -1,12 +1,8 @@
 // import styled from '@emotion/styled';
 import styled from '@emotion/styled';
-import { useCallback } from 'react';
 import { useVotingTimeTable } from '../hooks/useVotingTimeTable';
-import { IMyTimeTableRefs, MyTimeTable } from './MyTimeTable/MyTimeTable';
-import {
-  IVotedTimeTableRefs,
-  VotedTimeTable,
-} from './VotedTimeTable/VotedTimeTable';
+import { MyTimeTable } from './MyTimeTable/MyTimeTable';
+import { VotedTimeTable } from './VotedTimeTable/VotedTimeTable';
 
 interface IVotedUser {
   id: string;
@@ -28,39 +24,20 @@ export interface TimeTableProps {
 }
 
 export const TimeTable = ({ meetDate, vote, userId }: TimeTableProps) => {
-  const { dragAreaRef, dragItemsRef, voteItemsRef } = useVotingTimeTable({
+  const { dragAreaRef, voteAreaRef } = useVotingTimeTable({
     vote,
     userId,
   });
 
-  const myTimeTableRef = useCallback(
-    (node: IMyTimeTableRefs) => {
-      if (node !== null) {
-        node.dragAreaRef = dragAreaRef;
-        node.dragItemsRef = dragItemsRef;
-      }
-    },
-    [dragAreaRef, dragItemsRef],
-  );
-
-  const votedTimeTableRef = useCallback(
-    (node: IVotedTimeTableRefs) => {
-      if (node !== null) {
-        node.voteItemsRef = voteItemsRef;
-      }
-    },
-    [voteItemsRef],
-  );
-
   return (
     <StContainer>
       <MyTimeTable
-        ref={myTimeTableRef}
+        ref={dragAreaRef}
         meetDate={meetDate}
         vote={vote}
       />
       <VotedTimeTable
-        ref={votedTimeTableRef}
+        ref={voteAreaRef}
         meetDate={meetDate}
         vote={vote}
       />
