@@ -1,5 +1,9 @@
 import styled from '@emotion/styled';
+import { useState } from 'react';
+import { CommentRegister } from '@/pages/DetailPage/components/CommentRegister';
 import { GREY, LIGHT_GREY } from '@/style/colorConstants';
+import { Icon } from '@common/Icon/Icon';
+import { Profile } from '@common/Profile/Profile';
 
 interface CommentProps {
   author: string;
@@ -7,6 +11,7 @@ interface CommentProps {
   createdAt: string;
   comment: string;
   isMine: boolean;
+  _id: string;
 }
 
 export const Comment = ({
@@ -15,80 +20,110 @@ export const Comment = ({
   createdAt,
   comment,
   isMine,
+  _id,
 }: CommentProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+
+  const onEditClick = () => {
+    setIsEditing(!isEditing);
+  };
+  const onDeleteClick = () => {
+    const isCommentDelete = confirm('댓글을 삭제하시겠습니까?');
+    if (!isCommentDelete) return;
+    alert('삭제되었습니다.');
+  };
+
   return (
     <StCommentContainer>
-      <StCommentInfo>
-        {/* StProfileImage, StProfileAuthor는 Profile 컴포넌트로 대체할 부분 */}
-        <StProfileImage
-          src={image}
-          alt={author + '의 프로필 사진'}
+      <StCommentWrapper>
+        <StCommentedUser>
+          <Profile
+            image={image}
+            fullName={author}
+            imageSize={32}
+            fontSize={16}
+            _id={_id}
+          />
+          <StCreatedAt>{`(${createdAt})`}</StCreatedAt>
+        </StCommentedUser>
+
+        {isMine && (
+          <StCommentedManage>
+            <Icon
+              onIconClick={onEditClick}
+              name="edit-3"
+              size={18}
+            />
+            <Icon
+              onIconClick={onDeleteClick}
+              name="x"
+              size={18}
+            />
+          </StCommentedManage>
+        )}
+      </StCommentWrapper>
+
+      {isEditing ? (
+        <CommentRegister
+          width={64}
+          height={28}
+          mode="edit"
+          defaultValue={comment}
         />
-        <StProfileAuthor>{author}</StProfileAuthor>
-
-        <StCreatedAt>{`(${createdAt})`}</StCreatedAt>
-
-        {/* StIcon은 Icon 컴포넌트로 대체할 부분 */}
-        {isMine && <StIcon>X</StIcon>}
-      </StCommentInfo>
-      <StCommentMessage>
-        <pre>{comment}</pre>
-      </StCommentMessage>
+      ) : (
+        <StCommentMessage>
+          <pre>{comment}</pre>
+        </StCommentMessage>
+      )}
     </StCommentContainer>
   );
 };
 
 const StCommentContainer = styled.div`
-  width: 600px;
+  border: 2px solid green;
   padding: 16px;
 `;
 
-const StCommentInfo = styled.div`
+const StCommentWrapper = styled.div`
   display: flex;
-  position: relative;
+  align-items: center;
 `;
 
-const StProfileImage = styled.img`
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  cursor: pointer;
-`;
-
-const StProfileAuthor = styled.span`
-  overflow: hidden;
-  max-width: 300px;
-  margin-left: 8px;
-  font-size: 16px;
-  white-space: nowrap; // 텍스트를 한 줄로 표시
-  text-overflow: ellipsis; // 넘치는 텍스트를 ...로 표시
-  cursor: pointer;
+const StCommentedUser = styled.div`
+  width: 80%;
+  display: flex;
+  align-items: center;
 `;
 
 const StCreatedAt = styled.span`
-  margin: 4px 0 0 8px; // 날짜 정보는 Author 보다는 조금 아래에 위치하는게 좋아보입니다.
+  margin: 2px 0 0 8px;
   color: ${GREY};
   font-size: 12px;
 `;
 
-const StIcon = styled.i`
-  position: absolute;
-  top: 0%;
-  right: 0%;
-  font-size: 16px;
-  transform: translate(-50%, 0);
-  cursor: pointer;
+const StCommentedManage = styled.div`
+  width: 20%;
+  text-align: right;
+  & span:first-of-type {
+    margin-right: 10px;
+  }
 `;
 
 const StCommentMessage = styled.div`
-  width: calc(100% - 32px);
+  border: 2px solid crimson;
   margin-top: 8px;
-  margin-left: 32px;
+  margin-left: 42px;
+  width: calc(100% - 42px);
   padding: 16px;
   border-radius: 8px;
   background-color: ${LIGHT_GREY};
 
-  & span {
-    overflow: hidden;
+  & pre {
+    white-space: pre-wrap;
   }
 `;
+
+// const StCommentEdit = styled.div`
+//   display: flex;
+//   align-items: center;
+// `;
