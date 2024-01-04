@@ -12,7 +12,7 @@ interface IconProps {
   style?: CSSProperties;
   showBackground?: boolean;
   isFill?: boolean;
-  onIconClick: () => void;
+  onIconClick?: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 interface IStIconWrapper {
@@ -46,7 +46,7 @@ export const Icon = ({
     stroke,
     width: size,
     height: size,
-    fill: isFill ? '' : 'transparent',
+    fill: isFill ? '#FF3040' : 'transparent',
   };
 
   const icon = icons[iconName];
@@ -67,7 +67,7 @@ export const Icon = ({
   );
 };
 
-const StIconWrapper = styled.i<IStIconWrapper>`
+const StIconWrapper = styled.span<IStIconWrapper>`
   display: inline-flex;
   justify-content: center;
   align-items: center;

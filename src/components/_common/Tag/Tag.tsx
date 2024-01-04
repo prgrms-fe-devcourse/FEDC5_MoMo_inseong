@@ -13,15 +13,7 @@ interface TagProps {
   backgroundColor?: string;
 }
 
-interface IStTag {
-  height: number;
-  fontSize: number;
-  padding: number;
-  marginRight: number;
-  color: string;
-  hasMouseCursor: boolean;
-  backgroundColor: string;
-}
+type StTagType = Required<Omit<TagProps, 'name'>>;
 
 export const Tag = ({
   name,
@@ -55,9 +47,8 @@ const StTagContainer = styled.div`
   align-items: center;
 `;
 
-const StTag = styled.div<IStTag>`
+const StTag = styled.div<StTagType>`
   display: flex;
-  justify-content: center;
   align-items: center;
   height: ${({ height }) => height}px;
   margin-right: ${({ marginRight }) => marginRight}px;
@@ -65,6 +56,7 @@ const StTag = styled.div<IStTag>`
   background-color: ${({ backgroundColor }) => backgroundColor};
   border-radius: 8px;
   font-size: ${({ fontSize }) => fontSize}px;
+  line-height: ${({ height }) => height}px;
   letter-spacing: 0.96px;
   color: ${({ color }) => color};
   cursor: ${({ hasMouseCursor }) => (hasMouseCursor ? 'pointer' : 'inherit')};

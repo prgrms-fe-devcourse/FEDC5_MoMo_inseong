@@ -1,15 +1,16 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
-import { LIGHT_GREY } from '@/style/colorConstants';
+import { CSSProperties, useState } from 'react';
+import { theme } from '@/style/theme';
 
 interface ProfileProps {
   image: string;
   fullName: string;
   imageSize?: number;
   fontSize?: number;
-  width?: number;
   _id: string;
-  status: 'Profile' | 'ProfileImage' | 'ProfileName';
+  status?: 'Profile' | 'ProfileImage' | 'ProfileName';
+  maxWidth?: number;
+  style?: CSSProperties;
 }
 
 interface IImageStyle {
@@ -23,8 +24,8 @@ export const Profile = ({
   imageSize = 48,
   fontSize = 18,
   _id,
-  width = 300,
   status = 'Profile',
+  maxWidth = 300,
   ...props
 }: ProfileProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -36,30 +37,33 @@ export const Profile = ({
 
   return (
     <StProfileContainer
-      width={width}
       onClick={handleUserClick}
-      {...props}>
+      {...props}
+      style={{ ...props.style }}>
       {(status === 'Profile' || status === 'ProfileImage') && (
         <StProfileImage
           image={image}
           imageSize={imageSize}
-          style={{ backgroundColor: isLoaded ? '' : LIGHT_GREY }}
+          style={{ backgroundColor: isLoaded ? '' : theme.colors.grey.light }}
           onLoad={() => setIsLoaded(true)}
         />
       )}
       {(status === 'Profile' || status === 'ProfileName') && (
-        <StProfileName fontSize={fontSize}>{fullName}</StProfileName>
+        <StProfileName
+          fontSize={fontSize}
+          maxWidth={maxWidth}>
+          {fullName}
+        </StProfileName>
       )}
     </StProfileContainer>
   );
 };
 
-const StProfileContainer = styled.div<{ width: number }>`
+const StProfileContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  width: ${({ width }) => width}px;
 `;
 
 const StProfileImage = styled.div<IImageStyle>`
@@ -67,12 +71,17 @@ const StProfileImage = styled.div<IImageStyle>`
   background-size: cover;
   background-position: center;
   border-radius: 50%;
-  border: 1px solid ${LIGHT_GREY};
+  border: 1px solid ${theme.colors.grey.light};
   width: ${({ imageSize }) => imageSize}px;
   height: ${({ imageSize }) => imageSize}px;
   transition: opacity 0.3s ease-in-out;
 `;
 
-const StProfileName = styled.span<{ fontSize: number }>`
+const StProfileName = styled.span<{ fontSize: number; maxWidth: number }>`
   font-size: ${({ fontSize }) => fontSize}px;
+  line-height: ${({ fontSize }) => fontSize + 8}px;
+  max-width: ${({ maxWidth }) => maxWidth}px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
