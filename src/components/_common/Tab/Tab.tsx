@@ -6,7 +6,7 @@ export interface TabProps {
   width: number;
   isActive: boolean;
   isJustify: boolean;
-  handleTabClick: () => void;
+  handleTabClick?: () => void;
 }
 export const Tab = ({
   label,

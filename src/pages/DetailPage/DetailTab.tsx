@@ -1,32 +1,31 @@
 import styled from '@emotion/styled';
+import { MouseEvent } from 'react';
 import { DUMMY_DATA } from './components/DummyData';
 import { Tab } from '@common/Tab/Tab';
 
 interface DetailTabProps {
   isPostPage: boolean;
-  handleTabClick: () => void;
+  handleTabClick: (e: MouseEvent<HTMLElement>) => void;
 }
 
 export const DetailTab = ({ isPostPage, handleTabClick }: DetailTabProps) => {
   return (
     <>
       <StTabContainer>
-        <StTabWrapper>
+        <StTabWrapper onClick={handleTabClick}>
           <Tab
             label={DUMMY_DATA.labelPost}
             width={DUMMY_DATA.tabWidth}
             isActive={isPostPage}
             isJustify={true}
-            handleTabClick={handleTabClick}
           />
         </StTabWrapper>
-        <StTabWrapper>
+        <StTabWrapper onClick={handleTabClick}>
           <Tab
             label={DUMMY_DATA.labelTimeTable}
             width={DUMMY_DATA.tabWidth}
             isActive={!isPostPage}
             isJustify={true}
-            handleTabClick={handleTabClick}
           />
         </StTabWrapper>
       </StTabContainer>
