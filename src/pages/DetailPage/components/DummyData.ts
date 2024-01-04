@@ -31,4 +31,7 @@ export const DUMMY_DATA = {
   // image, 여기서도 사용 함.
   tags: ['보드게임', '치킨', '모각코'],
   mentions: dummyMentionUser,
+
+  // Comment
+  isMine: true,
 };
