@@ -1,4 +1,4 @@
-const dummyMentionUser = Array(20)
+const dummyMentionUser = Array(5)
   .fill('user')
   .map((v, i) => {
     return {
