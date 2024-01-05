@@ -49,9 +49,7 @@ export const CommentRegister = ({
     </StCommentRegisterContainer>
   );
 };
-const StCommentRegisterContainer = styled.div<
-  Pick<CommentRegisterProps, 'mode'>
->`
+const StCommentRegisterContainer = styled.div<{ mode: 'create' | 'edit' }>`
   display: ${(props) => (props.mode === 'edit' ? 'block' : 'flex')};
   margin-left: ${(props) => (props.mode === 'edit' ? 30 : 0)}px;
   align-items: center;
