@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { customAxios, customAxiosJWT } from './customAxios';
-import { AxiosError, AxiosResponse, RawAxiosRequestConfig } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 export const getApi = async (url: string) => {
   try {
@@ -12,7 +12,7 @@ export const getApi = async (url: string) => {
   }
 };
 export const useGetApi = <T>(url: string) => {
-  const [response, setResponse] = useState<AxiosResponse<T>>('');
+  const [response, setResponse] = useState<AxiosResponse<T>>();
   const [error, setError] = useState<AxiosError>(); //
   const [isLoading, setIsLoading] = useState(true);
 

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { ScheduledCards } from './ScheduledCards';
+import { ScheduledMain } from './ScheduledMain';
 import { WhenCards } from './WhenCards';
 import { Tab } from '@common/Tab/Tab';
 
@@ -24,7 +24,7 @@ export const MainArea = () => {
           handleTabClick={() => setSelectedTab(1)}
         />
       </StTabsWrapper>
-      <div>{selectedTab === 0 ? <WhenCards /> : <ScheduledCards />}</div>
+      <div>{selectedTab === 0 ? <WhenCards /> : <ScheduledMain />}</div>
     </div>
   );
 };
