@@ -19,7 +19,8 @@ export const CreateMeetingModal = ({
   ...props
 }: CreateMeetingModalProps): ReactElement => {
   const [count, setCount] = useState(1);
-  const ref = useClickAway(() => {
+
+  const modalRef = useClickAway(() => {
     if (onClose) onClose();
   }) as React.MutableRefObject<HTMLDivElement | null>;
 
@@ -36,7 +37,7 @@ export const CreateMeetingModal = ({
         />
       </StClose>
       <StModalContainer
-        ref={ref}
+        ref={modalRef}
         {...props}>
         <StTitle>모임</StTitle>
         <StForm>
@@ -102,8 +103,8 @@ const StModalContainer = styled.div`
 
   top: 50%;
   left: 50%;
-  height: 800px;
-  width: 600px;
+  height: 85%;
+  width: 32%;
   border-radius: 8px;
 
   transform: translate(-50%, -50%);
@@ -124,8 +125,8 @@ const StModalContainer = styled.div`
 
 const StClose = styled.div`
   position: fixed;
-  top: calc(50% - 390px);
-  left: calc(50% + 270px);
+  top: 9%;
+  left: 64%;
   cursor: pointer;
   z-index: 1001;
 `;
