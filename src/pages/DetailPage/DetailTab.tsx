@@ -16,20 +16,22 @@ export const DetailTab = ({
   return (
     <>
       <StTabContainer>
-        <StTabWrapper onClick={handlePostClick}>
+        <StTabWrapper>
           <Tab
             label={DUMMY_DATA.labelPost}
             width={DUMMY_DATA.tabWidth}
             isActive={pageNumber === 1}
             isJustify={true}
+            handleTabClick={handlePostClick}
           />
         </StTabWrapper>
-        <StTabWrapper onClick={handleTimeTableClick}>
+        <StTabWrapper>
           <Tab
             label={DUMMY_DATA.labelTimeTable}
             width={DUMMY_DATA.tabWidth}
             isActive={pageNumber === 2}
             isJustify={true}
+            handleTabClick={handleTimeTableClick}
           />
         </StTabWrapper>
       </StTabContainer>
