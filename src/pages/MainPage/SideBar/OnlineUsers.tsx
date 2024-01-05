@@ -50,7 +50,7 @@ export const StSideBlockWrapper = styled.div`
   box-sizing: border-box;
   border: 1px solid ${({ theme }) => theme.colors.grey.bright};
   padding: 10px 16px;
-  position: sticky;
+  position: fixed;
   top: 80px;
 `;
 export const StSideTitle = styled.div`
