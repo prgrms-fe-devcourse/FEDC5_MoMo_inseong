@@ -1,87 +1,99 @@
 // 이날모일래 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
-import { useState } from 'react';
-import { postsChannelChannelId } from './CardsDummy';
+import { useEffect, useMemo, useState } from 'react';
 import { IPost, IPostTitleCustom } from '@/api/_types/apiModels';
+import { getApi } from '@/api/apis';
 import { Button } from '@common/Button/Button';
 import { Card } from '@common/Card/Card';
 import { Icon } from '@common/Icon/Icon';
 
 export const ScheduledCards = () => {
-  const allScheduledPosts: IPost[] = postsChannelChannelId;
-
   const [page, setPage] = useState(0); // 오늘주0, 이후 +7, -7 씩
-  console.log(page);
 
-  const today = new Date('2022-12-21 11:20:20');
+  const today = new Date('2022-12-22 11:20:20');
   const thisWeek = new Array(7)
     .fill(0)
     .map((_, i) =>
       dateFormat(new Date(new Date(today).setDate(today.getDate() + i + page))),
     );
 
-  console.log(thisWeek);
   const days = ['월', '화', '수', '목', '금', '토', '일'];
+  const [cardsOfDay, setCardsOfDay] = useState<IPost[][]>([]);
+  console.log(cardsOfDay);
 
+  // 여기 async함수를 또 만들어야만 할까요... useEffect에선 안될까요
+  const getCardsOfDay = async (url: string) => {
+    return await getApi(url);
+  };
+  useEffect(() => {
+    const getCardsOfWeek = async () => {
+      for (const day of thisWeek) {
+        const results = await getCardsOfDay(
+          `/search/all/meetDate....${day.slice(0, 10)}`,
+        );
+        setCardsOfDay((prev) => [...prev, results?.data]);
+      }
+    };
+    void getCardsOfWeek();
+  }, []);
   // TODO : 포스트 검색 api 이용해서 해당 요일 값 가져오자아
   return (
     <>
       <StScheduledWrapper>
-        {thisWeek.map((date, i) => (
-          <div
-            key={i}
-            style={{ display: 'flex', gap: '20px', marginBottom: '15px' }}>
-            <StDayWrapper>
-              <div>{date.slice(5, 10)}</div>
-              <div>{days[new Date(date).getDay()]}</div>
-            </StDayWrapper>
-            <StCardsWrapper>
-              {allScheduledPosts.map((post, idx) => {
-                // TODO : 디테일 정보 요청
-                // const postDetail = customaxios.get(post ~~)
-                const postDetail = JSON.parse(post.title) as IPostTitleCustom; //  ....
-                const {
-                  postTitle,
-                  cardId,
-                  status,
-                  tags,
-                  meetDate,
-                  author,
-                  isLiked,
-                  contents,
-                  mentions,
-                  peopleLimit,
-                  vote,
-                } = postDetail;
-                return (
-                  <Card
-                    key={idx}
-                    postTitle={postTitle}
-                    contents={contents}
-                    mentions={mentions}
-                    peopleLimit={peopleLimit}
-                    cardId={cardId}
-                    author={author}
-                    status={status}
-                    tags={tags}
-                    vote={vote}
-                    meetDate={meetDate}
-                    isLiked={isLiked}
-                    handleCardClick={(cardId) => console.log(cardId)}
-                    image={'image' in post ? (post.image as string) : ''}
+        {cardsOfDay.length === 7 &&
+          thisWeek.map((date, i) => (
+            <div
+              key={i}
+              style={{ display: 'flex', gap: '20px', marginBottom: '15px' }}>
+              <StDayWrapper>
+                <div>{date.slice(5, 10)}</div>
+                <div>{days[new Date(date).getDay()]}</div>
+              </StDayWrapper>
+              <StCardsWrapper>
+                {cardsOfDay[i].map((post: IPost, idx) => {
+                  const postDetail = JSON.parse(post.title) as IPostTitleCustom; //  ....
+                  const {
+                    postTitle,
+                    cardId,
+                    status,
+                    tags,
+                    meetDate,
+                    author,
+                    isLiked,
+                    contents,
+                    mentions,
+                    peopleLimit,
+                    vote,
+                  } = postDetail;
+                  return (
+                    <Card
+                      key={idx}
+                      postTitle={postTitle}
+                      contents={contents}
+                      mentions={mentions}
+                      peopleLimit={peopleLimit}
+                      cardId={cardId}
+                      author={author}
+                      status={status}
+                      tags={tags}
+                      vote={vote}
+                      meetDate={meetDate}
+                      isLiked={isLiked}
+                      handleCardClick={(cardId) => console.log(cardId)}
+                      image={'image' in post ? (post.image as string) : ''}
+                    />
+                  );
+                })}
+                <StAddWrapper>
+                  <Icon
+                    name="plus"
+                    size={20}
+                    onIconClick={() => console.log('모임생성 모달 연결')}
                   />
-                );
-              })}
-              <StAddWrapper>
-                <Icon
-                  name="plus"
-                  size={20}
-                  onIconClick={() => console.log('모임생성 모달 연결')}
-                />
-              </StAddWrapper>
-            </StCardsWrapper>
-          </div>
-        ))}
+                </StAddWrapper>
+              </StCardsWrapper>
+            </div>
+          ))}
       </StScheduledWrapper>
       <StButtonsWrapper>
         <Button
