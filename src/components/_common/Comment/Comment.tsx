@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { GREY, LIGHT_GREY } from '@/style/colorConstants';
 import { theme } from '@/style/theme';
@@ -15,7 +15,7 @@ interface CommentProps {
   comment: string;
   mode: 'readonly' | 'edit';
   isMine: boolean;
-  handleEditClick: () => void;
+  handleEditChange: () => void;
   handleDeleteClick?: () => void;
 }
 
@@ -27,20 +27,16 @@ export const Comment = ({
   isMine,
   mode,
   comment,
-  handleEditClick,
+  handleEditChange,
   handleDeleteClick,
 }: CommentProps) => {
   const [text, setText] = useState(comment);
   const [editText, setEditText] = useState('');
 
-  const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setEditText(e.target.value);
-  };
-
   const handleChangeBtnClick = () => {
     alert('수정되었습니다.');
     setText(editText);
-    handleEditClick();
+    handleEditChange();
   };
 
   return (
@@ -62,7 +58,7 @@ export const Comment = ({
           <StCommentedManage>
             {mode !== 'edit' && (
               <Icon
-                onIconClick={handleEditClick}
+                onIconClick={handleEditChange}
                 name="edit-3"
                 size={18}
               />
@@ -88,13 +84,13 @@ export const Comment = ({
             <TextareaAutosize
               className="CommentTextarea"
               cacheMeasurements
-              onChange={handleTextChange}
+              onChange={(e) => setEditText(e.target.value)}
               defaultValue={text}
             />
           </StTextarea>
           <StEditButtonWrapper>
             <Button
-              handleButtonClick={handleEditClick}
+              handleButtonClick={handleEditChange}
               label="취소"
               width={64}
               height={28}

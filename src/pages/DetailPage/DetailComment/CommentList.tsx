@@ -5,7 +5,7 @@ import { Comment } from '@common/Comment/Comment';
 export const CommentList = () => {
   const [mode, setMode] = useState<'readonly' | 'edit'>('readonly');
 
-  const handleEditClick = () => {
+  const handleEditChange = () => {
     mode === 'readonly' ? setMode('edit') : setMode('readonly');
   };
   const handleDeleteClick = () => {
@@ -23,7 +23,7 @@ export const CommentList = () => {
       isMine={DUMMY_DATA.isMine}
       mode={mode}
       comment={DUMMY_DATA.contents}
-      handleEditClick={handleEditClick}
+      handleEditChange={handleEditChange}
       handleDeleteClick={handleDeleteClick}
     />
   );
