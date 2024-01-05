@@ -1,15 +1,18 @@
 import styled from '@emotion/styled';
-import { MouseEvent, useState } from 'react';
+import { useState } from 'react';
+import { DetailComment } from './DetailComment/DetailComment';
 import { DetailMeetDescription } from './DetailMeetDescription';
 import { DetailPost } from './DetailPost/DetailPost';
 import { DetailTab } from './DetailTab';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 
 export const DetailPage = () => {
-  const [isPostPage, setIsPostPage] = useState(true);
-  const handleTabClick = (e: MouseEvent<HTMLElement>) => {
-    const { innerText } = e.currentTarget;
-    setIsPostPage(innerText === '본문' ? true : false);
+  const [pageNumber, setPageNumber] = useState(1);
+  const handlePostClick = () => {
+    setPageNumber(1);
+  };
+  const handleTimeTableClick = () => {
+    setPageNumber(2);
   };
 
   return (
@@ -19,12 +22,15 @@ export const DetailPage = () => {
         <DetailMeetDescription />
         {/* 탭 */}
         <DetailTab
-          isPostPage={isPostPage}
-          handleTabClick={handleTabClick}
+          pageNumber={pageNumber}
+          handlePostClick={handlePostClick}
+          handleTimeTableClick={handleTimeTableClick}
         />
         {/* 본문 내용 */}
-        <DetailPost isPostPage={isPostPage} />
+        <DetailPost pageNumber={pageNumber} />
         <hr />
+        {/* 댓글 */}
+        <DetailComment />
       </StDetailContainer>
     </StSideMarginWrapper>
   );

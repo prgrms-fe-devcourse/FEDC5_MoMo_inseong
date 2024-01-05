@@ -6,16 +6,16 @@ import { PostContents } from './PostContents';
 import { PostIcon } from './PostIcon';
 
 type DetailPostType = {
-  isPostPage: boolean;
+  pageNumber: number;
 };
 
-export const DetailPost = ({ isPostPage }: DetailPostType) => {
+export const DetailPost = ({ pageNumber }: DetailPostType) => {
   return (
     <>
       <StPostContainer>
         {/* Post or TimeTable*/}
-        {isPostPage && <PostContents />}
-        {!isPostPage && <DetailTimeTablePage />}
+        {pageNumber === 1 && <PostContents />}
+        {pageNumber === 2 && <DetailTimeTablePage />}
 
         {/* Badge */}
         {DUMMY_DATA.tags.length && (
