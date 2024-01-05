@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { Icon } from '../../../components/_common/Icon/Icon';
 import { DUMMY_DATA } from '../components/DummyData';
+import { Icon } from '@common/Icon/Icon';
 
 export const PostIcon = () => {
   const [isHeartClick, setIsHeartClick] = useState(false);
