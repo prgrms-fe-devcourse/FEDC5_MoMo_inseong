@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { GREY, LIGHT_GREY } from '@/style/colorConstants';
 import { theme } from '@/style/theme';
@@ -31,8 +31,16 @@ export const Comment = ({
   handleDeleteClick,
 }: CommentProps) => {
   const [text, setText] = useState(comment);
-  const handleTextChange = () => {
-    setText(text);
+  const [editText, setEditText] = useState('');
+
+  const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setEditText(e.target.value);
+  };
+
+  const handleChangeBtnClick = () => {
+    alert('수정되었습니다.');
+    setText(editText);
+    handleEditClick();
   };
 
   return (
@@ -80,17 +88,19 @@ export const Comment = ({
             <TextareaAutosize
               className="CommentTextarea"
               cacheMeasurements
-              value={text}
               onChange={handleTextChange}
+              defaultValue={text}
             />
           </StTextarea>
           <StEditButtonWrapper>
             <Button
+              handleButtonClick={handleEditClick}
               label="취소"
               width={64}
               height={28}
             />
             <Button
+              handleButtonClick={handleChangeBtnClick}
               label="수정"
               width={64}
               height={28}
@@ -103,12 +113,10 @@ export const Comment = ({
 };
 
 const StCommentContainer = styled.div`
-  border: 1px solid green;
   padding: 16px;
 `;
 
 const StCommentWrapper = styled.div`
-  border: 1px solid purple;
   display: flex;
   align-items: center;
 `;
@@ -134,7 +142,6 @@ const StCommentedManage = styled.div`
 `;
 
 const StCommentMessage = styled.div`
-  /* border: 1px solid crimson; */
   margin-top: 8px;
   margin-left: 42px;
   width: calc(100% - 42px);
@@ -166,7 +173,6 @@ const StTextarea = styled.div`
 `;
 
 const StEditButtonWrapper = styled.div`
-  border: 1px solid purple;
   display: flex;
   justify-content: flex-end;
   align-items: center;

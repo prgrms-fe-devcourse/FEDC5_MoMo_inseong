@@ -9,8 +9,8 @@ export const CommentList = () => {
     mode === 'readonly' ? setMode('edit') : setMode('readonly');
   };
   const handleDeleteClick = () => {
-    const isCommentDelete = confirm('댓글을 삭제하시겠습니까?');
-    if (!isCommentDelete) return;
+    const isDelete = confirm('댓글을 삭제하시겠습니까?');
+    if (!isDelete) return;
     alert('삭제되었습니다.');
   };
 
