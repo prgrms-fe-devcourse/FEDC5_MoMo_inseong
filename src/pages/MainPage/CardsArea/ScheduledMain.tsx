@@ -58,7 +58,6 @@ export const ScheduledMain = () => {
               width={100}
               height={36}
               color="NAVY"
-              disabled={page === 0}
             />
             <Button
               label="이번 주"

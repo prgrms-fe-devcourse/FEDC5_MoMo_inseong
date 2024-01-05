@@ -92,7 +92,7 @@ export const Card = (cardData: CardProps) => {
             />
             {tags.length > 1 && <span>...</span>}
           </StCardBottomTagsWrap>
-          {isLiked ? (
+          {!isLiked ? (
             <Icon
               name="heart"
               onIconClick={handleIconClick}
