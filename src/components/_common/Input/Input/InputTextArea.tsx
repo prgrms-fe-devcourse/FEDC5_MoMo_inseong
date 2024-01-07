@@ -1,22 +1,26 @@
 import styled from '@emotion/styled';
-import { CSSProperties } from 'react';
+import React, { CSSProperties } from 'react';
+import { theme } from '@/style/theme';
 
 interface InputProps {
   fontSize?: number;
-  width?: string | number;
-  placeholder: string;
+  placeholder?: string;
   style?: CSSProperties;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 export const InputTextArea = ({
   fontSize = 16,
-  width,
   placeholder,
+  value,
+  onChange,
   ...props
 }: InputProps) => {
   return (
     <StTextArea
-      width={width}
+      value={value}
+      onChange={onChange}
       fontSize={fontSize}
       placeholder={placeholder}
       {...props}
@@ -28,15 +32,16 @@ export const InputTextArea = ({
 const StTextArea = styled.textarea<InputProps>`
   border: none;
   outline: none;
-  width: 100%;
   min-height: 24px;
   font-size: ${({ fontSize }) => `${fontSize}px`};
-  width: ${({ width }) =>
-    width ? (typeof width === 'number' ? `${width}px` : width) : '100%'};
   resize: none;
   overflow-y: scroll;
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  ::placeholder {
+    color: ${theme.colors.grey.default};
   }
 `;

@@ -1,22 +1,26 @@
 import styled from '@emotion/styled';
-import { CSSProperties } from 'react';
+import React, { CSSProperties } from 'react';
+import { theme } from '@/style/theme';
 
 interface InputProps {
   fontSize?: number;
-  width?: string | number;
-  placeholder: string;
+  placeholder?: string;
   style?: CSSProperties;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const InputText = ({
   fontSize = 16,
-  width,
   placeholder,
+  value,
+  onChange,
   ...props
 }: InputProps) => {
   return (
     <StInputText
-      width={width}
+      value={value}
+      onChange={onChange}
       fontSize={fontSize}
       placeholder={placeholder}
       {...props}
@@ -28,7 +32,9 @@ export const InputText = ({
 const StInputText = styled.input<{ fontSize: number }>`
   border: none;
   outline: none;
-  width: 100%;
-  height: 24px;
   font-size: ${({ fontSize }) => `${fontSize}px`};
+
+  ::placeholder {
+    color: ${theme.colors.grey.default};
+  }
 `;
