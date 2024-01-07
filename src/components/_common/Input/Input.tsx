@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
-import { KeyboardEvent, useState } from 'react';
+import { CSSProperties, KeyboardEvent, useState } from 'react';
 import InputUpload from './InputUpload';
 import { LIGHT_GREY, PRIMARY_BLUE } from '@/style/colorConstants';
 import { Icon } from '@common/Icon/Icon';
 import { Tag } from '@common/Tag/Tag';
 
 interface InputProps {
+  type?: string;
   fontSize?: number;
   width?: string | number;
   placeholder: string;
@@ -14,6 +15,7 @@ interface InputProps {
   tags?: string[];
   hasImage?: boolean;
   image?: string;
+  style?: CSSProperties;
 }
 
 interface IInputStyle {
@@ -22,6 +24,7 @@ interface IInputStyle {
 }
 
 export const Input = ({
+  type = 'text',
   fontSize = 16,
   width = 300,
   placeholder,
@@ -42,6 +45,9 @@ export const Input = ({
     if (event.key === 'Enter' && inputValue.trim() && hasTags) {
       setTags([...tags, inputValue.trim()]);
       setInputValue('');
+    } else if (event.key === 'Enter') {
+      setInputValue('');
+      // TODO : 검색api요청하고, 결과값으로 리덕스에 검색결과 상태 갱신
     }
   };
 
@@ -66,6 +72,7 @@ export const Input = ({
     <StInputContainer
       width={width}
       hasTags={hasTags}
+      style={{ ...props.style }}
       {...props}>
       {isTextarea ? (
         <StTextArea
@@ -77,6 +84,7 @@ export const Input = ({
         />
       ) : (
         <StInputText
+          type={type}
           fontSize={fontSize}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
@@ -138,7 +146,6 @@ const StInputContainer = styled.div<IInputStyle>`
   position: relative;
   border: 1px solid ${LIGHT_GREY};
   border-radius: 8px;
-  min-height: 50px;
   padding: 15px 24px;
   width: ${({ width, hasTags }) =>
     hasTags ? '100%' : typeof width === 'number' ? `${width}px` : width};
@@ -154,6 +161,7 @@ const StInputText = styled.input<{ fontSize: number }>`
   width: 100%;
   height: 24px;
   font-size: ${({ fontSize }) => `${fontSize}px`};
+  background: transparent;
 `;
 
 const StTextArea = styled.textarea<{ fontSize: number }>`
