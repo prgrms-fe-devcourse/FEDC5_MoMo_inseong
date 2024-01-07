@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import React from 'react';
 import { CSSProperties, useEffect, useState } from 'react';
 import { LIGHT_GREY } from '@/style/colorConstants';
 import { Buffer } from 'buffer';
@@ -47,7 +46,7 @@ export const Icon = ({
     stroke,
     width: size,
     height: size,
-    fill: isFill ? '' : 'transparent',
+    fill: isFill ? '#FF3040' : 'transparent',
   };
 
   const icon = icons[iconName];
