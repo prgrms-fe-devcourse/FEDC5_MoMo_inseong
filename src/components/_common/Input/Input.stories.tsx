@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Input } from './Input';
+import { InputTest } from './InputTest';
 
 interface InputProps {
   fontSize?: number;
@@ -32,35 +33,65 @@ const meta: Meta<typeof Input> = {
 
 export default meta;
 
-export const Default: StoryObj<InputProps> = {
-  args: {
-    placeholder: 'placeholder',
-  },
+// export const Default: StoryObj<InputProps> = {
+//   args: {},
+// };
+
+// export const TagsInput: StoryObj<InputProps> = {
+//   args: {
+//     hasTags: true,
+//     tags: [
+//       'Tag1',
+//       'Tag2',
+//       'Tag3',
+//       'Tag4',
+//       'Tag5',
+//       'Tag6',
+//       'Tag7',
+//       'Tag8',
+//       'Tag9',
+//       'Tag10',
+//     ],
+//   },
+// };
+
+// export const ImageInput: StoryObj<InputProps> = {
+//   args: {
+//     hasImage: true,
+//     image: 'https://picsum.photos/200',
+//   },
+// };
+
+export const DefaultTest: StoryObj<InputProps> = {
+  render: () => (
+    <InputTest>
+      <InputTest.Text placeholder="입력" />
+    </InputTest>
+  ),
 };
 
-export const TagsInput: StoryObj<InputProps> = {
-  args: {
-    placeholder: 'placeholder',
-    hasTags: true,
-    tags: [
-      'Tag1',
-      'Tag2',
-      'Tag3',
-      'Tag4',
-      'Tag5',
-      'Tag6',
-      'Tag7',
-      'Tag8',
-      'Tag9',
-      'Tag10',
-    ],
-  },
+export const TextAreaTest: StoryObj<InputProps> = {
+  render: () => (
+    <InputTest>
+      <InputTest.TextArea placeholder="입력" />
+    </InputTest>
+  ),
 };
 
-export const ImageInput: StoryObj<InputProps> = {
-  args: {
-    placeholder: 'placeholder',
-    hasImage: true,
-    image: 'https://picsum.photos/200',
-  },
+export const TagsInputTest: StoryObj<InputProps> = {
+  render: () => (
+    <InputTest>
+      <InputTest.Text placeholder="입력" />
+      <InputTest.Tags tags={['1', '2', '3']} />
+    </InputTest>
+  ),
+};
+
+export const ImageInputTest: StoryObj<InputProps> = {
+  render: () => (
+    <InputTest>
+      <InputTest.Text placeholder="입력" />
+      <InputTest.Image image="https://picsum.photos/200" />
+    </InputTest>
+  ),
 };
