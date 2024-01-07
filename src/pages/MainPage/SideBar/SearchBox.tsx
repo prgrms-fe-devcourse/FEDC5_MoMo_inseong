@@ -4,7 +4,7 @@ import {
   StSideBlockWrapper,
   StSideTitle,
 } from './OnlineUsers';
-import searchDummy from './SearchedPostDummy.json';
+import { searchDummy } from './SearchedPostDummy';
 import { IPost, IUser } from '@/api/_types/apiModels';
 import { theme } from '@/style/theme';
 import { Icon } from '@common/Icon/Icon';
@@ -16,7 +16,7 @@ export const SearchBox = () => {
   const dummy: (IUser | IPost)[] = searchDummy;
 
   return (
-    <StSideBlockWrapper style={{ marginTop: '15px' }}>
+    <StSideBlockWrapper style={{ marginTop: '15px', top: '357px' }}>
       <StSideTitle>검색 결과</StSideTitle>
       <div style={{ position: 'relative' }}>
         <StSearchIconWrapper>
@@ -25,7 +25,6 @@ export const SearchBox = () => {
         <Input
           placeholder="검색"
           width="100%"
-          height={19}
           fontSize={14}
           style={{
             padding: '8px 36px',

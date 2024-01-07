@@ -1,13 +1,40 @@
+import { useEffect, useState } from 'react';
 import { customAxios, customAxiosJWT } from './customAxios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 export const getApi = async (url: string) => {
   try {
     const res = await customAxios().get(url);
-    console.log('get api result: ', res);
+    // console.log(url, 'get api result: ', res);
     return res; //{data: Array(1), status: 200, statusText: '', headers: AxiosHeaders, config: {…},}
   } catch (e) {
     console.error(e);
   }
+};
+export const useGetApi = <T>(url: string) => {
+  const [response, setResponse] = useState<AxiosResponse<T>>();
+  const [error, setError] = useState<AxiosError>(); //
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchApi = async (url: string) => {
+    await customAxios()
+      .get(url)
+      .then((res) => {
+        console.log(res);
+        setResponse(res);
+      })
+      .catch((error) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        setError(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  useEffect(() => {
+    void fetchApi(url);
+  }, [url]);
+  return { response, error, isLoading };
 };
 export const postApi = async (url: string, data: object) => {
   try {

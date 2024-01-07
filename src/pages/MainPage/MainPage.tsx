@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-// import { MainArea } from './MainArea';
-import { OnlineUsers } from './OnlineUsers';
-import { SearchBox } from './SearchBox';
+import { MainArea } from './CardsArea/MainArea';
+import { OnlineUsers } from './SideBar/OnlineUsers';
+import { SearchBox } from './SideBar/SearchBox';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 
 export const MainPage = () => {
@@ -20,14 +20,13 @@ export const MainPage = () => {
 
 const StMainWrapper = styled.div`
   display: flex;
-  gap: 100px;
-  padding-top: 20px;
+  gap: 50px;
+  padding: 20px 0px;
   box-sizing: border-box;
 `;
 const StMainSide = styled.div`
-  width: 30%;
+  width: 300px;
 `;
 const StMainArea = styled.div`
   flex-grow: 1;
-  background: pink;
 `;
