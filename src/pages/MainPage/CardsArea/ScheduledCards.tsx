@@ -17,7 +17,7 @@ export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
         {thisWeek.map((date, i) => (
           <div
             key={i}
-            style={{ display: 'flex', gap: '20px', marginBottom: '15px' }}>
+            style={{ display: 'flex', gap: '20px', marginBottom: '25px' }}>
             <StDayWrapper>
               <div>{date.slice(5, 10)}</div>
               <div>{days[new Date(date).getDay()]}</div>
@@ -81,15 +81,12 @@ const StCardsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
-  margin-bottom: 15px;
 `;
 const StAddWrapper = styled.button`
   margin: 0 auto;
-  padding: 10px;
 `;
 const StDayWrapper = styled.div`
   font-size: 14px;
-  margin-top: 20px;
   width: 70px;
   height: fit-content;
   display: flex;

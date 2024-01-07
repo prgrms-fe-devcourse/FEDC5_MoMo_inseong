@@ -1,6 +1,6 @@
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 import { App } from './App';
-import { MainPage } from './pages/MainPage/CardsArea/MainPage';
+import { MainPage } from './pages/MainPage/MainPage';
 import { Header } from '@common/Header/Header';
 
 export const router = createBrowserRouter([
