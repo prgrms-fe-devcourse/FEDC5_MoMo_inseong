@@ -1,12 +1,15 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { ProfileTab } from './ProfileTab';
+import { SearchCards } from './SearchCards';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { Button } from '@common/Button/Button';
 import { Profile } from '@common/Profile/Profile';
 
 export const ProfilePage = () => {
   const [pageNumber, setPageNumber] = useState(1);
+  const navigate = useNavigate();
 
   return (
     <StSideMarginWrapper>
@@ -19,8 +22,14 @@ export const ProfilePage = () => {
           fontSize={16}
         />
         <StButtonsContainer>
-          <Button label="프로필 수정" />
-          <Button label="비밀번호 변경" />
+          <Button
+            label="프로필 수정"
+            handleButtonClick={() => navigate('/EditProfile')}
+          />
+          <Button
+            label="비밀번호 변경"
+            handleButtonClick={() => navigate('/EditPassword')}
+          />
         </StButtonsContainer>
       </StProfileActionsContainer>
       <StProfileContainer>
@@ -31,6 +40,7 @@ export const ProfilePage = () => {
           handleInterestedPostClick={() => setPageNumber(3)}
         />
       </StProfileContainer>
+      <SearchCards />
     </StSideMarginWrapper>
   );
 };
