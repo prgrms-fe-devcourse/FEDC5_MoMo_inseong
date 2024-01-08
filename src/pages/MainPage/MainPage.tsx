@@ -12,7 +12,9 @@ export const MainPage = () => {
           <OnlineUsers></OnlineUsers>
           <SearchBox></SearchBox>
         </StMainSide>
-        <StMainArea>{/* <MainArea></MainArea> */}</StMainArea>
+        <StMainArea>
+          <MainArea></MainArea>
+        </StMainArea>
       </StMainWrapper>
     </StSideMarginWrapper>
   );
