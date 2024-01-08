@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { DUMMY_DATA } from './components/DummyData';
+import { DUMMY_DATA } from './DummyData';
 import { theme } from '@/style/theme';
 import { Profile } from '@common/Profile/Profile';
 
