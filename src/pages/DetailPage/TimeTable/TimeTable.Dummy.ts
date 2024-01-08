@@ -37,12 +37,12 @@ const generateITimeVote = (): ITimeVote => {
 };
 
 export const TimeTablePropsExample = {
-  meetDate: ['2024-01-01', '2024-01-02', '2024-01-03', '2024-01-04'],
+  meetDate: ['2024-11-01', '2024-11-12', '2024-11-13', '2025-01-14'],
   vote: {
-    '2024-01-01': generateITimeVote(),
-    '2024-01-02': generateITimeVote(),
-    '2024-01-03': generateITimeVote(),
-    '2024-01-04': generateITimeVote(),
+    '2024-11-01': generateITimeVote(),
+    '2024-11-12': generateITimeVote(),
+    '2024-11-13': generateITimeVote(),
+    '2025-01-14': generateITimeVote(),
   },
   userId: 'user3',
 };

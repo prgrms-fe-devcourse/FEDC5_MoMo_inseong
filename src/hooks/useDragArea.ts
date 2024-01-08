@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface IuseDragArea {
   onMouseDown?: (event: MouseEvent) => void;
@@ -11,59 +11,53 @@ export const useDragArea = ({
   onMouseDown,
   onMouseMove,
   onMouseUp,
-  onMouseLeave,
 }: IuseDragArea) => {
-  const [isDragging, setIsDragging] = useState(false);
   const dragAreaRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  // const animation = useRef<number | null>(null);
 
-  const handleMouseDown = useCallback((event: MouseEvent) => {
-    setIsDragging(true);
-    // 여기에 드래그 시작 시 필요한 로직을 추가할 수 있습니다.
-    onMouseDown?.(event);
-  }, []);
+  const handleMouseDown = (event: MouseEvent) => {
+    if (
+      dragAreaRef.current?.contains(event.target as Node) &&
+      isDragging.current === false
+    ) {
+      isDragging.current = true;
+      onMouseDown?.(event);
+    }
+  };
 
-  const handleMouseMove = useCallback(
-    (event: MouseEvent) => {
-      if (isDragging) {
-        // 드래그 진행 중 필요한 로직을 추가할 수 있습니다.
-        onMouseMove?.(event);
-      }
-    },
-    [isDragging],
-  );
+  const handleMouseMove = (event: MouseEvent) => {
+    if (isDragging.current) {
+      // animation.current = requestAnimationFrame(() => {
+      // animation.current = null;
+      onMouseMove?.(event);
+      // });
+    }
+  };
 
-  const handleMouseUp = useCallback((event: MouseEvent) => {
-    setIsDragging(false);
-    // 드래그 종료 시 필요한 로직을 추가할 수 있습니다.
-    onMouseUp?.(event);
-  }, []);
-
-  const handleMouseLeave = useCallback((event: MouseEvent) => {
-    setIsDragging(false);
-    // 드래그 영역을 벗어났을 시 로직을 추가할 수 있습니다.
-    onMouseLeave?.(event);
-  }, []);
+  const handleMouseUp = (event: MouseEvent) => {
+    if (isDragging.current) {
+      isDragging.current = false;
+      onMouseUp?.(event);
+    }
+  };
 
   useEffect(() => {
     if (dragAreaRef.current) {
       dragAreaRef.current.addEventListener('mousedown', handleMouseDown);
-      dragAreaRef.current.addEventListener('mouseleave', handleMouseLeave);
 
-      // 마우스 이동과 마우스 뗄 때 이벤트 리스너를 전역(window)에 추가합니다.
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
     }
 
-    // 컴포넌트가 언마운트될 때 이벤트 리스너를 정리합니다.
     return () => {
       if (dragAreaRef.current) {
         dragAreaRef.current.removeEventListener('mousedown', handleMouseDown);
-        dragAreaRef.current.removeEventListener('mouseleave', handleMouseLeave);
       }
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave]);
+  }, []);
 
   return {
     dragAreaRef,
