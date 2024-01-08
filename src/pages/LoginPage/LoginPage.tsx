@@ -1,16 +1,47 @@
 import styled from '@emotion/styled';
+import React, { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { postApi } from '@/api/apis';
 import { theme } from '@/style/theme';
 import { Button } from '@common/Button/Button';
 import { Input } from '@common/Input/Input';
+import { InputTest } from '@common/Input/InputTest';
 
 export const LoginPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email) {
+      console.error('이메일 주소를 입력해주세요.');
+      return;
+    }
+    if (!password) {
+      console.error('비밀번호를 입력해주세요.');
+      return;
+    }
+
+    const url = '/login';
+    const data = { email, password };
+    try {
+      const response = await postApi(url, data);
+      console.log('Response:', response);
+      navigate('/');
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   return (
     <StLoginContainer>
       <StDescriptionContainer>LOGO TEXT</StDescriptionContainer>
       <StVerticalLine />
       <StLoginFormContainer>
         <StFormTitle>로그인</StFormTitle>
-        <StInputContainer>
+        {/* <StInputContainer>
           <Input placeholder="이메일" />
         </StInputContainer>
         <StInputContainer>
@@ -18,12 +49,30 @@ export const LoginPage = () => {
             placeholder="비밀번호"
             type="password"
           />
-        </StInputContainer>
+        </StInputContainer> */}
+        <InputTest style={{ width: '300px' }}>
+          <InputTest.Text
+            placeholder="이메일"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </InputTest>
+        <InputTest style={{ width: '300px' }}>
+          <InputTest.Text
+            placeholder="비밀번호"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </InputTest>
         <Button
           label="확인"
           type="submit"
+          onClick={handleLogin}
         />
-        <StSignupLink>회원가입</StSignupLink>
+        <StSignupLink onClick={() => navigate('/signUp')}>
+          회원가입
+        </StSignupLink>
       </StLoginFormContainer>
     </StLoginContainer>
   );
