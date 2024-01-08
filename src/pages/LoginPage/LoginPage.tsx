@@ -8,7 +8,6 @@ import { postApi } from '@/api/apis';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
 import { getItem, setItem } from '@/utils/storage';
-import { getItem, setItem } from '@/utils/storage';
 import { Button } from '@common/Button/Button';
 import { InputCompound } from '@common/Input/InputCompound';
 
