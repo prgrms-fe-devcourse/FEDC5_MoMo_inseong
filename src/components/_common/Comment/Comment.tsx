@@ -130,8 +130,8 @@ const StCreatedAt = styled.span`
 `;
 
 const StCommentedManage = styled.div`
-  width: 20%;
   text-align: right;
+  flex-grow: 1;
   & span:last-of-type {
     margin-left: 10px;
   }
