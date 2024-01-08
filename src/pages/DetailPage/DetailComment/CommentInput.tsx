@@ -24,7 +24,7 @@ export const CommentInput = () => {
           fullName={DUMMY_DATA.author}
         />
         <TextareaAutosize
-          className="CommentTextarea"
+          className="commentTextarea"
           placeholder="댓글을 입력해 보세요."
           cacheMeasurements
           value={text}
@@ -46,7 +46,7 @@ const StCommentInputContainer = styled.div`
   margin-bottom: 8px;
   padding: 16px;
 
-  & .CommentTextarea {
+  & .commentTextarea {
     margin: 0 10px;
     width: calc(100% - 116px);
     border: 1px solid ${theme.colors.grey.default};
@@ -54,10 +54,10 @@ const StCommentInputContainer = styled.div`
     padding: 16px;
     box-sizing: content-box;
   }
-  & .CommentTextarea::placeholder {
+  & .commentTextarea::placeholder {
     color: ${theme.colors.grey.dark};
   }
-  & .CommentTextarea:focus {
+  & .commentTextarea:focus {
     outline: none;
   }
 `;

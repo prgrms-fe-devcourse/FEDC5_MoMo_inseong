@@ -82,7 +82,7 @@ export const Comment = ({
         <>
           <StTextarea>
             <TextareaAutosize
-              className="CommentTextarea"
+              className="commentTextarea"
               cacheMeasurements
               onChange={(e) => setEditText(e.target.value)}
               defaultValue={text}
@@ -154,16 +154,16 @@ const StTextarea = styled.div`
   margin-top: 8px;
   margin-left: 42px;
 
-  & .CommentTextarea {
+  & .commentTextarea {
     border: 1px solid ${theme.colors.grey.default};
     border-radius: 8px;
     padding: 15.5px;
     width: 100%;
   }
-  & .CommentTextarea::placeholder {
+  & .commentTextarea::placeholder {
     color: ${theme.colors.grey.dark};
   }
-  & .CommentTextarea:focus {
+  & .commentTextarea:focus {
     outline: none;
   }
 `;
