@@ -13,15 +13,7 @@ interface TagProps {
   backgroundColor?: string;
 }
 
-interface IStTag {
-  height: number;
-  fontSize: number;
-  padding: number;
-  marginRight: number;
-  color: string;
-  hasMouseCursor: boolean;
-  backgroundColor: string;
-}
+type StTagType = Required<Omit<TagProps, 'name'>>;
 
 export const Tag = ({
   name,
@@ -31,7 +23,7 @@ export const Tag = ({
   marginRight = 8,
   color = SECONDARY_NAVY,
   hasMouseCursor = false,
-  backgroundColor = theme.colors.primaryBlue.transparent,
+  backgroundColor = theme.colors.grey.light,
 }: TagProps) => {
   const tagStyle = {
     height,
@@ -55,7 +47,7 @@ const StTagContainer = styled.div`
   align-items: center;
 `;
 
-const StTag = styled.div<IStTag>`
+const StTag = styled.div<StTagType>`
   display: flex;
   align-items: center;
   height: ${({ height }) => height}px;
