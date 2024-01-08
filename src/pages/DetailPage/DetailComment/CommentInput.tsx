@@ -9,6 +9,7 @@ import { Profile } from '@common/Profile/Profile';
 export const CommentInput = () => {
   const [text, setText] = useState('');
   const handleButtonClick = () => {
+    if (!text) return;
     // Data 전송
     setText('');
   };
