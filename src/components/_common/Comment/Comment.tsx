@@ -118,20 +118,17 @@ const StCommentWrapper = styled.div`
 `;
 
 const StCommentedUser = styled.div`
-  width: 80%;
   display: flex;
   align-items: center;
+  flex-grow: 1;
 `;
 
 const StCreatedAt = styled.span`
-  margin: 2px 0 0 8px;
   color: ${GREY};
   font-size: 12px;
 `;
 
 const StCommentedManage = styled.div`
-  text-align: right;
-  flex-grow: 1;
   & span:last-of-type {
     margin-left: 10px;
   }
