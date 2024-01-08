@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { DUMMY_DATA } from './components/DummyData';
+import { DUMMY_DATA } from './DummyData';
 import { Tab } from '@common/Tab/Tab';
 
 interface DetailTabProps {

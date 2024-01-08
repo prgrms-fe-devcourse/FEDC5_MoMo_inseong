@@ -1,2 +1,0 @@
-export const TEXTAREA_HEIGHT = 68.5;
-export const TEXTAREA_CREATE_HEIGHT = 23.333334;

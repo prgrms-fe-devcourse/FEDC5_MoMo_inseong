@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
-import { DUMMY_DATA } from '../components/DummyData';
+import { DUMMY_DATA } from '../DummyData';
 import { theme } from '@/style/theme';
 import { Button } from '@common/Button/Button';
 import { Profile } from '@common/Profile/Profile';
@@ -52,6 +52,7 @@ const StCommentInputContainer = styled.div`
     border: 1px solid ${theme.colors.grey.default};
     border-radius: 8px;
     padding: 16px;
+    box-sizing: content-box;
   }
   & .CommentTextarea::placeholder {
     color: ${theme.colors.grey.dark};

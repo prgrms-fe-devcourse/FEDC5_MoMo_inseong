@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { DUMMY_DATA } from '../components/DummyData';
+import { DUMMY_DATA } from '../DummyData';
 import { Icon } from '@common/Icon/Icon';
 
 export const PostIcon = () => {

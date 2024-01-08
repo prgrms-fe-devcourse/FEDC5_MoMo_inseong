@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { DUMMY_DATA } from '../components/DummyData';
+import { DUMMY_DATA } from '../DummyData';
 import { Comment } from '@common/Comment/Comment';
 
 export const CommentList = () => {
