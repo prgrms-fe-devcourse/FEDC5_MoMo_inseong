@@ -2,17 +2,21 @@ import styled from '@emotion/styled';
 import { MainArea } from './CardsArea/MainArea';
 import { OnlineUsers } from './SideBar/OnlineUsers';
 import { SearchBox } from './SideBar/SearchBox';
+import { Test } from '@/Test';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 
 export const MainPage = () => {
   return (
     <StSideMarginWrapper>
+      <Test />
       <StMainWrapper>
         <StMainSide>
           <OnlineUsers></OnlineUsers>
           <SearchBox></SearchBox>
         </StMainSide>
-        <StMainArea>{/* <MainArea></MainArea> */}</StMainArea>
+        <StMainArea>
+          <MainArea></MainArea>
+        </StMainArea>
       </StMainWrapper>
     </StSideMarginWrapper>
   );
