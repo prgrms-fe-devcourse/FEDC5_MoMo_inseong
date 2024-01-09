@@ -1,7 +1,12 @@
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 import { App } from './App';
 import { DetailPage } from './pages/DetailPage/DetailPage';
+import { LoginPage } from './pages/LoginPage/LoginPage';
 import { MainPage } from './pages/MainPage/MainPage';
+import { EditPasswordPage } from './pages/ProfilePage/EditPasswordPage';
+import { EditProfilePage } from './pages/ProfilePage/EditProfilePage';
+import { ProfilePage } from './pages/ProfilePage/ProfilePage';
+import { SignUpPage } from './pages/SignupPage/SignupPage';
 import { Header } from '@common/Header/Header';
 
 export const router = createBrowserRouter([
@@ -30,17 +35,25 @@ export const router = createBrowserRouter([
           },
           {
             path: '/profile/:id', // 프로필 페이지
-            element: <div>profile</div>,
+            element: <ProfilePage />,
+          },
+          {
+            path: '/EditProfile', // 프로필 변경 페이지
+            element: <EditProfilePage />,
+          },
+          {
+            path: '/EditPassword', // 비밀번호 변경 페이지
+            element: <EditPasswordPage />,
           },
         ],
       },
       {
         path: '/login',
-        element: <div>login</div>,
+        element: <LoginPage />,
       },
       {
         path: '/signup',
-        element: <div>signup</div>,
+        element: <SignUpPage />,
       },
     ],
   },
