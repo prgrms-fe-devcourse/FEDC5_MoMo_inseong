@@ -3,10 +3,8 @@ import { useEffect, useState } from 'react';
 import { Notification, NotificationExtractType } from './Notification';
 import { notificationMockup } from './NotificatonMockup';
 import { PopupProfile, PopupProfileProps } from './PopupProfile';
-// import axios from 'axios';
-import { popoverMockup } from './PopupProfileMockup';
+import { popupProfileMockup } from './PopupProfileMockup';
 import { Icon } from '@common/Icon/Icon';
-import { Profile } from '@common/Profile/Profile';
 import { Tooltip } from '@common/Tooltip/Tooltip';
 
 type ModeType = 'light' | 'dark';
@@ -33,29 +31,9 @@ export const Menu = ({ initialMode }: MenuProps) => {
 
   //FIXME: 비동기 함수는 따로 추상화 필요
   useEffect(() => {
-    // const fetchNotifications =  () => {
-    // const response = await axios(
-    // 'src/components/_common/Header/Menu/NotificatonMockup.json',
-    // );
-    // setNotification(response.data as NotificationExtractType[]);
-
     setNotification(notificationMockup as NotificationExtractType[]);
-    // };
 
-    // const fetchPopupProfile = () => {
-    // const response = await axios(
-    //   'src/components/_common/Header/Menu/PopupProfileMockup.json',
-    // );
-
-    setPopupProfile(popoverMockup as PopupProfileProps);
-    // };
-
-    // fetchNotifications().catch((error) =>
-    // console.error('Error fetching notifications:', error),
-    // );
-    // fetchPopupProfile().catch((error) =>
-    // console.error('Error fetching notifications:', error),
-    // );
+    setPopupProfile(popupProfileMockup as PopupProfileProps);
   }, []);
 
   return (
@@ -86,12 +64,9 @@ export const Menu = ({ initialMode }: MenuProps) => {
           content={<PopupProfile {...popupProfile} />}
           height={'fit-content'}
           offset={-90}>
-          <Profile
-            image={popupProfile.image}
-            fullName={popupProfile.fullName}
-            _id={popupProfile.userId}
-            status={'ProfileImage'}
-            imageSize={32}
+          <StProfileImg
+            src={popupProfile.image}
+            alt={popupProfile.fullName}
           />
         </Tooltip>
       </StTooltipWrapper>
@@ -139,4 +114,10 @@ const IconContainer = styled.div<IDarkMode>`
     position: absolute;
     font-size: 20px;
   }
+`;
+
+const StProfileImg = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: 100%;
 `;

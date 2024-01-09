@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, InputHTMLAttributes } from 'react';
 import { theme } from '@/style/theme';
 
-interface InputProps {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   fontSize?: number;
   placeholder?: string;
   style?: CSSProperties;
