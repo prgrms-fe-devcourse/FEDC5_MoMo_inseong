@@ -1,20 +1,24 @@
 import { IUser } from '@/api/_types/apiModels';
-import { getApi } from '@/api/apis';
+import { getApiJWT } from '@/api/apis';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 interface IUserData {
   isLoading: boolean;
   isLogin: boolean;
+  loggedinUser: IUser;
+  userId: string;
 }
 
 const initialState: IUserData = {
   isLoading: false,
   isLogin: false,
+  loggedinUser: {} as IUser,
+  userId: '',
 };
 
 export const getIsLogin = createAsyncThunk('authUser', async () => {
-  const response = await getApi<IUser[]>('/auth-user');
-  return Array.isArray(response.data);
+  const response = await getApiJWT<IUser>('/auth-user');
+  return response.data._id;
 });
 
 const loginSlice = createSlice({
@@ -27,7 +31,7 @@ const loginSlice = createSlice({
     });
     builder.addCase(getIsLogin.fulfilled, (state, action) => {
       state.isLoading = true;
-      state.isLogin = action.payload;
+      state.userId = action.payload;
     });
     builder.addCase(getIsLogin.rejected, (state) => {
       state.isLoading = false;

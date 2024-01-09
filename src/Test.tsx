@@ -7,16 +7,19 @@ export const Test = () => {
   const useAppDispatch: () => AppDispatchType = useDispatch;
   const dispatch = useAppDispatch();
   const hearts = useSelector((state: RootStateType) => state.hearts.hearts);
+  const userId = useSelector((state: RootStateType) => state.auth.userId);
   console.log('hearts state', hearts);
+  console.log('userId state', userId);
+
   return (
     <>
       <button
         onClick={() => {
           dispatch(getHearts('hi'));
 
-          // dispatch(getIsLogin())
-          //   .then((res) => console.log(res))
-          //   .catch((err) => console.error(err));
+          dispatch(getIsLogin())
+            .then((res) => console.log(res))
+            .catch((err) => console.error(err));
 
           // dispatch(getChannelsData())
           //   .then((res) => console.log(res))
