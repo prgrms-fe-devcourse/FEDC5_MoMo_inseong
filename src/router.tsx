@@ -1,6 +1,7 @@
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 import { App } from './App';
 import { DetailPage } from './pages/DetailPage/DetailPage';
+import { ErrorPage } from './pages/ErrorPage/ErrorPage';
 import { LoginPage } from './pages/LoginPage/LoginPage';
 import { MainPage } from './pages/MainPage/MainPage';
 import { EditPasswordPage } from './pages/ProfilePage/EditPasswordPage';
@@ -12,6 +13,7 @@ import { Header } from '@common/Header/Header';
 export const router = createBrowserRouter([
   {
     Component: App,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: '/',
