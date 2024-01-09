@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { IUser } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
@@ -23,6 +23,7 @@ export const OnlineUsers = () => {
       setAllUsers(allUserResp);
     }
   }, [isAllUserLoading]);
+
   const [onlineUsers, setOnlineUsers] = useState<IUser[]>([]);
 
   const { values, isLoading, errors, handleChange, handleSubmit } = useForm({
@@ -45,13 +46,14 @@ export const OnlineUsers = () => {
       setOnlineUsers(allUsers);
     }
   }, [values, allUsers, isLoading]);
+
   return (
     <StSideBlockWrapper>
       <div style={{ position: 'relative' }}>
         <StSearchIconWrapper>
           <Icon name="search" />
         </StSearchIconWrapper>
-        <form onSubmit={() => handleSubmit}>
+        <form onSubmit={(e: FormEvent) => void handleSubmit(e)}>
           <InputCompound style={{ width: '100%', padding: 0 }}>
             <InputCompound.Text
               placeholder="유저 검색"
@@ -97,10 +99,7 @@ export const StSideBlockWrapper = styled.div`
   position: sticky;
   // top: 80px;
 `;
-export const StSideTitle = styled.div`
-  margin: 3px 0px 10px;
-  font-size: 14px;
-`;
+
 const StOnlineUserUl = styled.ul`
   margin-top: 10px;
   display: flex;

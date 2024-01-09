@@ -3,8 +3,8 @@ import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 
 const useAxios = <T>(
   cbFn: () => Promise<AxiosResponse<T, unknown>>,
+  fetchOnMount = true,
   deps?: string,
-  fetchOnMount = false,
 ) => {
   const [response, setResponse] = useState<T>({} as T);
   const [error, setError] = useState<Error | AxiosError | null>(null); //
