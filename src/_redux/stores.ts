@@ -3,7 +3,7 @@ import heartsSlice from './slices/heartsSlice';
 import loginSlice from './slices/loginSlice';
 import { configureStore } from '@reduxjs/toolkit';
 
-export const store = configureStore({
+const stores = configureStore({
   reducer: {
     channels: channelsSlice,
     auth: loginSlice,
@@ -11,7 +11,5 @@ export const store = configureStore({
   },
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootStateType = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatchType = typeof store.dispatch;
+export type RootStateType = ReturnType<typeof stores.getState>;
+export type AppDispatchType = typeof stores.dispatch;
