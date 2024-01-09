@@ -60,46 +60,53 @@ export type NotificationExtractType = NotificationBaseProps & ContentType;
 
 interface NotificationProps {
   data: NotificationExtractType[];
+  setIsVisible?: (arg: boolean) => void;
 }
 
-export const Notification = memo(({ data }: NotificationProps) => {
-  return (
-    <StContainer>
-      <StTitle>알림</StTitle>
-      <StContentScrollWrapper>
-        <StContents>
-          {data.length > 0 &&
-            data.map(({ type, _id, fullName, when, details }) => (
-              <StContentBox
-                key={_id}
-                title={subTitleOf(type)}>
-                {type === 'COMMENT' ? (
-                  <>
-                    <StSummary>{`${details.postTitle} 모임에 새로운 댓글이 있습니다.`}</StSummary>
-                    <StContent>{`${fullName}: ${details.comment}`}</StContent>
-                  </>
-                ) : type === 'LIKE' ? (
-                  <StSummary>{`${fullName}님이 ${details.postTitle} 모임을 북마크 등록했습니다.`}</StSummary>
-                ) : type === 'FOLLOW' ? (
-                  details.isCancel ? null : (
-                    <StSummary>{`${fullName}님이 팔로우 하였습니다.`}</StSummary>
-                  )
-                ) : type === 'MESSAGE' ? (
-                  <>
-                    <StSummary>{`${fullName}님으로부터 메세지가 도착했습니다.`}</StSummary>
-                    <StContent>{`${details.message}`}</StContent>
-                  </>
-                ) : type === 'MENTION' ? (
-                  <StSummary>{`${fullName}님이 ${details.postTitle} 모임에 멘션하였습니다.`}</StSummary>
-                ) : null}
-                <StDate>{when}</StDate>
-              </StContentBox>
-            ))}
-        </StContents>
-      </StContentScrollWrapper>
-    </StContainer>
-  );
-});
+export const Notification = memo(
+  ({ data, setIsVisible }: NotificationProps) => {
+    const handleVisibility = () => {
+      setIsVisible && setIsVisible(false);
+    };
+    return (
+      <StContainer>
+        <StTitle>알림</StTitle>
+        <StContentScrollWrapper>
+          <StContents>
+            {data.length > 0 &&
+              data.map(({ type, _id, fullName, when, details }) => (
+                <StContentBox
+                  key={_id}
+                  title={subTitleOf(type)}
+                  onClick={handleVisibility}>
+                  {type === 'COMMENT' ? (
+                    <>
+                      <StSummary>{`${details.postTitle} 모임에 새로운 댓글이 있습니다.`}</StSummary>
+                      <StContent>{`${fullName}: ${details.comment}`}</StContent>
+                    </>
+                  ) : type === 'LIKE' ? (
+                    <StSummary>{`${fullName}님이 ${details.postTitle} 모임을 북마크 등록했습니다.`}</StSummary>
+                  ) : type === 'FOLLOW' ? (
+                    details.isCancel ? null : (
+                      <StSummary>{`${fullName}님이 팔로우 하였습니다.`}</StSummary>
+                    )
+                  ) : type === 'MESSAGE' ? (
+                    <>
+                      <StSummary>{`${fullName}님으로부터 메세지가 도착했습니다.`}</StSummary>
+                      <StContent>{`${details.message}`}</StContent>
+                    </>
+                  ) : type === 'MENTION' ? (
+                    <StSummary>{`${fullName}님이 ${details.postTitle} 모임에 멘션하였습니다.`}</StSummary>
+                  ) : null}
+                  <StDate>{when}</StDate>
+                </StContentBox>
+              ))}
+          </StContents>
+        </StContentScrollWrapper>
+      </StContainer>
+    );
+  },
+);
 
 /* style */
 const StContainer = styled.div`
@@ -113,7 +120,6 @@ const StContainer = styled.div`
 const StTitle = styled.header`
   font-weight: bold;
   color: black;
-  background-color: ${({ theme }) => theme.colors.background.default};
   padding: 1rem 8px 1rem 8px;
   border-bottom: 2px solid #dfdfdf;
 `;

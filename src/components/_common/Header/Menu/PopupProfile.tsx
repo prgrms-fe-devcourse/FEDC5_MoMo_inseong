@@ -7,14 +7,18 @@ export interface PopupProfileProps {
   userId: string;
   fullName: string;
   image: string;
+  setIsVisible?: (arg: boolean) => void;
 }
 
 export const PopupProfile = memo(
-  ({ userId, image, fullName }: PopupProfileProps) => {
+  ({ userId, image, fullName, setIsVisible }: PopupProfileProps) => {
+    const handleVisibility = () => {
+      setIsVisible && setIsVisible(false);
+    };
     return (
       <StContainer>
         <StTitle>내 정보</StTitle>
-        <StRouter>
+        <StRouter onClick={handleVisibility}>
           <Profile
             image={image}
             fullName={fullName}
@@ -23,7 +27,7 @@ export const PopupProfile = memo(
             fontSize={16}
           />
         </StRouter>
-        <StRouter>
+        <StRouter onClick={handleVisibility}>
           <StIconBox content={'"설정"'}>
             <Icon
               name="settings"
@@ -32,7 +36,7 @@ export const PopupProfile = memo(
             />
           </StIconBox>
         </StRouter>
-        <StRouter>
+        <StRouter onClick={handleVisibility}>
           <StIconBox content={'"로그아웃"'}>
             <Icon
               name="log-out"
@@ -51,8 +55,6 @@ const StContainer = styled.article`
   display: flex;
   flex-direction: column;
   width: 100%;
-
-  background-color: ${({ theme }) => theme.colors.background.default};
 `;
 
 const StTitle = styled.header`
