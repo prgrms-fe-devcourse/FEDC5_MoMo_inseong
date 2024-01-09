@@ -1,8 +1,11 @@
 import styled from '@emotion/styled';
 import {
+  ReactElement,
   MouseEvent as ReactMouseEvent,
   ReactNode,
   RefObject,
+  cloneElement,
+  isValidElement,
   memo,
   useCallback,
   useEffect,
@@ -27,9 +30,13 @@ interface IStWrapper {
   shadowColor?: string;
 }
 
+interface ISetIsVisible {
+  setIsVisible: (arg: boolean) => void;
+}
+
 interface TooltipProps extends IStWrapper, IGetPosition {
   children: ReactNode; // 툴팁을 표시할 요소
-  content: string | ReactNode; // 툴팁 내용
+  content: string | ReactNode | ReactElement; // 툴팁 내용
 }
 
 export const Tooltip = memo(
@@ -89,7 +96,11 @@ export const Tooltip = memo(
             maxHeight={maxHeight}
             shadowColor={shadowColor}
             style={positionStyles}>
-            {content}
+            {isValidElement(content)
+              ? cloneElement(content, {
+                  setIsVisible: (arg: boolean) => setIsVisible(arg),
+                } as ISetIsVisible)
+              : content}
           </StContentBox>
         </StTransitionBox>
       </StWrapper>
@@ -117,6 +128,8 @@ const StTransitionBox = styled.div<{ isVisible: boolean }>`
 
 const StContentBox = styled.div<IStWrapper>`
   position: absolute;
+  background-color: ${({ theme }) => theme.colors.background.default};
+
   z-index: ${(props) => props.theme.zIndex.tooltip};
   width: ${({ width }) => (typeof width === 'number' ? width + 'px' : width)};
   height: ${({ height }) =>
