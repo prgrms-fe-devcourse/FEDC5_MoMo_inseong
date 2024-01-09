@@ -11,8 +11,8 @@ import { Spinner } from '@common/Spinner/Spinner';
 export const WhenCards = () => {
   const { response, error, isLoading } = useAxios<IPost[]>(() =>
     getApi('/posts/channel/6594b09792c75f48e4de63e6'),
-  const navigate = useNavigate();
   );
+  const navigate = useNavigate();
   return (
     <StCardsWrapper>
       {isLoading ? (
