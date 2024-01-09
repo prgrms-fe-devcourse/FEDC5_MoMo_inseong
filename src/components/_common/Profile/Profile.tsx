@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { CSSProperties, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { theme } from '@/style/theme';
 
 interface ProfileProps {
@@ -7,7 +8,8 @@ interface ProfileProps {
   fullName: string;
   imageSize?: number;
   fontSize?: number;
-  _id: string;
+  params?: string;
+  _id?: string;
   status?: 'Profile' | 'ProfileImage' | 'ProfileName';
   maxWidth?: number;
   style?: CSSProperties;
@@ -23,16 +25,17 @@ export const Profile = ({
   fullName,
   imageSize = 48,
   fontSize = 18,
-  _id,
+  params = '', // params은 확장성을 위해 추가된 값
+  _id = '',
   status = 'Profile',
   maxWidth = 300,
   ...props
 }: ProfileProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
-
-  // TODO: 링크 추가
+  const navigate = useNavigate();
   const handleUserClick = () => {
-    console.log(_id);
+    if (!_id) return;
+    navigate(`/profile${params}/${_id}`);
   };
 
   return (
