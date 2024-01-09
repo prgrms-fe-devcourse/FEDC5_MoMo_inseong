@@ -1,8 +1,8 @@
-// import styled from '@emotion/styled';
 import styled from '@emotion/styled';
+import { useState } from 'react';
 import { useVotingTimeTable } from '../hooks/useVotingTimeTable';
-import { MyTimeTable } from './MyTimeTable/MyTimeTable';
-import { VotedTimeTable } from './VotedTimeTable/VotedTimeTable';
+import { VoteTable } from './VoteTable/VoteTable';
+import { Button } from '@common/Button/Button';
 
 interface IVotedUser {
   id: string;
@@ -24,108 +24,67 @@ export interface TimeTableProps {
 }
 
 export const TimeTable = ({ meetDate, vote, userId }: TimeTableProps) => {
-  const { dragAreaRef, voteAreaRef } = useVotingTimeTable({
+  const [isVoting, setIsVoting] = useState(false);
+  const { dragAreaRef, totalVoteAreaRef } = useVotingTimeTable({
     vote,
     userId,
+    isVoting,
   });
 
+  const handleButtonClick = () => {
+    setIsVoting((old) => !old);
+  };
+
   return (
-    <StContainer>
-      <MyTimeTable
-        ref={dragAreaRef}
-        meetDate={meetDate}
-        vote={vote}
+    <StWrapper>
+      <StTableContainer>
+        {isVoting && (
+          <VoteTable
+            meetDate={meetDate}
+            vote={vote}>
+            <VoteTable.ScrollWrapper vote={vote}>
+              <VoteTable.CellContainer
+                ref={dragAreaRef}
+                vote={vote}
+                meetDate={meetDate}
+                isMyTable={true}
+              />
+            </VoteTable.ScrollWrapper>
+          </VoteTable>
+        )}
+        <VoteTable
+          meetDate={meetDate}
+          vote={vote}>
+          <VoteTable.ScrollWrapper vote={vote}>
+            <VoteTable.CellContainer
+              ref={totalVoteAreaRef}
+              vote={vote}
+              meetDate={meetDate}
+              isMyTable={false}
+            />
+          </VoteTable.ScrollWrapper>
+        </VoteTable>
+      </StTableContainer>
+      <Button
+        label={isVoting ? '완료하기' : '투표하기'}
+        width={100}
+        height={30}
+        handleButtonClick={handleButtonClick}
       />
-      <VotedTimeTable
-        ref={voteAreaRef}
-        meetDate={meetDate}
-        vote={vote}
-      />
-    </StContainer>
+    </StWrapper>
   );
 };
 
-// export const TimeTable = ({ meetDate }: TimeTableProps) => {
-//   const { timeSlots, handleMouseDown, handleMouseEnter, handleMouseUp } =
-//     useTimeTable({ meetDate });
-//   const copy = useMemo(() => deepCopy(timeSlots as [][]), []);
-
-//   return (
-//     <>
-//       <div style={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
-//         {copy.length > 0 &&
-//           copy.map((column, i) => (
-//             <div
-//               key={self.crypto.randomUUID()}
-//               style={{ display: 'flex', flexDirection: 'column' }}>
-//               {column.map((_, j) => (
-//                 <div
-//                   key={self.crypto.randomUUID()}
-//                   data-col={i}
-//                   data-row={j}
-//                   onMouseDown={() => handleMouseDown(i, j)}
-//                   onMouseEnter={() => handleMouseEnter(i, j)}
-//                   onMouseUp={handleMouseUp}
-//                   style={{
-//                     width: '30px',
-//                     height: '8px',
-//                     border: '1px solid black',
-//                   }}></div>
-//               ))}
-//             </div>
-//           ))}
-//       </div>
-//       <div style={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
-//         {timeSlots.length > 0 &&
-//           timeSlots.map((column, i) => (
-//             <div
-//               key={self.crypto.randomUUID()}
-//               style={{ display: 'flex', flexDirection: 'column' }}>
-//               {column.map(({ selected }, j) => (
-//                 <div
-//                   key={self.crypto.randomUUID()}
-//                   data-col={i}
-//                   data-row={j}
-//                   style={{
-//                     width: '30px',
-//                     height: '8px',
-//                     border: '1px solid black',
-//                     background: `${selected ? 'blue' : 'white'}`,
-//                   }}></div>
-//               ))}
-//             </div>
-//           ))}
-//       </div>
-//     </>
-//   );
-// };
-
-// const TimeTable: React.FC = () => {
-
-//   return (
-//     <div onMouseLeave={handleMouseUp}>
-//       {timeSlots.map((selected, index) => (
-//         <div
-//           key={index}
-//           onMouseDown={() => handleMouseDown(index)}
-//           onMouseEnter={() => handleMouseEnter(index)}
-//           onMouseUp={handleMouseUp}
-//           style={{
-//             width: '100px',
-//             height: '20px',
-//             background: selected ? 'blue' : 'gray',
-//             cursor: 'pointer',
-//           }}
-//         >
-//           {index % 2 === 0 ? `${index / 2}:00` : `${Math.floor(index / 2)}:30`}
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
 /* style */
-const StContainer = styled.div`
+const StWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+`;
+
+const StTableContainer = styled.div`
   display: flex;
   gap: 16px;
 `;

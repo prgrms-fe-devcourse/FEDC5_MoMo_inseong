@@ -14,35 +14,31 @@ export const useDragArea = ({
 }: IuseDragArea) => {
   const dragAreaRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
-  // const animation = useRef<number | null>(null);
-
-  const handleMouseDown = (event: MouseEvent) => {
-    if (
-      dragAreaRef.current?.contains(event.target as Node) &&
-      isDragging.current === false
-    ) {
-      isDragging.current = true;
-      onMouseDown?.(event);
-    }
-  };
-
-  const handleMouseMove = (event: MouseEvent) => {
-    if (isDragging.current) {
-      // animation.current = requestAnimationFrame(() => {
-      // animation.current = null;
-      onMouseMove?.(event);
-      // });
-    }
-  };
-
-  const handleMouseUp = (event: MouseEvent) => {
-    if (isDragging.current) {
-      isDragging.current = false;
-      onMouseUp?.(event);
-    }
-  };
 
   useEffect(() => {
+    const handleMouseDown = (event: MouseEvent) => {
+      if (
+        dragAreaRef.current?.contains(event.target as Node) &&
+        isDragging.current === false
+      ) {
+        isDragging.current = true;
+        onMouseDown?.(event);
+      }
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
+      if (isDragging.current) {
+        onMouseMove?.(event);
+      }
+    };
+
+    const handleMouseUp = (event: MouseEvent) => {
+      if (isDragging.current) {
+        isDragging.current = false;
+        onMouseUp?.(event);
+      }
+    };
+
     if (dragAreaRef.current) {
       dragAreaRef.current.addEventListener('mousedown', handleMouseDown);
 
@@ -57,7 +53,7 @@ export const useDragArea = ({
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, []);
+  }, [onMouseDown, onMouseMove, onMouseUp]);
 
   return {
     dragAreaRef,
