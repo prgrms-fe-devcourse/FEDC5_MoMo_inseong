@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 import { Menu } from './Menu/Menu';
 
 //FIXME: 실제 isLogin은 리덕스로 관리되어야 함
@@ -8,15 +9,18 @@ interface HeaderProps {
 }
 
 export const Header = ({ isLogin, initialMode }: HeaderProps) => {
+  const navigate = useNavigate();
   return (
     <StWrapper>
       <StFixedContainer>
         <StContainer>
-          <StLogo>MoMo</StLogo>
+          <StLogo onClick={() => navigate('/')}>MoMo</StLogo>
           {isLogin ? (
             <Menu initialMode={initialMode} />
           ) : (
-            <StLoginButton>로그인</StLoginButton>
+            <StLoginButton onClick={() => navigate('/login')}>
+              로그인
+            </StLoginButton>
           )}
         </StContainer>
       </StFixedContainer>
