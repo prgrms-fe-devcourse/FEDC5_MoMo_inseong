@@ -1,69 +1,94 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  validateConfirmPassword,
+  validateEmail,
+  validateFullName,
+  validatePassword,
+} from './validation';
+import { postApi } from '@/api/apis';
 import { theme } from '@/style/theme';
 import { Button } from '@common/Button/Button';
-import { Input } from '@common/Input/Input';
-import { InputTest } from '@common/Input/InputTest';
+import { InputCompound } from '@common/Input/InputCompound';
 
 export const SignUpPage = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [nickname, setNickname] = useState('');
-  const [isValid, setIsValid] = useState(false);
+  const [confirm, setconfirm] = useState('');
+  const [fullName, setFullName] = useState('');
 
-  useEffect(() => {
-    const handleValidateEmail = (email: string) =>
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const handleValidatePassword = (password: string) => password.length >= 6;
-    const isPasswordMatching = password === confirmPassword;
-    const hasNickname = nickname.trim().length > 0;
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmError, setconfirmError] = useState('');
+  const [fullNameError, setFullNameError] = useState('');
 
-    setIsValid(
-      handleValidateEmail(email) &&
-        handleValidatePassword(password) &&
-        isPasswordMatching &&
-        hasNickname,
-    );
-  }, [email, password, confirmPassword, nickname]);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const confirmRef = useRef<HTMLInputElement>(null);
+  const fullNameRef = useRef<HTMLInputElement>(null);
 
-  // const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setEmail(e.target.value);
-  // };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSignUp = async (
+    e:
+      | React.FormEvent<HTMLInputElement>
+      | React.KeyboardEvent<HTMLInputElement>,
+  ) => {
     e.preventDefault();
+
+    const errorChecks = [
+      { ref: emailRef, error: emailError },
+      { ref: passwordRef, error: passwordError },
+      { ref: confirmRef, error: confirmError },
+      { ref: fullNameRef, error: fullNameError },
+    ];
+
+    for (const { ref, error } of errorChecks) {
+      if (error !== '') {
+        ref.current?.focus();
+        return false;
+      }
+    }
+
+    // 추후 수정
+    try {
+      const response = await postApi('/signup', { email, fullName, password });
+      // TODO: 아이디 중복 처리
+      if (!response) return;
+      navigate('/login');
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  const handleSignUp = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
+  const handleOnKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      emailCheckHandler(email);
+      passwordCheckHandler(password);
+      confirmCheckHandler(confirm);
+      fullNameCheckHandler(fullName);
+      void handleSignUp(e);
+    }
+  };
 
-    if (!email) {
-      console.error('이메일 주소를 입력해주세요.');
-      return;
-    }
-    if (!password) {
-      console.error('비밀번호를 입력해주세요.');
-      return;
-    }
-    if (!isValid) {
-      console.error('비밀번호를 제대로 입력해주세요.');
-      return;
-    }
-    if (!nickname) {
-      console.error('닉네임을 제대로 입력해주세요.');
-      return;
-    }
+  const emailCheckHandler = (value: string) => {
+    setEmailError(validateEmail(value));
+  };
 
-    const url = '/login';
-    const data = { email, password };
-    try {
-      const response = await postApi(url, data);
-      console.log('Response:', response);
-      navigate('/');
-    } catch (error) {
-      console.error('Error:', error);
+  const passwordCheckHandler = (value: string) => {
+    setPasswordError(validatePassword(value));
+    if (confirm.length !== 0) {
+      setconfirmError(validateConfirmPassword(password, value));
     }
+  };
+
+  const confirmCheckHandler = (value: string) => {
+    setconfirmError(validateConfirmPassword(password, value));
+  };
+
+  const fullNameCheckHandler = (value: string) => {
+    setFullNameError(validateFullName(value));
   };
 
   return (
@@ -72,46 +97,68 @@ export const SignUpPage = () => {
       <StVerticalLine />
       <StSignUpFormContainer>
         <StFormTitle>회원가입</StFormTitle>
-
-        {/* <Input placeholder="이메일" />
-        <Input
-          placeholder="비밀번호"
-          type="password"
-        />
-        <Input
-          placeholder="비밀번호 재확인"
-          type="password"
-        />
-        <Input placeholder="닉네임" /> */}
-
-        <InputTest style={{ width: '300px' }}>
-          <InputTest.Text
-            placeholder="이메일"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </InputTest>
-        <InputTest style={{ width: '300px' }}>
-          <InputTest.Text
-            placeholder="비밀번호"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </InputTest>
-        <InputTest style={{ width: '300px' }}>
-          <InputTest.Text
-            placeholder="비밀번호 재확인"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </InputTest>
-        <InputTest style={{ width: '300px' }}>
-          <InputTest.Text
-            placeholder="닉네임"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-          />
-        </InputTest>
+        <StInputText>
+          <InputCompound style={{ width: '300px' }}>
+            <InputCompound.Text
+              placeholder="이메일"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                emailCheckHandler(e.target.value);
+              }}
+              ref={emailRef}
+              onKeyUp={handleOnKeyUp}
+            />
+          </InputCompound>
+          {emailError}
+        </StInputText>
+        <StInputText>
+          <InputCompound style={{ width: '300px' }}>
+            <InputCompound.Text
+              placeholder="비밀번호"
+              value={password}
+              type="password"
+              onChange={(e) => {
+                setPassword(e.target.value);
+                passwordCheckHandler(e.target.value);
+              }}
+              ref={passwordRef}
+              onKeyUp={handleOnKeyUp}
+            />
+          </InputCompound>
+          {passwordError}
+        </StInputText>
+        <StInputText>
+          <InputCompound style={{ width: '300px' }}>
+            <InputCompound.Text
+              placeholder="비밀번호 재확인"
+              value={confirm}
+              type="password"
+              onChange={(e) => {
+                setconfirm(e.target.value);
+                confirmCheckHandler(e.target.value);
+              }}
+              ref={confirmRef}
+              onKeyUp={handleOnKeyUp}
+            />
+          </InputCompound>
+          {confirmError}
+        </StInputText>
+        <StInputText>
+          <InputCompound style={{ width: '300px' }}>
+            <InputCompound.Text
+              placeholder="닉네임"
+              value={fullName}
+              onChange={(e) => {
+                setFullName(e.target.value);
+                fullNameCheckHandler(e.target.value);
+              }}
+              ref={fullNameRef}
+              onKeyUp={handleOnKeyUp}
+            />
+          </InputCompound>
+          {fullNameError}
+        </StInputText>
         <Button label="가입" />
       </StSignUpFormContainer>
     </StSignUpContainer>
@@ -145,11 +192,17 @@ const StSignUpFormContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   background-color: 'blue';
-  gap: 25px;
 `;
 
 const StFormTitle = styled.h1`
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 20px;
+`;
+
+const StInputText = styled.div`
+  height: 85px;
+  max-width: 300px;
+  font-size: 14px;
+  color: ${theme.colors.red};
 `;
