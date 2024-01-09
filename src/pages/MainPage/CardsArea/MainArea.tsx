@@ -14,6 +14,7 @@ export const MainArea = () => {
   // );
   return (
     <div>
+      <button onClick={() => console.log('')}>post 테텥테테트스트</button>
       <StTabsWrapper>
         <Tab
           label="언제 모일래?"
