@@ -1,7 +1,14 @@
-import { configureStore } from "@reduxjs/toolkit";
+import channelsSlice from './slices/channelsSlice';
+import heartsSlice from './slices/heartsSlice';
+import loginSlice from './slices/loginSlice';
+import { configureStore } from '@reduxjs/toolkit';
 
-const store = configureStore({
-  reducer: {},
+export const store = configureStore({
+  reducer: {
+    channels: channelsSlice,
+    auth: loginSlice,
+    hearts: heartsSlice,
+  },
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

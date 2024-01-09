@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { CSSProperties, KeyboardEvent, useState } from 'react';
 import InputUpload from './InputUpload';
 import { LIGHT_GREY, PRIMARY_BLUE } from '@/style/colorConstants';
+import { theme } from '@/style/theme';
 
 interface InputProps {
   type?: string;
@@ -152,6 +153,10 @@ const StInputText = styled.input<{ fontSize: number }>`
   height: 24px;
   font-size: ${({ fontSize }) => `${fontSize}px`};
   background: transparent;
+
+  ::placeholder {
+    color: ${theme.colors.grey.default};
+  }
 `;
 
 const StTextArea = styled.textarea<{ fontSize: number }>`

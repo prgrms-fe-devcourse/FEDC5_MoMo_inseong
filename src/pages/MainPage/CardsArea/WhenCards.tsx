@@ -1,5 +1,6 @@
 // 언제모일까 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 import { IPost, IPostTitleCustom } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
@@ -10,6 +11,7 @@ import { Spinner } from '@common/Spinner/Spinner';
 export const WhenCards = () => {
   const { response, error, isLoading } = useAxios<IPost[]>(() =>
     getApi('/posts/channel/6594b09792c75f48e4de63e6'),
+  const navigate = useNavigate();
   );
   return (
     <StCardsWrapper>
@@ -50,7 +52,7 @@ export const WhenCards = () => {
               vote={vote}
               meetDate={meetDate}
               isLiked={isLiked}
-              handleCardClick={(cardId) => console.log(cardId)}
+              handleCardClick={(cardId) => navigate(`/details/${cardId}`)}
               image={'image' in post ? (post.image as string) : ''}
             />
           );

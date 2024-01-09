@@ -1,5 +1,6 @@
 // 이날모일래 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 import { IPost, IPostTitleCustom } from '@/api/_types/apiModels';
 import { Card } from '@common/Card/Card';
 import { Icon } from '@common/Icon/Icon';
@@ -10,7 +11,7 @@ interface ScheduledCardsProps {
 }
 export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
   const days = ['월', '화', '수', '목', '금', '토', '일'];
-
+  const navigate = useNavigate();
   return (
     <>
       <StScheduledWrapper>
@@ -52,7 +53,7 @@ export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
                     vote={vote}
                     meetDate={meetDate}
                     isLiked={isLiked}
-                    handleCardClick={(cardId) => console.log(cardId)}
+                    handleCardClick={(cardId) => navigate(`/details/${cardId}`)}
                     image={'image' in post ? (post.image as string) : ''}
                   />
                 );

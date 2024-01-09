@@ -20,13 +20,9 @@ export const postApi = async (url: string, data: object) => {
 // with JWT ----------------
 
 export const getApiJWT = async <T>(url: string) => {
-  try {
-    const res: AxiosResponse<T> = await customAxiosJWT().get(url);
-    console.log('get api jwt result: ', res);
-    return res; //
-  } catch (e) {
-    console.error(e);
-  }
+  const res: AxiosResponse<T> = await customAxiosJWT().get(url);
+  console.log('get api jwt result: ', res);
+  return res; //
 };
 export const postApiJWT = async <T>(
   url: string,
