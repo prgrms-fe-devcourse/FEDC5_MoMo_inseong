@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Input } from './Input';
-import { InputTest } from './InputTest';
+import { InputCompound } from './InputCompound';
 
 interface InputProps {
   fontSize?: number;
@@ -64,34 +64,34 @@ export default meta;
 
 export const DefaultTest: StoryObj<InputProps> = {
   render: () => (
-    <InputTest>
-      <InputTest.Text placeholder="입력" />
-    </InputTest>
+    <InputCompound>
+      <InputCompound.Text placeholder="입력" />
+    </InputCompound>
   ),
 };
 
 export const TextAreaTest: StoryObj<InputProps> = {
   render: () => (
-    <InputTest>
-      <InputTest.TextArea placeholder="입력" />
-    </InputTest>
+    <InputCompound>
+      <InputCompound.TextArea placeholder="입력" />
+    </InputCompound>
   ),
 };
 
-export const TagsInputTest: StoryObj<InputProps> = {
+export const TagsInputCompound: StoryObj<InputProps> = {
   render: () => (
-    <InputTest>
-      <InputTest.Text placeholder="입력" />
-      <InputTest.Tags tags={['1', '2', '3']} />
-    </InputTest>
+    <InputCompound>
+      <InputCompound.Text placeholder="입력" />
+      <InputCompound.Tags tags={['1', '2', '3']} />
+    </InputCompound>
   ),
 };
 
-export const ImageInputTest: StoryObj<InputProps> = {
+export const ImageInputCompound: StoryObj<InputProps> = {
   render: () => (
-    <InputTest>
-      <InputTest.Text placeholder="입력" />
-      <InputTest.Image image="https://picsum.photos/200" />
-    </InputTest>
+    <InputCompound>
+      <InputCompound.Text placeholder="입력" />
+      <InputCompound.Image image="https://picsum.photos/200" />
+    </InputCompound>
   ),
 };

@@ -4,7 +4,7 @@ import { InputTags } from './Input/InputTags';
 import { InputText } from './Input/InputText';
 import { InputTextArea } from './Input/InputTextArea';
 
-export const InputTest = Object.assign(InputContainer, {
+export const InputCompound = Object.assign(InputContainer, {
   Image: InputImage,
   Tags: InputTags,
   Text: InputText,
