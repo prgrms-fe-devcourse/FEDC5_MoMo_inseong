@@ -43,7 +43,7 @@ const StMeetInformation = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
     font-weight: 700;
-    font-size: 32px;
+    font-size: 18px;
   }
   & span:last-child {
     font-size: 16px;

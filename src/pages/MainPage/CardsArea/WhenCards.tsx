@@ -1,5 +1,6 @@
 // 언제모일까 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 // import { cardDetailDummy } from './CardDetailDummy';
 // import { postsChannelChannelId } from './CardsDummy';
 import { IPost, IPostTitleCustom } from '@/api/_types/apiModels';
@@ -11,7 +12,7 @@ import { Spinner } from '@common/Spinner/Spinner';
 export const WhenCards = () => {
   // const dummy: IPost[] = postsChannelChannelId;
   // const detailDummy: IPostTitleCustom = cardDetailDummy;
-
+  const navigate = useNavigate();
   const { response, error, isLoading } = useGetApi<IPost[]>(
     '/posts/channel/6594b09792c75f48e4de63e6',
   );
@@ -55,7 +56,7 @@ export const WhenCards = () => {
               vote={vote}
               meetDate={meetDate}
               isLiked={isLiked}
-              handleCardClick={(cardId) => console.log(cardId)}
+              handleCardClick={(cardId) => navigate(`/details/${cardId}`)}
               image={'image' in post ? (post.image as string) : ''}
             />
           );

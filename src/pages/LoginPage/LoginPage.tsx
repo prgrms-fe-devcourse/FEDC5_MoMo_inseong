@@ -1,9 +1,11 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 import { theme } from '@/style/theme';
 import { Button } from '@common/Button/Button';
 import { Input } from '@common/Input/Input';
 
 export const LoginPage = () => {
+  const navigate = useNavigate();
   return (
     <StLoginContainer>
       <StDescriptionContainer>LOGO TEXT</StDescriptionContainer>
@@ -23,7 +25,9 @@ export const LoginPage = () => {
           label="확인"
           type="submit"
         />
-        <StSignupLink>회원가입</StSignupLink>
+        <StSignupLink onClick={() => navigate('/signup')}>
+          회원가입
+        </StSignupLink>
       </StLoginFormContainer>
     </StLoginContainer>
   );
