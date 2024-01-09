@@ -1,14 +1,19 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { IVote } from '../TimeTable/TimeTable';
 import { useDragArea } from '@/hooks/useDragArea';
 
 interface IuseVotingTimeTable {
   userId: string;
   vote: IVote;
+  isVoting: boolean;
 }
 
-export const useVotingTimeTable = ({ vote, userId }: IuseVotingTimeTable) => {
-  const voteAreaRef = useRef<HTMLDivElement>(null);
+export const useVotingTimeTable = ({
+  vote,
+  userId,
+  isVoting,
+}: IuseVotingTimeTable) => {
+  const totalVoteAreaRef = useRef<HTMLDivElement>(null);
   const startDragPoint = useRef<number[]>([-1, -1]);
   const prevDragPoint = useRef<number[]>([-1, -1]);
 
@@ -39,7 +44,10 @@ export const useVotingTimeTable = ({ vote, userId }: IuseVotingTimeTable) => {
   const isVoted = useRef(false);
 
   const onMouseMove = (event: MouseEvent) => {
-    if (isTargetContains(event, dragAreaRef.current) && voteAreaRef.current) {
+    if (
+      isTargetContains(event, dragAreaRef.current) &&
+      totalVoteAreaRef.current
+    ) {
       const y = Number(event.target.dataset.col);
       const x = Number(event.target.dataset.row);
 
@@ -91,7 +99,7 @@ export const useVotingTimeTable = ({ vote, userId }: IuseVotingTimeTable) => {
     }
   };
 
-  const onMouseDown = (event: MouseEvent) => {
+  const onMouseDown = useCallback((event: MouseEvent) => {
     if (isTargetContains(event, dragAreaRef.current)) {
       const y = Number(event.target.dataset.col);
       const x = Number(event.target.dataset.row);
@@ -104,9 +112,9 @@ export const useVotingTimeTable = ({ vote, userId }: IuseVotingTimeTable) => {
 
       onMouseMove(event);
     }
-  };
+  }, []);
 
-  const onMouseUp = (event: MouseEvent) => {
+  const onMouseUp = useCallback((event: MouseEvent) => {
     prevDragPoint.current = [-1, -1];
 
     if (isTargetContains(event, dragAreaRef.current)) {
@@ -126,53 +134,66 @@ export const useVotingTimeTable = ({ vote, userId }: IuseVotingTimeTable) => {
         );
       }),
     );
-  };
+  }, []);
+
+  const setTableDataOf = useCallback((table: 'MyTable' | 'TotalVoteTable') => {
+    const dates = Object.values(vote);
+
+    const voteArray = Array.from(dates, (times) =>
+      Array(times).map(() => false),
+    );
+
+    dates.forEach((timeMap, i) => {
+      const times = Object.values(timeMap);
+
+      // 두 타임테이블을 받아온 데이터로 초기화
+      times.forEach((users, j) => {
+        // 현재 투표용 voteArray 초기화
+        voteArray[i][j] = users.some(({ id }) => userId === id);
+
+        if (table === 'MyTable') {
+          const myNode = myCells.current[i][j];
+
+          // 이전에 투표한 곳이면 색상 변경
+          myNode?.classList.toggle('selected', voteArray[i][j]);
+        } else {
+          const totalVoteNode = votedCells.current[i][j];
+
+          // 투표 인원수가 많을수록 채도 상승
+          const voteCount = users.filter(({ id }) => userId !== id).length;
+          totalVoteNode?.classList.add(`voted-${voteCount}`);
+          totalVoteNode?.classList.toggle(`voted-mine`, voteArray[i][j]);
+        }
+      });
+    });
+
+    // 데이터 구조상 행,열이 바뀌어있기 때문에 전치시켜야됨
+    if (table === 'MyTable') {
+      myVotes.current = transpose(voteArray);
+      currentMyVotes.current = transpose(voteArray);
+      prevMyVotes.current = transpose(voteArray);
+      myCells.current = transpose(myCells.current);
+    } else {
+      votedCells.current = transpose(votedCells.current);
+    }
+  }, []);
 
   useEffect(() => {
-    if (dragAreaRef.current && voteAreaRef.current) {
-      const dates = Object.values(vote);
-
-      // 데이터 구조상 행,열이 바뀌어있기 때문에 전치시켜야됨
+    if (dragAreaRef.current) {
       myCells.current = getChildArray<HTMLDivElement>(
         dragAreaRef.current?.childNodes,
       ).map((column) => getChildArray(column.childNodes));
 
+      setTableDataOf('MyTable');
+    }
+    if (totalVoteAreaRef.current) {
       votedCells.current = getChildArray<HTMLDivElement>(
-        voteAreaRef.current?.childNodes,
+        totalVoteAreaRef.current?.childNodes,
       ).map((column) => getChildArray(column.childNodes));
 
-      const newVotes = Array.from(dates, (times) =>
-        Array(times).map(() => false),
-      );
-
-      dates.forEach((timeMap, i) => {
-        const times = Object.values(timeMap);
-
-        // 두 타임테이블을 받아온 데이터로 초기화
-        times.forEach((users, j) => {
-          const myNode = myCells.current[i][j];
-          const voteNode = votedCells.current[i][j];
-
-          // 현재 투표용 newVotes 초기화
-          newVotes[i][j] = users.some(({ id }) => userId === id);
-
-          // 이전에 투표한 곳이면 색상 변경
-          myNode?.classList.toggle('selected', newVotes[i][j]);
-
-          // 투표 인원수가 많을수록 채도 상승
-          const voteCount = users.filter(({ id }) => userId !== id).length;
-          voteNode?.classList.add(`voted-${voteCount}`);
-          voteNode?.classList.toggle(`voted-mine`, newVotes[i][j]);
-        });
-      });
-
-      myVotes.current = transpose(newVotes);
-      currentMyVotes.current = transpose(newVotes);
-      prevMyVotes.current = transpose(newVotes);
-      myCells.current = transpose(myCells.current);
-      votedCells.current = transpose(votedCells.current);
+      setTableDataOf('TotalVoteTable');
     }
-  }, []);
+  }, [isVoting]);
 
   const { dragAreaRef } = useDragArea({
     onMouseDown,
@@ -180,18 +201,27 @@ export const useVotingTimeTable = ({ vote, userId }: IuseVotingTimeTable) => {
     onMouseUp,
   });
 
-  return { dragAreaRef, voteAreaRef };
+  return { dragAreaRef, totalVoteAreaRef };
 };
 
 /* utils */
+
+/**
+ * 이벤트의 타겟이 area에 포함되는지 평가합니다.
+ * 타겟이 HTMLDivElement이면서 속성에 data-time이 포함되면 테이블의 요소로 추론됩니다.
+ *
+ * @param event MouseEvent
+ * @param area HTMLDivElement | null
+ * @returns boolean
+ */
 const isTargetContains = (
   event: MouseEvent,
-  dragArea: HTMLDivElement | null,
+  area: HTMLDivElement | null,
 ): event is MouseEvent & { target: HTMLDivElement } => {
   return Boolean(
     event.target instanceof HTMLDivElement &&
       event.target.hasAttribute('data-time') &&
-      dragArea?.contains(event.target as Node),
+      area?.contains(event.target as Node),
   );
 };
 
