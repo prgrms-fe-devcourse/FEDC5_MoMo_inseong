@@ -1,5 +1,6 @@
-import { Outlet, createBrowserRouter } from 'react-router-dom';
+import { Outlet, createBrowserRouter, redirect } from 'react-router-dom';
 import { App } from './App';
+import { store } from './_redux/store';
 import { DetailPage } from './pages/DetailPage/DetailPage';
 import { ErrorPage } from './pages/ErrorPage/ErrorPage';
 import { LoginPage } from './pages/LoginPage/LoginPage';
@@ -9,6 +10,18 @@ import { EditProfilePage } from './pages/ProfilePage/EditProfilePage';
 import { ProfilePage } from './pages/ProfilePage/ProfilePage';
 import { SignUpPage } from './pages/SignupPage/SignupPage';
 import { Header } from '@common/Header/Header';
+
+/* loder */
+const preventLoginLoder = () => {
+  const {
+    auth: { isLogin },
+  } = store.getState();
+
+  if (isLogin) {
+    return redirect('/');
+  }
+  return null;
+};
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +64,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/login',
+        loader: preventLoginLoder,
         element: <LoginPage />,
       },
       {

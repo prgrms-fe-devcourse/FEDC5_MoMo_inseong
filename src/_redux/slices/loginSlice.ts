@@ -1,4 +1,4 @@
-import type { RootStateType } from '../stores';
+import type { RootStateType } from '../store';
 import { IUser } from '@/api/_types/apiModels';
 import { getApiJWT } from '@/api/apis';
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';

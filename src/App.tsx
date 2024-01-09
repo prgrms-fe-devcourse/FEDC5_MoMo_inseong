@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@emotion/react';
 import { Provider } from 'react-redux';
 import { Outlet } from 'react-router-dom';
-import { store } from './_redux/stores';
+import { store } from './_redux/store';
 import { GlobalReset } from './style/GlobalReset';
 import { theme } from './style/theme';
 
