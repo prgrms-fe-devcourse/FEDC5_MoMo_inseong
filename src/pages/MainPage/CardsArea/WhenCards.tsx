@@ -1,22 +1,18 @@
 // 언제모일까 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
-// import { cardDetailDummy } from './CardDetailDummy';
-// import { postsChannelChannelId } from './CardsDummy';
 import { IPost, IPostTitleCustom } from '@/api/_types/apiModels';
-import { useGetApi } from '@/api/apis';
+import { getApi } from '@/api/apis';
+import useAxios from '@/api/useAxios';
 import { Card } from '@common/Card/Card';
 import { Icon } from '@common/Icon/Icon';
 import { Spinner } from '@common/Spinner/Spinner';
 
 export const WhenCards = () => {
-  // const dummy: IPost[] = postsChannelChannelId;
-  // const detailDummy: IPostTitleCustom = cardDetailDummy;
+  const { response, error, isLoading } = useAxios<IPost[]>(() =>
+    getApi('/posts/channel/6594b09792c75f48e4de63e6'),
   const navigate = useNavigate();
-  const { response, error, isLoading } = useGetApi<IPost[]>(
-    '/posts/channel/6594b09792c75f48e4de63e6',
   );
-
   return (
     <StCardsWrapper>
       {isLoading ? (
@@ -24,7 +20,7 @@ export const WhenCards = () => {
       ) : (
         !error &&
         response &&
-        response.data.map((post, idx) => {
+        response.map((post, idx) => {
           const detailed = JSON.parse(post.title) as IPostTitleCustom;
 
           const postDetail = detailed;

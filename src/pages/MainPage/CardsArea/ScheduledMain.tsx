@@ -23,7 +23,7 @@ export const ScheduledMain = () => {
 
   // 여기 async함수를 또 만들어야만 할까요... useEffect에선 안될까요
   const getCardsOfDay = async (url: string) => {
-    return await getApi(url);
+    return await getApi<IPost[]>(url);
   };
   useEffect(() => {
     setCardsOfDay([] as IPost[][]);
