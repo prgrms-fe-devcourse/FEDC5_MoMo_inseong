@@ -1,7 +1,7 @@
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 import { App } from './App';
-import { MainPage } from './pages/MainPage/MainPage';
 import { DetailPage } from './pages/DetailPage/DetailPage';
+import { MainPage } from './pages/MainPage/MainPage';
 import { Header } from '@common/Header/Header';
 
 export const router = createBrowserRouter([
@@ -25,11 +25,11 @@ export const router = createBrowserRouter([
             element: <MainPage />,
           },
           {
-            path: '/details', // 상세 페이지
+            path: '/details/:id', // 상세 페이지
             element: <DetailPage />,
           },
           {
-            path: '/profile', // 프로필 페이지
+            path: '/profile/:id', // 프로필 페이지
             element: <div>profile</div>,
           },
         ],

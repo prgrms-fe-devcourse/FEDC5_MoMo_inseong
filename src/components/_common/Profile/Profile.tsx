@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { CSSProperties, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { theme } from '@/style/theme';
 
 interface ProfileProps {
@@ -29,10 +30,11 @@ export const Profile = ({
   ...props
 }: ProfileProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const navigate = useNavigate();
 
   // TODO: 링크 추가
   const handleUserClick = () => {
-    console.log(_id);
+    navigate(`/profile/${_id}`);
   };
 
   return (
