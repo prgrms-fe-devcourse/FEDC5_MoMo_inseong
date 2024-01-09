@@ -1,15 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { PopupProfile } from './PopupProfile';
+import { popupProfileMockup } from './PopupProfileMockup';
 import { Profile } from '@common/Profile/Profile';
 import { Tooltip } from '@common/Tooltip/Tooltip';
 
 const meta: Meta<typeof PopupProfile> = {
   component: PopupProfile,
-  args: {
-    userId: '42fec1b6-dfd8-5c51-94b0-1195de9cc4f7',
-    fullName: '원동건',
-    image: 'https://picsum.photos/200',
-  },
+  args: popupProfileMockup,
 };
 
 export default meta;
@@ -33,7 +30,7 @@ export const Default: StoryType = {
           fullName={args.fullName}
           _id={args.userId}
           status={'ProfileImage'}
-          width={48}
+          style={{ width: '48px' }}
         />
       </Tooltip>
     </div>
