@@ -1,6 +1,6 @@
 import { Outlet, createBrowserRouter, redirect } from 'react-router-dom';
 import { App } from './App';
-import { store } from './_redux/stores';
+import { store } from './_redux/store';
 import { DetailPage } from './pages/DetailPage/DetailPage';
 import { LoginPage } from './pages/LoginPage/LoginPage';
 import { MainPage } from './pages/MainPage/MainPage';

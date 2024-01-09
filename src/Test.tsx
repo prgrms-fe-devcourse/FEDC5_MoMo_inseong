@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { getHearts } from './_redux/slices/heartsSlice';
 import { getIsLogin } from './_redux/slices/loginSlice';
-import { AppDispatchType, RootStateType } from './_redux/stores';
+import { AppDispatchType, RootStateType } from './_redux/store';
 
 export const Test = () => {
   const useAppDispatch: () => AppDispatchType = useDispatch;
