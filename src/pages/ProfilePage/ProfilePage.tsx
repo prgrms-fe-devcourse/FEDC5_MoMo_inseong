@@ -18,7 +18,6 @@ export const ProfilePage = () => {
           image={'https://picsum.photos/200'}
           fullName={'name'}
           _id={'testId'}
-          status={'Profile'}
           fontSize={16}
         />
         <StButtonsContainer>
