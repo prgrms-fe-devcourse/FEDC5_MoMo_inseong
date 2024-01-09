@@ -1,11 +1,13 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { Notification, NotificationExtractType } from './Notification';
+import { notificationMockup } from './NotificatonMockup';
 import { PopupProfile, PopupProfileProps } from './PopupProfile';
+// import axios from 'axios';
+import { popoverMockup } from './PopupProfileMockup';
 import { Icon } from '@common/Icon/Icon';
 import { Profile } from '@common/Profile/Profile';
 import { Tooltip } from '@common/Tooltip/Tooltip';
-import axios from 'axios';
 
 type ModeType = 'light' | 'dark';
 
@@ -31,27 +33,29 @@ export const Menu = ({ initialMode }: MenuProps) => {
 
   //FIXME: 비동기 함수는 따로 추상화 필요
   useEffect(() => {
-    const fetchNotifications = async () => {
-      const response = await axios(
-        'src/components/_common/Header/Menu/NotificatonMockup.json',
-      );
-      setNotification(response.data as NotificationExtractType[]);
-    };
+    // const fetchNotifications =  () => {
+    // const response = await axios(
+    // 'src/components/_common/Header/Menu/NotificatonMockup.json',
+    // );
+    // setNotification(response.data as NotificationExtractType[]);
 
-    const fetchPopupProfile = async () => {
-      const response = await axios(
-        'src/components/_common/Header/Menu/PopupProfileMockup.json',
-      );
+    setNotification(notificationMockup as NotificationExtractType[]);
+    // };
 
-      setPopupProfile(response.data as PopupProfileProps);
-    };
+    // const fetchPopupProfile = () => {
+    // const response = await axios(
+    //   'src/components/_common/Header/Menu/PopupProfileMockup.json',
+    // );
 
-    fetchNotifications().catch((error) =>
-      console.error('Error fetching notifications:', error),
-    );
-    fetchPopupProfile().catch((error) =>
-      console.error('Error fetching notifications:', error),
-    );
+    setPopupProfile(popoverMockup as PopupProfileProps);
+    // };
+
+    // fetchNotifications().catch((error) =>
+    // console.error('Error fetching notifications:', error),
+    // );
+    // fetchPopupProfile().catch((error) =>
+    // console.error('Error fetching notifications:', error),
+    // );
   }, []);
 
   return (
@@ -88,7 +92,6 @@ export const Menu = ({ initialMode }: MenuProps) => {
             _id={popupProfile.userId}
             status={'ProfileImage'}
             imageSize={32}
-            width={32}
           />
         </Tooltip>
       </StTooltipWrapper>

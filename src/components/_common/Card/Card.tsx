@@ -29,7 +29,6 @@ export const Card = (cardData: CardProps) => {
     image = 'https://picsum.photos/200',
   } = cardData;
   const { hoverRef, isHovered } = useHover();
-
   const handleIconClick = (
     event: React.MouseEvent<HTMLElement, MouseEvent>,
   ) => {
@@ -42,6 +41,7 @@ export const Card = (cardData: CardProps) => {
         ? theme.colors.primaryBlue.default
         : theme.colors.secondaryNavy.default,
   };
+
   return (
     <>
       <StCardContainer
@@ -59,7 +59,7 @@ export const Card = (cardData: CardProps) => {
               status="Profile"
               fontSize={12}
               imageSize={14}
-              width={62}
+              maxWidth={55}
             />
           </StCardProfileWrapper>
         )}
@@ -76,7 +76,7 @@ export const Card = (cardData: CardProps) => {
                     : theme.colors.secondaryNavy.default
                 }
               />
-              {meetDate}
+              {meetDate[0].slice(0, 16)}
             </>
           ) : (
             ''
@@ -92,7 +92,7 @@ export const Card = (cardData: CardProps) => {
             />
             {tags.length > 1 && <span>...</span>}
           </StCardBottomTagsWrap>
-          {isLiked ? (
+          {!isLiked ? (
             <Icon
               name="heart"
               onIconClick={handleIconClick}
@@ -132,12 +132,13 @@ const StCardContainer = styled.div<{ status: string }>`
 const StCardProfileWrapper = styled.div`
   position: absolute;
   right: 0px;
-  top: 0px;
+  top: 7px;
   width: 74px;
   height: 30px;
   display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: hidden;
 `;
 const StCardStatus = styled.div<{ children: string }>`
   position: absolute;

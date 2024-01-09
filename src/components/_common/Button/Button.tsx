@@ -14,6 +14,7 @@ interface ButtonProps {
   width?: number;
   height?: number;
   label: string;
+  disabled?: boolean;
   handleButtonClick?: () => void;
 }
 export const Button = ({
@@ -22,6 +23,7 @@ export const Button = ({
   width = 200,
   height = 48,
   label,
+  disabled = false,
   handleButtonClick,
   ...props
 }: ButtonProps) => {
@@ -33,7 +35,7 @@ export const Button = ({
     '',
   );
   if (response) {
-    console.log('응답 data', response.data);
+    // console.log('응답 data', response.data);
   }
   const buttonStyle = {
     width: `${width}px`,
@@ -46,6 +48,7 @@ export const Button = ({
       isOutline={isOutline}
       color={color}
       onClick={handleButtonClick}
+      disabled={disabled}
       {...props}>
       {label}
     </StButtonContainer>
@@ -60,6 +63,7 @@ const colorBlueNavy = {
 const StButtonContainer = styled.button<{
   isOutline: boolean;
   color: 'BLUE' | 'NAVY';
+  disabled: boolean;
 }>`
   border: 1px solid ${({ color }) => colorBlueNavy[color]};
   color: ${({ color, isOutline }) =>
@@ -74,6 +78,19 @@ const StButtonContainer = styled.button<{
       : isOutline
         ? 'white'
         : `${SECONDARY_NAVY}`};
+  &[disabled] {
+    &:hover {
+      cursor: default;
+      background-color: ${({ color, isOutline }) =>
+        color === 'BLUE'
+          ? isOutline
+            ? 'white'
+            : `${PRIMARY_BLUE}`
+          : isOutline
+            ? 'white'
+            : `${SECONDARY_NAVY}`};
+    }
+  }
   &:hover {
     background-color: ${({ color, isOutline }) =>
       isOutline

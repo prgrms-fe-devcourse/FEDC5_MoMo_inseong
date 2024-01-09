@@ -1,5 +1,7 @@
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 import { App } from './App';
+import { DetailPage } from './pages/DetailPage/DetailPage';
+import { MainPage } from './pages/MainPage/MainPage';
 import { Header } from '@common/Header/Header';
 
 export const router = createBrowserRouter([
@@ -20,14 +22,14 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true, // 메인 페이지
-            element: <div>main</div>,
+            element: <MainPage />,
           },
           {
-            path: '/details', // 상세 페이지
-            element: <div>details</div>,
+            path: '/details/:id', // 상세 페이지
+            element: <DetailPage />,
           },
           {
-            path: '/profile', // 프로필 페이지
+            path: '/profile/:id', // 프로필 페이지
             element: <div>profile</div>,
           },
         ],
