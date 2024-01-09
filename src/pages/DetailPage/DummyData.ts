@@ -1,4 +1,4 @@
-const dummyMentionUser = Array(20)
+const dummyMentionUser = Array(5)
   .fill('user')
   .map((v, i) => {
     return {
@@ -27,8 +27,11 @@ export const DUMMY_DATA = {
   },
 
   // PostContainer
-  contents: `냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹냐옹\n냐옹\n 냐옹\n  냐옹\n냐옹\n냐옹\n냐옹\n            냐옹\n냐옹\n냐옹\n냐옹`,
+  contents: `냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹 냐옹냐옹\n냐옹\n 냐옹\n  냐옹\n냐옹\n냐옹\n냐옹\n            냐옹\n냐옹\n냐옹\n냐옹`,
   // image, 여기서도 사용 함.
   tags: ['보드게임', '치킨', '모각코'],
   mentions: dummyMentionUser,
+
+  // Comment
+  isMine: true,
 };

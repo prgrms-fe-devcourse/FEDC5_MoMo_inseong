@@ -23,7 +23,7 @@ export const Tag = ({
   marginRight = 8,
   color = SECONDARY_NAVY,
   hasMouseCursor = false,
-  backgroundColor = theme.colors.primaryBlue.transparent,
+  backgroundColor = theme.colors.grey.light,
 }: TagProps) => {
   const tagStyle = {
     height,

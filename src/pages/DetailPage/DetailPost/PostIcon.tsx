@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { Icon } from '../../../components/_common/Icon/Icon';
-import { DUMMY_DATA } from '../components/DummyData';
+import { DUMMY_DATA } from '../DummyData';
+import { Icon } from '@common/Icon/Icon';
 
 export const PostIcon = () => {
   const [isHeartClick, setIsHeartClick] = useState(false);
@@ -11,7 +11,6 @@ export const PostIcon = () => {
   const onDeleteClick = () => {
     const isPostDelete = confirm('정말 삭제하시겠습니까?');
     if (!isPostDelete) return;
-
     alert('삭제되었습니다.');
     // TODO:
     // 해당 post 삭제 API 호출
@@ -28,7 +27,7 @@ export const PostIcon = () => {
             onIconClick={onHeartClick}
           />
         </HeartIconsWrapper>
-        {/* 글 작성자만, loggedIn id랑 postId랑 같으면, 추후 수정 예정 */}
+        {/* loggedInId랑 postId랑 같은 사람, 즉 글 작성자만 / 추후 수정 예정 */}
         {DUMMY_DATA._id && (
           <AdminIconsWrapper>
             <Icon
