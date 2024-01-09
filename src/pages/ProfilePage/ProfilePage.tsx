@@ -15,9 +15,9 @@ export const ProfilePage = () => {
     <StSideMarginWrapper>
       <StProfileActionsContainer>
         <Profile
-          image={'https://picsum.photos/200'}
-          fullName={'name'}
-          _id={'testId'}
+          image="https://picsum.photos/200"
+          fullName="name"
+          _id="testId"
           fontSize={16}
         />
         <StButtonsContainer>

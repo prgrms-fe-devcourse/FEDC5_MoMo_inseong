@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { Button } from '@common/Button/Button';
 import { Icon } from '@common/Icon/Icon';
-import { InputTest } from '@common/Input/InputTest';
+import { InputCompound } from '@common/Input/InputCompound';
 import { Profile } from '@common/Profile/Profile';
 
 export const EditPasswordPage = () => {
@@ -14,7 +14,7 @@ export const EditPasswordPage = () => {
         <Icon
           name="arrow-left"
           size={24}
-          onIconClick={() => navigate('/profile')}
+          onIconClick={() => navigate(-1)}
         />
         <Profile
           status="ProfileImage"
@@ -27,27 +27,27 @@ export const EditPasswordPage = () => {
       </StProfileActionsContainer>
       <StProfileForm>
         <StInputText>비밀번호</StInputText>
-        <InputTest>
-          <InputTest.Text
+        <InputCompound>
+          <InputCompound.Text
             placeholder="비밀번호"
             type="password"
           />
-        </InputTest>
+        </InputCompound>
 
         <StInputText>새 비밀번호</StInputText>
-        <InputTest>
-          <InputTest.Text
+        <InputCompound>
+          <InputCompound.Text
             placeholder="새 비밀번호"
             type="password"
           />
-        </InputTest>
+        </InputCompound>
         <StInputText>새 비밀번호 확인</StInputText>
-        <InputTest>
-          <InputTest.Text
+        <InputCompound>
+          <InputCompound.Text
             placeholder="새 비밀번호 확인"
             type="password"
           />
-        </InputTest>
+        </InputCompound>
       </StProfileForm>
     </StSideMarginWrapper>
   );

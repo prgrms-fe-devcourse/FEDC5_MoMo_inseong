@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { Button } from '@common/Button/Button';
 import { Icon } from '@common/Icon/Icon';
-import { InputTest } from '@common/Input/InputTest';
+import { InputCompound } from '@common/Input/InputCompound';
 import InputUpload from '@common/Input/InputUpload';
 import { Profile } from '@common/Profile/Profile';
 
@@ -23,7 +23,7 @@ export const EditProfilePage = ({ image: initialImage }: EditProfileProps) => {
         <Icon
           name="arrow-left"
           size={24}
-          onIconClick={() => navigate('/profile')}
+          onIconClick={() => navigate(-1)}
         />
         <StImageContainer>
           <Profile
@@ -45,14 +45,14 @@ export const EditProfilePage = ({ image: initialImage }: EditProfileProps) => {
       </StProfileActionsContainer>
       <StProfileForm>
         <StInputText>이름*</StInputText>
-        <InputTest>
-          <InputTest.Text placeholder="이름" />
-        </InputTest>
+        <InputCompound>
+          <InputCompound.Text placeholder="이름" />
+        </InputCompound>
 
         <StInputText>닉네임*</StInputText>
-        <InputTest>
-          <InputTest.Text placeholder="닉네임" />
-        </InputTest>
+        <InputCompound>
+          <InputCompound.Text placeholder="닉네임" />
+        </InputCompound>
       </StProfileForm>
     </StSideMarginWrapper>
   );
