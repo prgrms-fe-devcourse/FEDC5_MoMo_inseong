@@ -1,40 +1,41 @@
 import styled from '@emotion/styled';
-import { DUMMY_DATA } from '../DummyData';
 import { Badge } from './Badge';
 import { DetailTimeTablePage } from './DetailTimeTablePage';
 import { PostContents } from './PostContents';
 import { PostIcon } from './PostIcon';
+import { IPost, IPostTitleCustom } from '@/api/_types/apiModels';
 
-type DetailPostType = {
+interface DetailPostProps {
   pageNumber: number;
-};
+  response: IPost;
+}
 
-export const DetailPost = ({ pageNumber }: DetailPostType) => {
+export const DetailPost = ({ pageNumber, response }: DetailPostProps) => {
+  const responseTitle = JSON.parse(response.title) as IPostTitleCustom;
   return (
-    <>
-      <StPostContainer>
-        {/* Post or TimeTable*/}
-        {pageNumber === 1 && <PostContents />}
-        {pageNumber === 2 && <DetailTimeTablePage />}
+    <StPostContainer>
+      {/* Post or TimeTable*/}
+      {pageNumber === 1 && <PostContents response={response} />}
+      {pageNumber === 2 && <DetailTimeTablePage />}
 
-        {/* Badge */}
-        {DUMMY_DATA.tags.length && (
-          <Badge
-            kind="tag"
-            data={DUMMY_DATA.tags}
-          />
-        )}
-        {DUMMY_DATA.mentions.length && (
-          <Badge
-            kind="mention"
-            data={DUMMY_DATA.mentions}
-          />
-        )}
+      {/* Badge */}
+      {responseTitle.tags.length && (
+        <Badge
+          kind="tag"
+          data={responseTitle.tags}
+        />
+      )}
+      {/* Todo: 아래 멘션 태그 클릭 시 해당 유저 프로필로 이동 */}
+      {responseTitle.mentions.length && (
+        <Badge
+          kind="mention"
+          data={responseTitle.mentions}
+        />
+      )}
 
-        {/* Icon */}
-        <PostIcon />
-      </StPostContainer>
-    </>
+      {/* Icon */}
+      <PostIcon />
+    </StPostContainer>
   );
 };
 

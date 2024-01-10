@@ -1,21 +1,25 @@
 import styled from '@emotion/styled';
-import { DUMMY_DATA } from '../DummyData';
+import { IPost, IPostTitleCustom } from '@/api/_types/apiModels';
 
-export const PostContents = () => {
+type PostContentsType = {
+  response: IPost;
+};
+
+export const PostContents = ({ response }: PostContentsType) => {
+  const responseTitle = JSON.parse(response.title) as IPostTitleCustom;
+
   return (
     <>
       <StPostContainer>
-        {DUMMY_DATA.image && (
+        {response.image && (
           <StPostImgWrapper>
             <img
-              src={DUMMY_DATA.image}
-              alt={`${DUMMY_DATA.title}_image`}
+              src={response.image}
+              alt={`${response.title}_image`}
             />
           </StPostImgWrapper>
         )}
-        <StPostContents>
-          {DUMMY_DATA.contents && DUMMY_DATA.contents}
-        </StPostContents>
+        <StPostContents>{responseTitle.contents}</StPostContents>
       </StPostContainer>
     </>
   );
