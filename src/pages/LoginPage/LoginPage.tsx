@@ -1,12 +1,14 @@
 import styled from '@emotion/styled';
-import React, { useRef, useState } from 'react';
+import React, { FormEvent, KeyboardEvent, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IUser } from '@/api/_types/apiModels';
 import { postApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
+import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
 import { Button } from '@common/Button/Button';
 import { InputCompound } from '@common/Input/InputCompound';
+import { Spinner } from '@common/Spinner/Spinner';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -19,22 +21,16 @@ export const LoginPage = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  // const { isLoading, error, response } = useAxios(
-  //   () => postApi<IUser>('/login'),
-  //   undefined,
-  //   true,
-  // );
+  const { fetchData, error, isLoading } = useAxios(
+    () => postApi<IUser>('/login', { email, password }),
+    false,
+  );
 
-  const handleLogin = async (
-    e:
-      | React.FormEvent<HTMLInputElement>
-      | React.KeyboardEvent<HTMLInputElement>,
-  ) => {
+  const handleLogin = async (e: FormEvent | KeyboardEvent) => {
     e.preventDefault();
 
-    // 추후 수정
     try {
-      const response = await postApi('/login', { email, password });
+      const response = await fetchData();
       if (!response) {
         setloginError('로그인 정보가 잘못 되었습니다.');
         emailRef.current?.focus();
@@ -53,47 +49,49 @@ export const LoginPage = () => {
   };
 
   return (
-    <StLoginContainer>
-      {/* {isLoading && <p>Loading...</p>} */}
-      <StDescriptionContainer>LOGO TEXT</StDescriptionContainer>
-      <StVerticalLine />
-      <StLoginFormContainer>
-        <StFormTitle>로그인</StFormTitle>
+    <StSideMarginWrapper>
+      <StLoginContainer>
+        <StDescriptionContainer>LOGO TEXT</StDescriptionContainer>
+        <StVerticalLine />
+        <StLoginFormContainer>
+          <StFormTitle>로그인</StFormTitle>
 
-        <StInputText>
-          <InputCompound style={{ width: '300px' }}>
-            <InputCompound.Text
-              placeholder="이메일"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              ref={emailRef}
-              onKeyUp={handleOnKeyUp}
-            />
-          </InputCompound>
-          {loginError}
-        </StInputText>
-        <StInputText>
-          <InputCompound style={{ width: '300px' }}>
-            <InputCompound.Text
-              placeholder="비밀번호"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              ref={passwordRef}
-              onKeyUp={handleOnKeyUp}
-            />
-          </InputCompound>
-        </StInputText>
-        <Button
-          label="확인"
-          type="submit"
-          onClick={handleLogin}
-        />
-        <StSignupLink onClick={() => navigate('/signUp')}>
-          회원가입
-        </StSignupLink>
-      </StLoginFormContainer>
-    </StLoginContainer>
+          <StInputText>
+            <InputCompound style={{ width: '300px' }}>
+              <InputCompound.Text
+                placeholder="이메일"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                ref={emailRef}
+                onKeyUp={handleOnKeyUp}
+              />
+            </InputCompound>
+            {loginError}
+          </StInputText>
+          <StInputText>
+            <InputCompound style={{ width: '300px' }}>
+              <InputCompound.Text
+                placeholder="비밀번호"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                ref={passwordRef}
+                onKeyUp={handleOnKeyUp}
+              />
+            </InputCompound>
+          </StInputText>
+          <Button
+            label={isLoading ? <Spinner /> : '확인'}
+            type="submit"
+            onClick={handleLogin}
+            disabled={isLoading}
+          />
+          <StSignupLink onClick={() => navigate('/signUp')}>
+            회원가입
+          </StSignupLink>
+        </StLoginFormContainer>
+      </StLoginContainer>
+    </StSideMarginWrapper>
   );
 };
 
