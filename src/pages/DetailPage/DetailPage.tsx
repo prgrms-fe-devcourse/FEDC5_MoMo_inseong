@@ -58,7 +58,7 @@ export const DetailPage = () => {
         {/* 필요한 것 : 본문 이미지, contents, tag, badge,  */}
         <DetailPost
           pageNumber={pageNumber}
-          responseTitle={JSON.parse(response.title) as IPostTitleCustom}
+          response={response}
         />
         <hr />
         {/* 댓글 */}
