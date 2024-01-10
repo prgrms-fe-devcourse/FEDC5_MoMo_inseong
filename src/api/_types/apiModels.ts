@@ -112,9 +112,9 @@ export interface IPostTitleCustom {
 
   vote: IVote[]; // [{id: 'dfnkdflad', votedDate: ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ']}] <== 날짜 아니라 타임테이블 배열 인덱스
 
-  cardId: string; // 포스트 _id
+  // cardId: string; // 포스트 _id
   author: string; // Post author는 User 지만, 컴포넌트에 전달할땐 User.fullName을 줘야함!
-  isLiked: boolean; // 포스트 좋아요는 포스트 likes 중에서 user로 필터링해서 찾아야합니다
+  // isLiked: ILike[] | string[]; // 포스트 좋아요는 포스트 likes 중에서 user로 필터링해서 찾아야합니다
 }
 
 export interface IMentionedUser {
