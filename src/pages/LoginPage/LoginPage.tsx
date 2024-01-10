@@ -10,6 +10,7 @@ import { theme } from '@/style/theme';
 import { getItem, setItem } from '@/utils/storage';
 import { Button } from '@common/Button/Button';
 import { InputCompound } from '@common/Input/InputCompound';
+import { Spinner } from '@common/Spinner/Spinner';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
