@@ -1,7 +1,7 @@
 // 이날모일래 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
-import { IPost, IPostTitleCustom } from '@/api/_types/apiModels';
+import { IPost } from '@/api/_types/apiModels';
 import { Card } from '@common/Card/Card';
 import { Icon } from '@common/Icon/Icon';
 
@@ -12,6 +12,7 @@ interface ScheduledCardsProps {
 export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
   const days = ['월', '화', '수', '목', '금', '토', '일'];
   const navigate = useNavigate();
+
   return (
     <>
       <StScheduledWrapper>
@@ -25,36 +26,11 @@ export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
             </StDayWrapper>
             <StCardsWrapper>
               {cards[i].map((post: IPost, idx) => {
-                const postDetail = JSON.parse(post.title) as IPostTitleCustom; //  ....
-                const {
-                  postTitle,
-                  cardId,
-                  status,
-                  tags,
-                  meetDate,
-                  author,
-                  isLiked,
-                  contents,
-                  mentions,
-                  peopleLimit,
-                  vote,
-                } = postDetail;
                 return (
                   <Card
                     key={idx}
-                    postTitle={postTitle}
-                    contents={contents}
-                    mentions={mentions}
-                    peopleLimit={peopleLimit}
-                    cardId={cardId}
-                    author={author}
-                    status={status}
-                    tags={tags}
-                    vote={vote}
-                    meetDate={meetDate}
-                    isLiked={isLiked}
+                    cardData={post}
                     handleCardClick={(cardId) => navigate(`/details/${cardId}`)}
-                    image={'image' in post ? (post.image as string) : ''}
                   />
                 );
               })}

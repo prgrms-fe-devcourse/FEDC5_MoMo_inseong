@@ -6,7 +6,6 @@ import { CreateMeetingModal } from '../Modal/CreateMeetingModal';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
-import { parseTitle } from '@/utils/parseTitle';
 import { Card } from '@common/Card/Card';
 import { Icon } from '@common/Icon/Icon';
 import { Spinner } from '@common/Spinner/Spinner';
@@ -18,6 +17,7 @@ export const WhenCards = () => {
     getApi('/posts/channel/6594b09792c75f48e4de63e6'),
   );
   const navigate = useNavigate();
+
   return (
     <>
       <StCardsWrapper>
@@ -27,36 +27,11 @@ export const WhenCards = () => {
           !error &&
           response &&
           response.map((post, idx) => {
-            const detailedPost = parseTitle(post.title);
-            const {
-              postTitle,
-              cardId,
-              status,
-              tags,
-              meetDate,
-              author,
-              isLiked,
-              contents,
-              mentions,
-              peopleLimit,
-              vote,
-            } = detailedPost;
             return (
               <Card
                 key={idx}
-                postTitle={postTitle}
-                contents={contents}
-                mentions={mentions}
-                peopleLimit={peopleLimit}
-                cardId={cardId}
-                author={author}
-                status={status}
-                tags={tags}
-                vote={vote}
-                meetDate={meetDate}
-                isLiked={isLiked}
+                cardData={post}
                 handleCardClick={(cardId) => navigate(`/details/${cardId}`)}
-                image={'image' in post ? (post.image as string) : ''}
               />
             );
           })

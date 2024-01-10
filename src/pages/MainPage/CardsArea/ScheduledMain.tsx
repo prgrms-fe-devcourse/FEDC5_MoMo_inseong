@@ -26,7 +26,7 @@ export const ScheduledMain = () => {
     const getCardsOfWeek = async () => {
       for (const day of thisWeek) {
         const results2 = await getApi<IPost[]>(
-          `/search/all/meetDate....${day.slice(0, 10)}`,
+          `/search/all/meetDate....${day.slice(0, 10)}....people`,
         );
         setCardsOfDay((prev) => [...prev, results2?.data]);
       }

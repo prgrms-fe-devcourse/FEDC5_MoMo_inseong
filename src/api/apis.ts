@@ -39,9 +39,7 @@ export const putApiJWT = async <T, D>(url: string, data?: D) => {
   return res;
 };
 export const deleteApiJWT = async <T>(url: string, data: object) => {
-  const res: AxiosResponse<T> = await customAxiosJWT().delete(url, {
-    data: data,
-  });
+  const res: AxiosResponse<T> = await customAxiosJWT().delete(url, { data });
   console.log('deleteApiJWT result: ', res);
   return res;
 };
