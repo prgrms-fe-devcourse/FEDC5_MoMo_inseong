@@ -17,6 +17,7 @@ export const CommentInput = () => {
   return (
     <StCommentInputContainer>
       <StCommentInputWrapper>
+        {/* isLoggedIn User's Data */}
         <Profile
           status="ProfileImage"
           image={DUMMY_DATA.image}
@@ -31,6 +32,7 @@ export const CommentInput = () => {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
+        {/* post 기능 추가하기 */}
         <Button
           handleButtonClick={handleButtonClick}
           label="등록"

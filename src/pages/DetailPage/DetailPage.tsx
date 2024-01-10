@@ -5,7 +5,7 @@ import { DetailComment } from './DetailComment/DetailComment';
 import { DetailMeetDescription } from './DetailMeetDescription';
 import { DetailPost } from './DetailPost/DetailPost';
 import { DetailTab } from './DetailTab';
-import { IComment, IPost, IPostTitleCustom } from '@/api/_types/apiModels';
+import { IComment, IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
@@ -62,7 +62,7 @@ export const DetailPage = () => {
         />
         <hr />
         {/* 댓글 */}
-        {/* <DetailComment comments={response.comments as IComment[]} /> */}
+        <DetailComment comments={response.comments as IComment[]} />
       </StDetailContainer>
     </StSideMarginWrapper>
   );
