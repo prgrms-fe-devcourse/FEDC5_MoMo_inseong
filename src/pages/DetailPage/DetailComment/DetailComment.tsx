@@ -1,16 +1,18 @@
 import styled from '@emotion/styled';
 import { CommentInput } from './CommentInput';
 import { CommentList } from './CommentList';
+import { IComment } from '@/api/_types/apiModels';
 
-export const DetailComment = () => {
+interface DetailCommentProps {
+  comments: IComment[];
+}
+
+export const DetailComment = ({ comments }: DetailCommentProps) => {
   return (
     <StCommentContainer>
       <StCommentPicket>댓글</StCommentPicket>
       <CommentInput />
-      <CommentList />
-      <CommentList />
-      <CommentList />
-      <CommentList />
+      <CommentList comments={comments} />
     </StCommentContainer>
   );
 };
