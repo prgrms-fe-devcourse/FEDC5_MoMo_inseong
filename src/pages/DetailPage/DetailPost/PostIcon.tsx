@@ -20,6 +20,7 @@ export const PostIcon = () => {
     <>
       <StIconContainer>
         <HeartIconsWrapper>
+          {/* Redux-isLoggedIn===true 유저만 가능 */}
           <Icon
             name="heart"
             size={24}
