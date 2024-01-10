@@ -1,22 +1,59 @@
 import styled from '@emotion/styled';
-import { DUMMY_DATA } from './DummyData';
+import { IPost, IPostTitleCustom, IUser } from '@/api/_types/apiModels';
 import { theme } from '@/style/theme';
 import { Profile } from '@common/Profile/Profile';
 
-export const DetailMeetDescription = () => {
+interface IResData {
+  postTitle: string;
+  createdAt: string;
+  image: string;
+  _id: string;
+  username: string;
+  fullName: string;
+}
+
+type DetailMeetDescriptionType = {
+  response: IPost;
+};
+
+export const DetailMeetDescription = ({
+  response,
+}: DetailMeetDescriptionType) => {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 1을 더합니다.
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  };
+  const responseTitle = JSON.parse(response.title) as IPostTitleCustom;
+  const responseAuthor = response.author as IUser;
+  const resData: IResData = {
+    postTitle: responseTitle.postTitle,
+    createdAt: formatDate(responseAuthor.createdAt),
+    image: responseAuthor?.image || '',
+    _id: responseAuthor._id,
+    username: responseAuthor?.username ? responseAuthor.username : '',
+    fullName: responseAuthor.fullName,
+  };
+
   return (
     <>
       <StMeetDescription>
         <StMeetInformation>
-          <span>{DUMMY_DATA.title}</span>
-          <span>{DUMMY_DATA.createdAt}</span>
+          <span>{resData.postTitle}</span>
+          <span>{resData.createdAt}</span>
         </StMeetInformation>
         <Profile
-          image={DUMMY_DATA.image}
-          _id={DUMMY_DATA._id}
-          fullName={DUMMY_DATA.author}
-          fontSize={DUMMY_DATA.fontSize}
-          imageSize={DUMMY_DATA.imageSize}
+          image={resData.image}
+          _id={resData._id}
+          fullName={resData.username || resData.fullName}
+          fontSize={16}
+          imageSize={32}
           status="Profile"
         />
       </StMeetDescription>
