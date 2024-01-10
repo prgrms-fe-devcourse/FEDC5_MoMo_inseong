@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { FormatDate } from './FormatDate';
 import { IPost, IPostTitleCustom, IUser } from '@/api/_types/apiModels';
 import { theme } from '@/style/theme';
 import { Profile } from '@common/Profile/Profile';
@@ -19,22 +20,11 @@ type DetailMeetDescriptionType = {
 export const DetailMeetDescription = ({
   response,
 }: DetailMeetDescriptionType) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 1을 더합니다.
-    const day = date.getDate().toString().padStart(2, '0');
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
-  };
   const responseTitle = JSON.parse(response.title) as IPostTitleCustom;
   const responseAuthor = response.author as IUser;
   const resData: IResData = {
     postTitle: responseTitle.postTitle,
-    createdAt: formatDate(responseAuthor.createdAt),
+    createdAt: FormatDate(responseAuthor.createdAt),
     image: responseAuthor?.image || '',
     _id: responseAuthor._id,
     username: responseAuthor?.username ? responseAuthor.username : '',
