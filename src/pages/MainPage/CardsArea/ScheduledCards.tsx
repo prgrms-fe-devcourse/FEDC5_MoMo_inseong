@@ -82,6 +82,7 @@ const StCardsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
+  justify-items: center;
 `;
 const StAddWrapper = styled.button`
   margin: 0 auto;

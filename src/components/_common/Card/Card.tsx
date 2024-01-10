@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
-import { IPostTitleCustom } from '@/api/_types/apiModels';
+import { MouseEvent, useState } from 'react';
+import { ILike, IPost, IPostTitleCustom } from '@/api/_types/apiModels';
+import { postApiJWT, putApiJWT } from '@/api/apis';
 import { useHover } from '@/hooks/useHover';
 import { theme } from '@/style/theme';
 import { Icon } from '@common/Icon/Icon';
@@ -29,11 +31,27 @@ export const Card = (cardData: CardProps) => {
     image = 'https://picsum.photos/200',
   } = cardData;
   const { hoverRef, isHovered } = useHover();
-  const handleIconClick = (
-    event: React.MouseEvent<HTMLElement, MouseEvent>,
-  ) => {
+  const [isLike, setIsLike] = useState(isLiked);
+
+  const handleIconClick = async (event: MouseEvent<HTMLElement>) => {
+    const formData = new FormData();
     event.stopPropagation();
-    console.log('하트클릭');
+    setIsLike((prev) => !prev);
+    await postApiJWT<ILike>('/likes/create', {
+      postId: '6597692b888bed1583ee96ff',
+    }) //cardId
+      .then(() => '')
+      .catch((err) => console.log(err));
+    formData.append('postId', '6597692b888bed1583ee96ff');
+    formData.append(
+      'title',
+      `{"postTitle":"언제2343444222","contents":"본문22","status":"Opened","tags":["tag1222","tag2","tag3","tag4"],"mentions":[{"_id":"23","fullName":"MinSuKim"}],"meetDate":["2022-12-26","2022-12-28"],"peopleLimit":8,"vote":[{"id":"5465656","fullName":"이이름","votedDate":["2022-12-23 11:20:20","2022-12-23 11:20:20"]}],"cardId":"6597692b888bed1583ee96ff","author":"ㅇㅈ","isLiked":${!isLike}}`,
+    );
+    formData.append('image', 'null');
+    formData.append('channelId', '6594b09792c75f48e4de63e6');
+    await putApiJWT<IPost, FormData>('/posts/update', formData)
+      .then(() => '')
+      .catch((err) => console.log(err));
   };
   const colorStyle = {
     color:
@@ -92,16 +110,20 @@ export const Card = (cardData: CardProps) => {
             />
             {tags.length > 1 && <span>...</span>}
           </StCardBottomTagsWrap>
-          {!isLiked ? (
+          {!isLike ? (
             <Icon
               name="heart"
-              onIconClick={handleIconClick}
+              onIconClick={(e: MouseEvent<HTMLElement>) =>
+                void handleIconClick(e)
+              }
             />
           ) : (
             <Icon
               name="heart"
               isFill={true}
-              onIconClick={handleIconClick}
+              onIconClick={(e: MouseEvent<HTMLElement>) =>
+                void handleIconClick(e)
+              }
             />
           )}
         </StCardBottom>
