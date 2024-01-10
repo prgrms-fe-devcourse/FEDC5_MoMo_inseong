@@ -21,22 +21,19 @@ export const ScheduledMain = () => {
 
   const [cardsOfDay, setCardsOfDay] = useState<IPost[][]>([]);
 
-  // 여기 async함수를 또 만들어야만 할까요... useEffect에선 안될까요
-  const getCardsOfDay = async (url: string) => {
-    return await getApi<IPost[]>(url);
-  };
   useEffect(() => {
     setCardsOfDay([] as IPost[][]);
     const getCardsOfWeek = async () => {
       for (const day of thisWeek) {
-        const results = await getCardsOfDay(
+        const results2 = await getApi<IPost[]>(
           `/search/all/meetDate....${day.slice(0, 10)}`,
         );
-        setCardsOfDay((prev) => [...prev, results?.data]);
+        setCardsOfDay((prev) => [...prev, results2?.data]);
       }
     };
     void getCardsOfWeek();
   }, [page]);
+
   // TODO : 포스트 검색 api 이용해서 해당 요일 값 가져오자아
   return (
     <>
