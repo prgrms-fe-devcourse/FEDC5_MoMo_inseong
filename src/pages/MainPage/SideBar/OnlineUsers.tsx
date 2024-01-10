@@ -109,6 +109,10 @@ const StOnlineUserUl = styled.ul`
   color: ${({ theme }) => theme.colors.secondaryNavy.default};
   height: 150px;
   overflow-y: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 export const StSearchIconWrapper = styled.div`
   position: absolute;
