@@ -1,36 +1,26 @@
 import styled from '@emotion/styled';
 import React, { FormEvent, KeyboardEvent, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IUser } from '@/api/_types/apiModels';
 import { postApi } from '@/api/apis';
-import useAxios from '@/api/useAxios';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
 import { Button } from '@common/Button/Button';
 import { InputCompound } from '@common/Input/InputCompound';
-import { Spinner } from '@common/Spinner/Spinner';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
   const [loginError, setloginError] = useState('');
-
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-
-  const { fetchData, error, isLoading } = useAxios(
-    () => postApi<IUser>('/login', { email, password }),
-    false,
-  );
 
   const handleLogin = async (e: FormEvent | KeyboardEvent) => {
     e.preventDefault();
 
     try {
-      const response = await fetchData();
+      const response = await postApi('/login', { email, password });
       if (!response) {
         setloginError('로그인 정보가 잘못 되었습니다.');
         emailRef.current?.focus();
@@ -81,10 +71,9 @@ export const LoginPage = () => {
             </InputCompound>
           </StInputText>
           <Button
-            label={isLoading ? <Spinner /> : '확인'}
+            label={'확인'}
             type="submit"
             onClick={handleLogin}
-            disabled={isLoading}
           />
           <StSignupLink onClick={() => navigate('/signUp')}>
             회원가입
