@@ -18,6 +18,7 @@ export const OnlineUsers = () => {
     error: allUserError,
     isLoading: isAllUserLoading,
   } = useAxios<IUser[]>(() => getApi('/users/get-users'));
+
   useEffect(() => {
     if (!isAllUserLoading && !allUserError) {
       setAllUsers(allUserResp);

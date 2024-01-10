@@ -55,7 +55,6 @@ export const SearchBox = () => {
         </form>
       </div>
       <StSearchResults>
-        {/* {results. */}
         {searcedResults &&
           searcedResults.map(
             (result, idx) =>
@@ -66,10 +65,7 @@ export const SearchBox = () => {
                   </StSearchResultTitle>
                   <Profile
                     image={result.image || ''}
-                    fullName={
-                      typeof result.author === 'string' ? result.author : ''
-                    }
-                    // TODO :  사용자id값을 author로 줌... 사용자정보 요청 한번 거쳐와야함
+                    fullName={parseTitle(result.title).author}
                     _id={result._id}
                     status="ProfileName"
                     fontSize={12}
