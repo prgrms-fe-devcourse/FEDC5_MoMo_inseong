@@ -47,8 +47,6 @@ export const DetailPage = () => {
     <StSideMarginWrapper>
       <StDetailContainer>
         {/* 타이틀, 생성 시간 */}
-        {/* response.author._id, _id로 getapi 써서 데이터 받아와서 fullname 이나 username으로 , 이미지까지 */}
-
         <DetailMeetDescription response={response} />
         {/* 탭 */}
         <DetailTab
@@ -57,9 +55,10 @@ export const DetailPage = () => {
           handleTimeTableClick={handleTimeTableClick}
         />
         {/* 본문 내용 */}
+        {/* 필요한 것 : 본문 이미지, contents, tag, badge,  */}
         <DetailPost
           pageNumber={pageNumber}
-          apiPostTitle={JSON.parse(response.title) as IPostTitleCustom}
+          responseTitle={JSON.parse(response.title) as IPostTitleCustom}
         />
         <hr />
         {/* 댓글 */}
