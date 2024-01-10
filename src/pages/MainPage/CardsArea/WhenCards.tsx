@@ -41,7 +41,6 @@ export const WhenCards = () => {
             name="plus"
             size={20}
             onIconClick={() => {
-              console.log('모임생성 모달 연결');
               setIsModalOpen(true);
             }}
           />
