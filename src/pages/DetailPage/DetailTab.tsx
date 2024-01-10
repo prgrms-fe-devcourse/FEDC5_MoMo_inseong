@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { DUMMY_DATA } from './DummyData';
 import { Tab } from '@common/Tab/Tab';
 
 interface DetailTabProps {
@@ -18,8 +17,8 @@ export const DetailTab = ({
       <StTabContainer>
         <StTabWrapper>
           <Tab
-            label={DUMMY_DATA.labelPost}
-            width={DUMMY_DATA.tabWidth}
+            label={'본문'}
+            width={480}
             isActive={pageNumber === 1}
             isJustify={true}
             handleTabClick={handlePostClick}
@@ -27,8 +26,8 @@ export const DetailTab = ({
         </StTabWrapper>
         <StTabWrapper>
           <Tab
-            label={DUMMY_DATA.labelTimeTable}
-            width={DUMMY_DATA.tabWidth}
+            label={'타임테이블'}
+            width={480}
             isActive={pageNumber === 2}
             isJustify={true}
             handleTabClick={handleTimeTableClick}
