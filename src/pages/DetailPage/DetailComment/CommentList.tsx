@@ -1,8 +1,12 @@
 import { useState } from 'react';
-import { DUMMY_DATA } from '../DummyData';
+import { IComment } from '@/api/_types/apiModels';
 import { Comment } from '@common/Comment/Comment';
 
-export const CommentList = () => {
+type CommentListType = {
+  comments: IComment[];
+};
+
+export const CommentList = ({ comments }: CommentListType) => {
   const [mode, setMode] = useState<'readonly' | 'edit'>('readonly');
 
   const handleEditChange = () => {
@@ -15,16 +19,24 @@ export const CommentList = () => {
   };
 
   return (
-    <Comment
-      _id={DUMMY_DATA._id}
-      image={DUMMY_DATA.image}
-      author={DUMMY_DATA.author}
-      createdAt={DUMMY_DATA.createdAt}
-      isMine={DUMMY_DATA.isMine}
-      mode={mode}
-      comment={DUMMY_DATA.contents}
-      handleEditChange={handleEditChange}
-      handleDeleteClick={handleDeleteClick}
-    />
+    comments.length > 0 &&
+    comments.map((comment, idx) => {
+      return (
+        <Comment
+          key={idx}
+          _id={comment._id}
+          image={comment.author.image as string}
+          author={comment.author.fullName}
+          createdAt={comment.createdAt}
+          // isMine은 (isLoggedIn.id === comments._id) boolean 값.
+          isMine={false}
+          mode={mode}
+          comment={comment.comment}
+          nickname={comment.author.username}
+          handleEditChange={handleEditChange}
+          handleDeleteClick={handleDeleteClick}
+        />
+      );
+    })
   );
 };
