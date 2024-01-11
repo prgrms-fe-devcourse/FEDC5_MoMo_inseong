@@ -14,10 +14,10 @@ import { Header } from '@common/Header/Header';
 /* loder */
 const preventLoginLoder = () => {
   const {
-    auth: { isLogin },
+    userInfo: { user },
   } = store.getState();
 
-  if (isLogin) {
+  if (user) {
     return redirect('/');
   }
   return null;
