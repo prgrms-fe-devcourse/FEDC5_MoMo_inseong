@@ -1,36 +1,76 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
-import { DUMMY_DATA } from '../DummyData';
+import { MouseEvent, useEffect, useState } from 'react';
+import { ILike, IPost, IUser } from '@/api/_types/apiModels';
+import { deleteApiJWT, postApiJWT } from '@/api/apis';
 import { Icon } from '@common/Icon/Icon';
 
-export const PostIcon = () => {
-  const [isHeartClick, setIsHeartClick] = useState(false);
-  const onHeartClick = () => {
-    setIsHeartClick(!isHeartClick);
+interface PostIconProps {
+  apiResponse: IPost;
+  loginUser: IUser | null;
+}
+
+export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
+  const [isHeart, setIsHeart] = useState('');
+  // console.log('LoggedIn data : ', loginUser);
+  // console.log('Response data : ', apiResponse);
+  const handleHeartClick = async (e: MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    if (!loginUser) {
+      alert('로그인 후 이용해주세요.');
+      return;
+    }
+    // 좋아요 안한 상태 => 좋아요
+    if (!isHeart) {
+      await postApiJWT<ILike>('/likes/create', { postId: loginUser._id })
+        .then((res) => {
+          setIsHeart(res.data._id);
+        })
+        .catch((err) => console.log(err));
+    }
+
+    // 좋아요 했던 상태 => 좋아요 취소
+    else if (isHeart) {
+      await deleteApiJWT<ILike>('/likes/delete', {
+        id: isHeart,
+      })
+        .then(() => {
+          setIsHeart('');
+        })
+        .catch((err) => console.log(err));
+    }
   };
+
   const onDeleteClick = () => {
     const isPostDelete = confirm('정말 삭제하시겠습니까?');
     if (!isPostDelete) return;
     alert('삭제되었습니다.');
-    // TODO:
-    // 해당 post 삭제 API 호출
-    // main page로 redirect
   };
+
+  useEffect(() => {
+    const LoginUserId = loginUser && loginUser._id;
+    const PostLike = apiResponse.likes as ILike[];
+    const result = PostLike?.find((like) => like.user === LoginUserId);
+
+    setIsHeart(result ? result._id : '');
+  }, [loginUser, apiResponse]);
+
   return (
     <>
       <StIconContainer>
-        <HeartIconsWrapper>
-          {/* Redux-isLoggedIn===true 유저만 가능 */}
+        <StIconsWrapper>
           <Icon
             name="heart"
             size={24}
-            isFill={isHeartClick}
-            onIconClick={onHeartClick}
+            isFill={!!isHeart}
+            onIconClick={(e: MouseEvent<HTMLElement>) =>
+              void handleHeartClick(e)
+            }
           />
-        </HeartIconsWrapper>
-        {/* loggedInId랑 postId랑 같은 사람, 즉 글 작성자만 / 추후 수정 예정 */}
-        {DUMMY_DATA._id && (
-          <AdminIconsWrapper>
+        </StIconsWrapper>
+        {/* isLogin === post 작성자 id */}
+        {/* localStorage의 JWT 토큰 값 바꿔서 체크해보자 */}
+        {false && (
+          <StAdminIconsWrapper>
             <Icon
               name="edit"
               size={24}
@@ -40,7 +80,7 @@ export const PostIcon = () => {
               size={24}
               onIconClick={onDeleteClick}
             />
-          </AdminIconsWrapper>
+          </StAdminIconsWrapper>
         )}
       </StIconContainer>
     </>
@@ -50,17 +90,15 @@ const StIconContainer = styled.div`
   margin-top: 8px;
   display: flex;
   align-items: center;
+  padding: 8px 0;
 `;
 
-const HeartIconsWrapper = styled.div`
-  margin: 16px 0;
-  width: 50%;
+const StIconsWrapper = styled.div`
+  flex-grow: 1;
 `;
-const AdminIconsWrapper = styled.div`
-  width: 50%;
-  text-align: right;
-  & > span:first-of-type {
-    margin-right: 8px;
-    margin-right: 24px;
+
+const StAdminIconsWrapper = styled.div`
+  & > span:last-of-type {
+    margin-left: 24px;
   }
 `;
