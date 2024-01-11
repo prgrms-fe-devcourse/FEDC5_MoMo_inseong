@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreateMeetingModal } from '../Modal/CreateMeetingModal';
+import { unscheduledChannelId } from '../channelId';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
@@ -14,7 +15,7 @@ export const WhenCards = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { response, error, isLoading } = useAxios<IPost[]>(() =>
-    getApi('/posts/channel/6594b09792c75f48e4de63e6'),
+    getApi(`/posts/channel/${unscheduledChannelId}`),
   );
   const navigate = useNavigate();
 
