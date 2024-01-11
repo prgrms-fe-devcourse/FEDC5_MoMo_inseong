@@ -32,7 +32,6 @@ export const Profile = ({
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
 
-  // TODO: 링크 추가
   const handleUserClick = () => {
     navigate(`/profile/${_id}`);
   };

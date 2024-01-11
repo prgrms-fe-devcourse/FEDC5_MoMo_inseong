@@ -48,8 +48,8 @@ export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
     e.stopPropagation();
     const isPostDelete = confirm('정말 삭제하시겠습니까?');
     if (!isPostDelete) return;
-    // postId 먼저 넣어보겠음
-    await deleteApiJWT<ILike>('/posts/delete', { id: apiResponse._id })
+
+    await deleteApiJWT<ILike>('/posts/delete', { id: apiResponse._id }) // postId
       .then(() => {
         setIsHeart('');
       })
