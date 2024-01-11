@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import { FormEvent, useEffect, useState } from 'react';
+import { useDispatch } from '@/_redux/hooks';
+import { setAllUsersList } from '@/_redux/slices/allUsersSlice';
 import { IUser } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
@@ -18,12 +20,20 @@ export const OnlineUsers = () => {
     error: allUserError,
     isLoading: isAllUserLoading,
   } = useAxios<IUser[]>(() => getApi('/users/get-users'));
-
   useEffect(() => {
     if (!isAllUserLoading && !allUserError) {
       setAllUsers(allUserResp);
+      dispatch(setAllUsersList(allUserResp));
     }
   }, [isAllUserLoading]);
+
+  const [willDebounce, setWillDebounce] = useState(false);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    setTimeout(() => {
+      setWillDebounce((prev) => !prev);
+    }, 10000);
+  }, [willDebounce]);
 
   const [onlineUsers, setOnlineUsers] = useState<IUser[]>([]);
 
@@ -109,6 +119,10 @@ const StOnlineUserUl = styled.ul`
   color: ${({ theme }) => theme.colors.secondaryNavy.default};
   height: 150px;
   overflow-y: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 export const StSearchIconWrapper = styled.div`
   position: absolute;

@@ -1,39 +1,69 @@
 import styled from '@emotion/styled';
-import { IPostTitleCustom } from '@/api/_types/apiModels';
+import { MouseEvent, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootStateType } from '@/_redux/store';
+import { ILike, IPost, IPostTitleCustom } from '@/api/_types/apiModels';
+import { deleteApiJWT, postApiJWT } from '@/api/apis';
 import { useHover } from '@/hooks/useHover';
 import { theme } from '@/style/theme';
+import { parseTitle } from '@/utils/parseTitle';
 import { Icon } from '@common/Icon/Icon';
 import { Profile } from '@common/Profile/Profile';
 import { Tag } from '@common/Tag/Tag';
 
-interface CardProps extends IPostTitleCustom {
+interface ICardData {
+  cardData: IPost;
   handleCardClick: (cardId: string) => void;
-  image: string;
 }
+
 const statusValue = {
   Opened: '모집 중',
   Scheduled: '모임 예정',
   Closed: '모임 종료',
 };
 
-export const Card = (cardData: CardProps) => {
-  const {
-    postTitle,
-    cardId,
-    author,
-    status,
-    tags,
-    meetDate,
-    isLiked,
-    handleCardClick,
-    image = 'https://picsum.photos/200',
-  } = cardData;
+export const Card = ({ cardData, handleCardClick }: ICardData) => {
+  const userId = useSelector((state: RootStateType) => state.auth.userId);
+  const parsedTitle: IPostTitleCustom = parseTitle(cardData.title);
+
+  const { likes, _id: cardId, image } = cardData;
+  const { postTitle, status, tags, meetDate, author } = parsedTitle;
+
+  let isLiked = '';
+  likes?.forEach((each) => {
+    if (typeof each !== 'string' && each.user === userId) {
+      isLiked = each._id;
+    }
+  });
+
   const { hoverRef, isHovered } = useHover();
-  const handleIconClick = (
-    event: React.MouseEvent<HTMLElement, MouseEvent>,
-  ) => {
+
+  const [isLike, setIsLike] = useState(isLiked);
+  useEffect(() => {
+    setIsLike(isLiked);
+  }, [isLiked]);
+
+  const handleIconClick = async (event: MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    console.log('하트클릭');
+    if (!isLike) {
+      await postApiJWT<ILike>('/likes/create', {
+        postId: cardId,
+      }) //cardId
+        .then((res) => {
+          console.log(res);
+          setIsLike(res.data._id);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      await deleteApiJWT<ILike>('/likes/delete', {
+        id: isLike,
+      })
+        .then((res) => {
+          console.log(res);
+          setIsLike('');
+        })
+        .catch((err) => console.log(err));
+    }
   };
   const colorStyle = {
     color:
@@ -53,7 +83,7 @@ export const Card = (cardData: CardProps) => {
         ) : (
           <StCardProfileWrapper>
             <Profile
-              image={image}
+              image={image || ''}
               fullName={author}
               _id="1"
               status="Profile"
@@ -92,16 +122,20 @@ export const Card = (cardData: CardProps) => {
             />
             {tags.length > 1 && <span>...</span>}
           </StCardBottomTagsWrap>
-          {!isLiked ? (
+          {!isLike ? (
             <Icon
               name="heart"
-              onIconClick={handleIconClick}
+              onIconClick={(e: MouseEvent<HTMLElement>) =>
+                void handleIconClick(e)
+              }
             />
           ) : (
             <Icon
               name="heart"
               isFill={true}
-              onIconClick={handleIconClick}
+              onIconClick={(e: MouseEvent<HTMLElement>) =>
+                void handleIconClick(e)
+              }
             />
           )}
         </StCardBottom>
@@ -109,8 +143,6 @@ export const Card = (cardData: CardProps) => {
     </>
   );
 };
-// TODO
-// 아이콘(캘린더), 태그, 유저정보 컴포넌트 완성 후 추가 필요
 
 const StCardContainer = styled.div<{ status: string }>`
   position: relative;
