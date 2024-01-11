@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux';
-import { RootStateType } from '@/_redux/store';
+import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
@@ -8,7 +7,7 @@ import { Card } from '@common/Card/Card';
 import { Spinner } from '@common/Spinner/Spinner';
 
 export const MyJoinCards = () => {
-  const userId = useSelector((state: RootStateType) => state.auth.userId);
+  const userId = useSelector((state) => state.auth.userId);
   console.log('---', userId);
 
   // getApi(`posts/author/${userId}`),

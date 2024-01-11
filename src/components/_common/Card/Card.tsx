@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
 import { MouseEvent, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { RootStateType } from '@/_redux/store';
+import { useSelector } from '@/_redux/hooks';
 import { ILike, IPost, IPostTitleCustom } from '@/api/_types/apiModels';
 import { deleteApiJWT, postApiJWT } from '@/api/apis';
 import { useHover } from '@/hooks/useHover';
@@ -24,7 +23,7 @@ const statusValue = {
 };
 
 export const Card = ({ cardData, handleCardClick }: ICardData) => {
-  const userId = useSelector((state: RootStateType) => state.auth.userId);
+  const userId = useSelector((state) => state.auth.userId);
   const parsedTitle: IPostTitleCustom = parseTitle(cardData.title);
   const navigate = useNavigate();
 

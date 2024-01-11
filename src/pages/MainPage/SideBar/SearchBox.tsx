@@ -13,9 +13,7 @@ import { Spinner } from '@common/Spinner/Spinner';
 
 export const SearchBox = () => {
   const [searcedResults, setSearchedResults] = useState<IUser[] | IPost[]>([]);
-  // TODO : 리덕스 리덕스상태로 검색결과를 저장하고, Input.tsx에서 엔터 입력시 갱신
 
-  // isLoading 미사용
   const { values, isLoading, errors, handleChange, handleSubmit } = useForm({
     initialState: {
       inputValue: '',
