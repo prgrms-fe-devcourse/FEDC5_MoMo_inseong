@@ -11,7 +11,7 @@ import { Card } from '@common/Card/Card';
 import { Icon } from '@common/Icon/Icon';
 import { Spinner } from '@common/Spinner/Spinner';
 
-export const WhenCards = () => {
+export const UnsheduledCards = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { response, error, isLoading } = useAxios<IPost[]>(() =>

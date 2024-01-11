@@ -38,9 +38,7 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
 
   const { hoverRef, isHovered } = useHover();
 
-  const [isLike, setIsLike] = useState(isLiked); /// 좋아요했다면 그 좋아요한 객체의 id값을 갖도록함
-  // console.log(postTitle, isLiked, isLike, '-------');
-  // 언제만나1 true false -------
+  const [isLike, setIsLike] = useState(isLiked);
   useEffect(() => {
     setIsLike(isLiked);
   }, [isLiked]);
@@ -145,8 +143,6 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
     </>
   );
 };
-// TODO
-// 아이콘(캘린더), 태그, 유저정보 컴포넌트 완성 후 추가 필요
 
 const StCardContainer = styled.div<{ status: string }>`
   position: relative;
