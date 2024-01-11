@@ -1,16 +1,19 @@
 import styled from '@emotion/styled';
-import { CSSProperties, useState } from 'react';
+import { CSSProperties } from 'react';
 import { Icon } from '@common/Icon/Icon';
 import { Tag } from '@common/Tag/Tag';
 
 interface InputProps {
-  tags?: string[];
+  tags: string[];
+  setTags: (arg: string[]) => void;
   style?: CSSProperties;
 }
 
-export const InputTags = ({ tags: initialTags = [], ...props }: InputProps) => {
-  const [tags, setTags] = useState(initialTags);
-
+export const InputTags = ({
+  tags = [],
+  setTags = () => {},
+  ...props
+}: InputProps) => {
   const handleTagRemove = (indexToRemove: number) => {
     setTags(tags.filter((_, index) => index !== indexToRemove));
   };
