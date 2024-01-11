@@ -33,6 +33,10 @@ const StMainSide = styled.div`
   height: calc(100vh - 150px);
   max-height: 800px;
   overflow-y: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 const StMainArea = styled.div`
   flex-grow: 1;
