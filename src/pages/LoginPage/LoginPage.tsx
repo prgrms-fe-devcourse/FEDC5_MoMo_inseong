@@ -1,11 +1,5 @@
 import styled from '@emotion/styled';
-import React, {
-  FormEvent,
-  KeyboardEvent,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postApi } from '@/api/apis';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
@@ -17,41 +11,28 @@ import { InputCompound } from '@common/Input/InputCompound';
 export const LoginPage = () => {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [loginError, setLoginError] = useState<string>('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const handleLogin = async (
-    e: FormEvent<HTMLDivElement> | KeyboardEvent<HTMLInputElement>,
+    e: FormEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>,
   ) => {
     e.preventDefault();
-    setLoginError('');
 
-    try {
-      const response = (await postApi('/login', { email, password })) as {
-        data?: { token?: string };
-      };
-
-      if (
-        !response ||
-        !response.data ||
-        typeof response.data.token !== 'string'
-      ) {
+    await postApi<{ token: string }>('/login', { email, password })
+      .then((res) => {
+        const token = res.data.token;
+        setItem('JWT', token);
+        navigate('/');
+      })
+      .catch((err) => {
+        console.log(err);
         setLoginError('로그인 정보가 잘못 되었습니다.');
         emailRef.current?.focus();
-        return;
-      }
-
-      const token = response.data.token;
-      setItem('JWT', token);
-      navigate('/');
-    } catch (e) {
-      setLoginError('로그인에 실패했습니다.');
-      emailRef.current?.focus();
-      console.error(e);
-    }
+      });
   };
 
   useEffect(() => {
@@ -59,8 +40,7 @@ export const LoginPage = () => {
       navigate('/');
     }
   }, [navigate]);
-
-  const handleOnKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleOnKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       void handleLogin(e);
     }

@@ -7,14 +7,10 @@ export const getApi = async <T>(url: string) => {
   return res; //{data: Array(1), status: 200, statusText: '', headers: AxiosHeaders, config: {…},}
 };
 
-export const postApi = async (url: string, data: object) => {
-  try {
-    const res = await customAxios().post(url, data);
-    console.log('postApi result: ', res);
-    return res;
-  } catch (e) {
-    console.error(e);
-  }
+export const postApi = async <T>(url: string, data: object) => {
+  const res: AxiosResponse<T> = await customAxios().post(url, data);
+  console.log('postApi result: ', res);
+  return res;
 };
 
 // with JWT ----------------

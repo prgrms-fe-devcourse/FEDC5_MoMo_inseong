@@ -49,15 +49,17 @@ export const SignUpPage = () => {
       }
     }
 
-    // 추후 수정
-    try {
-      const response = await postApi('/signup', { email, password, fullName });
-      // TODO: 아이디 중복 처리
-      if (!response) return;
-      navigate('/login');
-    } catch (e) {
-      console.log(e);
-    }
+    await postApi('/signup', { email, password, fullName })
+      .then(() => {
+        // TODO: 아이디 중복 처리
+        alert('회원 가입 완료 되었습니다.');
+        navigate('/login');
+      })
+      .catch((err) => {
+        console.log(err);
+        setEmailError('정보가 잘못 되었습니다.');
+        emailRef.current?.focus();
+      });
   };
 
   useEffect(() => {
