@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { Notification, NotificationExtractType } from './Notification';
-import { notificationMockup } from './NotificatonMockup';
+import { Notification } from './Notification';
 import { PopupProfile, PopupProfileProps } from './PopupProfile';
 import { popupProfileMockup } from './PopupProfileMockup';
+import { useNotification } from './hooks/useNotification';
 import { Icon } from '@common/Icon/Icon';
+import { Spinner } from '@common/Spinner/Spinner';
 import { Tooltip } from '@common/Tooltip/Tooltip';
 
 type ModeType = 'light' | 'dark';
@@ -17,24 +18,30 @@ interface MenuProps {
   initialMode: ModeType;
 }
 
+// TODO: webWorker로 알람 받기
 export const Menu = ({ initialMode }: MenuProps) => {
-  const [notifications, setNotification] = useState<NotificationExtractType[]>(
-    [],
-  );
   const [popupProfile, setPopupProfile] = useState<PopupProfileProps>(
     {} as PopupProfileProps,
   );
   const [mode, setMode] = useState(initialMode); // 초기 테마 상태
+
+  const { notifications, isLoading, error } = useNotification();
+
+  const [isRedDot, setIsRedDot] = useState(false);
 
   // 테마 토글 함수
   const handleToggleMode = () => setMode(mode === 'light' ? 'dark' : 'light');
 
   //FIXME: 비동기 함수는 따로 추상화 필요
   useEffect(() => {
-    setNotification(notificationMockup as NotificationExtractType[]);
-
     setPopupProfile(popupProfileMockup as PopupProfileProps);
   }, []);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setIsRedDot(notifications.length > 0);
+    }
+  }, [notifications]);
 
   return (
     <StContainer>
@@ -46,11 +53,24 @@ export const Menu = ({ initialMode }: MenuProps) => {
         </ToggleButton>
       </StTooltipWrapper>
       <StTooltipWrapper>
+        {/* FIXME: 툴팁에서 알람창으로 SetVisibility를 cloneElement로 넘겨줌 */}
         <Tooltip
-          content={<Notification data={notifications} />}
+          content={
+            isLoading ? (
+              <Spinner />
+            ) : error ? (
+              <div>알림을 가져오지 못했습니다.</div>
+            ) : (
+              <Notification
+                data={notifications}
+                setIsRedDot={setIsRedDot}
+              />
+            )
+          }
           width={300}
           height={300}
           offset={-100}>
+          {isRedDot && <StRedDot />}
           <Icon
             name="bell"
             showBackground={false}
@@ -119,5 +139,15 @@ const IconContainer = styled.div<IDarkMode>`
 const StProfileImg = styled.img`
   width: 32px;
   height: 32px;
+  border-radius: 100%;
+`;
+
+const StRedDot = styled.div`
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 2px;
+  background-color: red;
   border-radius: 100%;
 `;

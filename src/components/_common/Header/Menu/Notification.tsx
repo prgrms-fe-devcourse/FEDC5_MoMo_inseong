@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
-import { memo } from 'react';
+import { Dispatch, SetStateAction, memo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { putApiJWT } from '@/api/apis';
 
 // 팔로우 알림, 댓글 알림, 좋아요 알림(북마크), 메세지 알림, 멘션 알림(커스텀)
 
@@ -22,7 +24,6 @@ interface IComment {
     postId: string;
     commentId: string;
     comment: string;
-    isCancel: boolean;
   };
 }
 interface ILike {
@@ -30,7 +31,6 @@ interface ILike {
   details: {
     postTitle: string;
     postId: string;
-    isCancel: boolean;
   };
 }
 interface IMessage {
@@ -49,41 +49,55 @@ interface IMention {
 
 type ContentType = IFollow | IComment | ILike | IMessage | IMention;
 
-interface NotificationBaseProps {
+export interface NotificationBaseProps {
   _id: string;
   userId: string;
   fullName: string;
   when: string;
+  isSeen: boolean;
 }
 
 export type NotificationExtractType = NotificationBaseProps & ContentType;
 
 interface NotificationProps {
   data: NotificationExtractType[];
+  setIsRedDot: Dispatch<SetStateAction<boolean>>;
   setIsVisible?: (arg: boolean) => void;
 }
 
 export const Notification = memo(
-  ({ data, setIsVisible }: NotificationProps) => {
+  ({ data, setIsVisible, setIsRedDot }: NotificationProps) => {
+    const [isBlur, setIsBlur] = useState(false);
+    // 전체 알람 확인
+    const handleSeenAlert = () => {
+      void putApiJWT(`/notifications/seen`);
+      setIsBlur(true);
+      setIsRedDot(false);
+    };
+    // 툴팁 클릭시 닫힘
     const handleVisibility = () => {
       setIsVisible && setIsVisible(false);
     };
     return (
       <StContainer>
-        <StTitle>알림</StTitle>
+        <StHeaderContainer>
+          <StTitle>알림</StTitle>
+          <StConfirmButton onClick={handleSeenAlert}>전체 확인</StConfirmButton>
+        </StHeaderContainer>
         <StContentScrollWrapper>
           <StContents>
             {data.length > 0 &&
-              data.map(({ type, _id, fullName, when, details }) => (
+              data.map(({ type, _id, fullName, when, details, isSeen }) => (
                 <StContentBox
                   key={_id}
                   title={subTitleOf(type)}
-                  onClick={handleVisibility}>
+                  isBlur={isBlur || isSeen}
+                  onClick={type !== 'LIKE' ? handleVisibility : () => {}}>
                   {type === 'COMMENT' ? (
-                    <>
+                    <Link to={`/details/${details.postId}`}>
                       <StSummary>{`${details.postTitle} 모임에 새로운 댓글이 있습니다.`}</StSummary>
-                      <StContent>{`${fullName}: ${details.comment}`}</StContent>
-                    </>
+                      <StContent>{`${fullName} / ${details.comment}`}</StContent>
+                    </Link>
                   ) : type === 'LIKE' ? (
                     <StSummary>{`${fullName}님이 ${details.postTitle} 모임을 북마크 등록했습니다.`}</StSummary>
                   ) : type === 'FOLLOW' ? (
@@ -96,9 +110,11 @@ export const Notification = memo(
                       <StContent>{`${details.message}`}</StContent>
                     </>
                   ) : type === 'MENTION' ? (
-                    <StSummary>{`${fullName}님이 ${details.postTitle} 모임에 멘션하였습니다.`}</StSummary>
+                    <Link to={`/details/${details.postId}`}>
+                      <StSummary>{`${fullName}님이 ${details.postTitle} 모임에 멘션하였습니다.`}</StSummary>
+                    </Link>
                   ) : null}
-                  <StDate>{when}</StDate>
+                  <StDate>{new Date(when).toLocaleDateString()}</StDate>
                 </StContentBox>
               ))}
           </StContents>
@@ -117,11 +133,24 @@ const StContainer = styled.div`
   overflow: hidden;
 `;
 
-const StTitle = styled.header`
-  font-weight: bold;
-  color: black;
+const StHeaderContainer = styled.header`
+  display: flex;
+  justify-content: center;
   padding: 1rem 8px 1rem 8px;
   border-bottom: 2px solid #dfdfdf;
+`;
+
+const StTitle = styled.header`
+  display: inline-block;
+  flex-grow: 1;
+  font-weight: bold;
+  color: black;
+`;
+
+const StConfirmButton = styled.button`
+  font-size: 12px;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.primaryBlue.default};
 `;
 
 const StContentScrollWrapper = styled.article`
@@ -141,15 +170,16 @@ const StContents = styled.ul`
   ${({ theme }) => theme.scrollBar.default}
 `;
 
-const StContentBox = styled.li<{ title: string }>`
+const StContentBox = styled.li<{ title: string; isBlur: boolean }>`
   display: flex;
   flex-direction: column;
-  gap: 8px;
   padding: 8px 12px 8px 12px;
 
   border-bottom: 2px solid ${({ theme }) => theme.colors.grey.light};
 
   transition: background-color 0.2s ease;
+
+  opacity: ${({ isBlur }) => (isBlur ? '40%' : 'none')};
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.grey.bright};
@@ -192,6 +222,7 @@ const StDate = styled.p`
   padding-top: 4px;
   font-size: 10px;
   color: ${({ theme }) => theme.colors.grey.dark};
+  text-align: end;
 `;
 
 /* util */
