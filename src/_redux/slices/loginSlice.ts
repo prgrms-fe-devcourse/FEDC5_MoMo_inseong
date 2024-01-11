@@ -5,12 +5,16 @@ import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 interface IUserData {
   isLoading: boolean;
-  user: IUser | null;
+  isLogin: boolean;
+  loggedinUser: IUser;
+  userId: string;
 }
 
 const initialState: IUserData = {
   isLoading: false,
-  user: null,
+  isLogin: false,
+  loggedinUser: {} as IUser,
+  userId: '',
 };
 
 /** `<<< thunk 사용 예시 >>>`
@@ -19,27 +23,31 @@ const initialState: IUserData = {
  * const dispatch = useDispatch();
  * dispatch(getIsLogin);
  */
-export const getUserInfo = createAsyncThunk('authUser', async () => {
+export const getIsLogin = createAsyncThunk('authUser', async () => {
   const response = await getApiJWT<IUser>('/auth-user');
-  return response.data;
+  return response.data._id;
 });
 
-const userInfoSlice = createSlice({
-  name: 'userInfoSlice',
+const loginSlice = createSlice({
+  name: 'loginSlice',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getUserInfo.pending, (state) => {
+    builder.addCase(getIsLogin.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(
-      getUserInfo.fulfilled,
-      (state, action: PayloadAction<IUser>) => {
-        state.isLoading = false;
-        state.user = action.payload;
+      getIsLogin.fulfilled,
+      /**
+       * @description action.payload의 타입을 지정해야할 때 PayloadAction 유틸 타입을 사용합니다.
+       * 제네릭으로 action.payload의 타입을 넘겨줍니다.
+       */
+      (state, action: PayloadAction<IUserData['userId']>) => {
+        state.isLoading = true;
+        state.userId = action.payload;
       },
     );
-    builder.addCase(getUserInfo.rejected, (state) => {
+    builder.addCase(getIsLogin.rejected, (state) => {
       state.isLoading = false;
     });
   },
@@ -50,6 +58,6 @@ const userInfoSlice = createSlice({
  *
  * @example const 변수 = useSelector(shouldRedirect);
  */
-export const shouldRedirect = (state: RootStateType) => state.userInfo;
+export const shouldRedirect = (state: RootStateType) => state.auth.isLogin;
 
-export default userInfoSlice.reducer;
+export default loginSlice.reducer;
