@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from '@/_redux/hooks';
+import { getUserInfo } from '@/_redux/slices/userSlice';
+import { IUser } from '@/api/_types/apiModels';
 import { postApi } from '@/api/apis';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
@@ -10,22 +13,24 @@ import { InputCompound } from '@common/Input/InputCompound';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
+  const dispatch = useDispatch();
   const handleLogin = async (
     e: FormEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>,
   ) => {
     e.preventDefault();
-
-    await postApi<{ token: string }>('/login', { email, password })
+    await postApi<{
+      user: IUser;
+      token: string;
+    }>('/login', { email, password })
       .then((res) => {
-        const token = res.data.token;
-        setItem('JWT', token);
+        setItem('JWT', res.data.token);
+        void dispatch(getUserInfo());
         navigate('/');
       })
       .catch((err) => {
