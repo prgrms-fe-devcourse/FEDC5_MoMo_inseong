@@ -1,7 +1,9 @@
 // 이날모일래 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { ScheduledCards } from './ScheduledCards';
+import { RootStateType } from '@/_redux/store';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import { theme } from '@/style/theme';
@@ -12,23 +14,25 @@ import { Spinner } from '@common/Spinner/Spinner';
 export const ScheduledMain = () => {
   const [page, setPage] = useState(0); // 오늘주0, 이후 +7, -7 씩
 
-  const today = new Date('2022-12-22 11:20:20'); /// FIX: 오늘날짜로 변경
+  const today = new Date(
+    useSelector((state: RootStateType) => state.today.today),
+  );
   const thisWeek = new Array(7)
     .fill(0)
     .map((_, i) =>
       dateFormat(new Date(new Date(today).setDate(today.getDate() + i + page))),
     );
 
-  const [cardsOfDay, setCardsOfDay] = useState<IPost[][]>([]);
+  const [cardsOfThisweek, setCardsOfThisweek] = useState<IPost[][]>([]);
 
   useEffect(() => {
-    setCardsOfDay([] as IPost[][]);
+    setCardsOfThisweek([] as IPost[][]);
     const getCardsOfWeek = async () => {
       for (const day of thisWeek) {
-        const results2 = await getApi<IPost[]>(
+        const cardsOfEachDay = await getApi<IPost[]>(
           `/search/all/meetDate....${day.slice(0, 10)}....people`,
         );
-        setCardsOfDay((prev) => [...prev, results2?.data]);
+        setCardsOfThisweek((prev) => [...prev, cardsOfEachDay?.data]);
       }
     };
     void getCardsOfWeek();
@@ -37,7 +41,7 @@ export const ScheduledMain = () => {
   // TODO : 포스트 검색 api 이용해서 해당 요일 값 가져오자아
   return (
     <>
-      {cardsOfDay.length !== 7 ? (
+      {cardsOfThisweek.length !== 7 ? (
         <Spinner
           size={50}
           color={theme.colors.primaryBlue.default}
@@ -45,7 +49,7 @@ export const ScheduledMain = () => {
       ) : (
         <>
           <ScheduledCards
-            cards={cardsOfDay}
+            cards={cardsOfThisweek}
             thisWeek={thisWeek}
           />
           <StButtonsWrapper>
