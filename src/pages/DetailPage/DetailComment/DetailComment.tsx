@@ -1,18 +1,22 @@
 import styled from '@emotion/styled';
 import { CommentInput } from './CommentInput';
 import { CommentList } from './CommentList';
-import { IComment } from '@/api/_types/apiModels';
+import { IPost, IUser } from '@/api/_types/apiModels';
 
 interface DetailCommentProps {
-  comments: IComment[];
+  response: IPost;
+  loginUser: IUser | null;
 }
 
-export const DetailComment = ({ comments }: DetailCommentProps) => {
+export const DetailComment = ({ response, loginUser }: DetailCommentProps) => {
   return (
     <StCommentContainer>
       <StCommentPicket>댓글</StCommentPicket>
-      <CommentInput />
-      <CommentList comments={comments} />
+      <CommentInput
+        loginUser={loginUser ?? null}
+        postId={response._id}
+      />
+      <CommentList comments={response.comments} />
     </StCommentContainer>
   );
 };

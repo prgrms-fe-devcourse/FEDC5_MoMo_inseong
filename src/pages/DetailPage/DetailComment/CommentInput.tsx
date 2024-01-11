@@ -1,29 +1,48 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
-import { DUMMY_DATA } from '../DummyData';
+import { IComment, IUser } from '@/api/_types/apiModels';
+import { postApiJWT } from '@/api/apis';
 import { theme } from '@/style/theme';
 import { Button } from '@common/Button/Button';
 import { Profile } from '@common/Profile/Profile';
 
-export const CommentInput = () => {
+interface CommentInputProps {
+  loginUser: IUser | null;
+  postId: string;
+}
+
+export const CommentInput = ({ loginUser, postId }: CommentInputProps) => {
   const [text, setText] = useState('');
+
+  const postComment = async () => {
+    await postApiJWT<IComment>('/comments/create', {
+      comment: text,
+      postId: postId,
+    });
+  };
+
   const handleButtonClick = () => {
-    if (!text) return;
-    // Data 전송
+    if (!text) {
+      alert('댓글을 입력해주세요.');
+      return;
+    }
+
+    void postComment();
     setText('');
   };
+  // console.log('loginUser : ', loginUser);
+  // console.log(text);
 
   return (
     <StCommentInputContainer>
       <StCommentInputWrapper>
-        {/* isLoggedIn User's Data */}
         <Profile
           status="ProfileImage"
-          image={DUMMY_DATA.image}
+          image={loginUser && loginUser.image ? loginUser.image : ''}
           imageSize={32}
-          _id={DUMMY_DATA._id}
-          fullName={DUMMY_DATA.author}
+          _id={loginUser ? loginUser._id : ''}
+          fullName={loginUser ? loginUser.fullName : ''}
         />
         <TextareaAutosize
           className="commentTextarea"
@@ -32,7 +51,6 @@ export const CommentInput = () => {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        {/* post 기능 추가하기 */}
         <Button
           handleButtonClick={handleButtonClick}
           label="등록"
