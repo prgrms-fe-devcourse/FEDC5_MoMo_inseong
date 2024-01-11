@@ -2,9 +2,10 @@ import styled from '@emotion/styled';
 
 interface CalendarProps {
   title: string;
+  name: 'start' | 'end';
 }
 
-export const Calendar = ({ title }: CalendarProps) => {
+export const Calendar = ({ title, name }: CalendarProps) => {
   const today = new Date().toISOString().split('T')[0];
 
   const nextYear = new Date(
@@ -18,6 +19,7 @@ export const Calendar = ({ title }: CalendarProps) => {
       <StCalendarTitle>{title}</StCalendarTitle>
       <StCalendar
         type="date"
+        name={name}
         defaultValue={today}
         min={today}
         max={nextYear}
