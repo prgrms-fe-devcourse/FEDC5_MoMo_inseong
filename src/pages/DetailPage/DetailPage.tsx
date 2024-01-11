@@ -56,12 +56,15 @@ export const DetailPage = () => {
         <DetailPost
           pageNumber={pageNumber}
           response={response}
-          loginUser={isLogin.user ? isLogin.user : null}
+          loginUser={isLogin.user ?? null}
         />
         <hr />
         {/* 댓글 */}
-        {/* 여기도 isLogin이 필요해 */}
-        <DetailComment comments={response.comments as IComment[]} />
+        <DetailComment
+          // comments={response.comments as IComment[]}
+          response={response}
+          loginUser={isLogin.user ?? null}
+        />
       </StDetailContainer>
     </StSideMarginWrapper>
   );
