@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { MouseEvent, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { RootStateType } from '@/_redux/store';
 import { ILike, IPost, IPostTitleCustom } from '@/api/_types/apiModels';
 import { deleteApiJWT, postApiJWT } from '@/api/apis';
@@ -25,6 +26,7 @@ const statusValue = {
 export const Card = ({ cardData, handleCardClick }: ICardData) => {
   const userId = useSelector((state: RootStateType) => state.auth.userId);
   const parsedTitle: IPostTitleCustom = parseTitle(cardData.title);
+  const navigate = useNavigate();
 
   const { likes, _id: cardId, image } = cardData;
   const { postTitle, status, tags, meetDate, author } = parsedTitle;
@@ -45,6 +47,12 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
 
   const handleIconClick = async (event: MouseEvent<HTMLElement>) => {
     event.stopPropagation();
+    if (!userId) {
+      if (confirm('로그인하세요')) {
+        navigate('/login');
+      }
+      return;
+    }
     if (!isLike) {
       await postApiJWT<ILike>('/likes/create', {
         postId: cardId,
