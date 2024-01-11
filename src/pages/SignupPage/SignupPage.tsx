@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   validateConfirmPassword,
@@ -8,7 +8,9 @@ import {
   validatePassword,
 } from './validation';
 import { postApi } from '@/api/apis';
+import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
+import { getItem } from '@/utils/storage';
 import { Button } from '@common/Button/Button';
 import { InputCompound } from '@common/Input/InputCompound';
 
@@ -30,11 +32,7 @@ export const SignUpPage = () => {
   const confirmRef = useRef<HTMLInputElement>(null);
   const fullNameRef = useRef<HTMLInputElement>(null);
 
-  const handleSignUp = async (
-    e:
-      | React.FormEvent<HTMLInputElement>
-      | React.KeyboardEvent<HTMLInputElement>,
-  ) => {
+  const handleSignUp = async (e: FormEvent | KeyboardEvent) => {
     e.preventDefault();
 
     const errorChecks = [
@@ -51,16 +49,25 @@ export const SignUpPage = () => {
       }
     }
 
-    // 추후 수정
-    try {
-      const response = await postApi('/signup', { email, fullName, password });
-      // TODO: 아이디 중복 처리
-      if (!response) return;
-      navigate('/login');
-    } catch (e) {
-      console.log(e);
-    }
+
+    await postApi('/signup', { email, password, fullName })
+      .then(() => {
+        // TODO: 아이디 중복 처리
+        alert('회원 가입 완료 되었습니다.');
+        navigate('/login');
+      })
+      .catch((err) => {
+        console.log(err);
+        setEmailError('정보가 잘못 되었습니다.');
+        emailRef.current?.focus();
+      });
   };
+
+  useEffect(() => {
+    if (getItem('JWT')) {
+      navigate('/');
+    }
+  }, [navigate]);
 
   const handleOnKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -92,76 +99,78 @@ export const SignUpPage = () => {
   };
 
   return (
-    <StSignUpContainer>
-      <StDescriptionContainer>LOGO TEXT</StDescriptionContainer>
-      <StVerticalLine />
-      <StSignUpFormContainer>
-        <StFormTitle>회원가입</StFormTitle>
-        <StInputText>
-          <InputCompound style={{ width: '300px' }}>
-            <InputCompound.Text
-              placeholder="이메일"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                emailCheckHandler(e.target.value);
-              }}
-              ref={emailRef}
-              onKeyUp={handleOnKeyUp}
-            />
-          </InputCompound>
-          {emailError}
-        </StInputText>
-        <StInputText>
-          <InputCompound style={{ width: '300px' }}>
-            <InputCompound.Text
-              placeholder="비밀번호"
-              value={password}
-              type="password"
-              onChange={(e) => {
-                setPassword(e.target.value);
-                passwordCheckHandler(e.target.value);
-              }}
-              ref={passwordRef}
-              onKeyUp={handleOnKeyUp}
-            />
-          </InputCompound>
-          {passwordError}
-        </StInputText>
-        <StInputText>
-          <InputCompound style={{ width: '300px' }}>
-            <InputCompound.Text
-              placeholder="비밀번호 재확인"
-              value={confirm}
-              type="password"
-              onChange={(e) => {
-                setconfirm(e.target.value);
-                confirmCheckHandler(e.target.value);
-              }}
-              ref={confirmRef}
-              onKeyUp={handleOnKeyUp}
-            />
-          </InputCompound>
-          {confirmError}
-        </StInputText>
-        <StInputText>
-          <InputCompound style={{ width: '300px' }}>
-            <InputCompound.Text
-              placeholder="닉네임"
-              value={fullName}
-              onChange={(e) => {
-                setFullName(e.target.value);
-                fullNameCheckHandler(e.target.value);
-              }}
-              ref={fullNameRef}
-              onKeyUp={handleOnKeyUp}
-            />
-          </InputCompound>
-          {fullNameError}
-        </StInputText>
-        <Button label="가입" />
-      </StSignUpFormContainer>
-    </StSignUpContainer>
+    <StSideMarginWrapper>
+      <StSignUpContainer>
+        <StDescriptionContainer>LOGO TEXT</StDescriptionContainer>
+        <StVerticalLine />
+        <StSignUpFormContainer>
+          <StFormTitle>회원가입</StFormTitle>
+          <StInputText>
+            <InputCompound style={{ width: '300px' }}>
+              <InputCompound.Text
+                placeholder="이메일"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  emailCheckHandler(e.target.value);
+                }}
+                ref={emailRef}
+                onKeyUp={handleOnKeyUp}
+              />
+            </InputCompound>
+            {emailError}
+          </StInputText>
+          <StInputText>
+            <InputCompound style={{ width: '300px' }}>
+              <InputCompound.Text
+                placeholder="비밀번호"
+                value={password}
+                type="password"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  passwordCheckHandler(e.target.value);
+                }}
+                ref={passwordRef}
+                onKeyUp={handleOnKeyUp}
+              />
+            </InputCompound>
+            {passwordError}
+          </StInputText>
+          <StInputText>
+            <InputCompound style={{ width: '300px' }}>
+              <InputCompound.Text
+                placeholder="비밀번호 재확인"
+                value={confirm}
+                type="password"
+                onChange={(e) => {
+                  setconfirm(e.target.value);
+                  confirmCheckHandler(e.target.value);
+                }}
+                ref={confirmRef}
+                onKeyUp={handleOnKeyUp}
+              />
+            </InputCompound>
+            {confirmError}
+          </StInputText>
+          <StInputText>
+            <InputCompound style={{ width: '300px' }}>
+              <InputCompound.Text
+                placeholder="닉네임"
+                value={fullName}
+                onChange={(e) => {
+                  setFullName(e.target.value);
+                  fullNameCheckHandler(e.target.value);
+                }}
+                ref={fullNameRef}
+                onKeyUp={handleOnKeyUp}
+              />
+            </InputCompound>
+            {fullNameError}
+          </StInputText>
+          <Button label="가입" />
+        </StSignUpFormContainer>
+      </StSignUpContainer>
+    </StSideMarginWrapper>
   );
 };
 
