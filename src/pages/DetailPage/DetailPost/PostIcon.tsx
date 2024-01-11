@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { MouseEvent, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ILike, IPost, IUser } from '@/api/_types/apiModels';
 import { deleteApiJWT, postApiJWT } from '@/api/apis';
 import { Icon } from '@common/Icon/Icon';
@@ -11,8 +12,11 @@ interface PostIconProps {
 
 export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
   const [isHeart, setIsHeart] = useState('');
-  // console.log('LoggedIn data : ', loginUser);
-  // console.log('Response data : ', apiResponse);
+  const [isPostOwner, setIsPostOwner] = useState(false);
+  const navigate = useNavigate();
+  // console.log('loginUser data : ', loginUser._id);
+  // console.log('response data : ', apiResponse._id);
+
   const handleHeartClick = async (e: MouseEvent<HTMLElement>) => {
     e.stopPropagation();
     if (!loginUser) {
@@ -21,7 +25,7 @@ export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
     }
     // 좋아요 안한 상태 => 좋아요
     if (!isHeart) {
-      await postApiJWT<ILike>('/likes/create', { postId: loginUser._id })
+      await postApiJWT<ILike>('/likes/create', { postId: apiResponse._id })
         .then((res) => {
           setIsHeart(res.data._id);
         })
@@ -40,10 +44,19 @@ export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
     }
   };
 
-  const onDeleteClick = () => {
+  const handleDeleteClick = async (e: MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
     const isPostDelete = confirm('정말 삭제하시겠습니까?');
     if (!isPostDelete) return;
+    // postId 먼저 넣어보겠음
+    await deleteApiJWT<ILike>('/posts/delete', { id: apiResponse._id })
+      .then(() => {
+        setIsHeart('');
+      })
+      .catch((err) => console.log(err));
+
     alert('삭제되었습니다.');
+    navigate('/');
   };
 
   useEffect(() => {
@@ -52,6 +65,7 @@ export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
     const result = PostLike?.find((like) => like.user === LoginUserId);
 
     setIsHeart(result ? result._id : '');
+    setIsPostOwner(LoginUserId === (apiResponse.author as IUser)._id);
   }, [loginUser, apiResponse]);
 
   return (
@@ -68,8 +82,7 @@ export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
           />
         </StIconsWrapper>
         {/* isLogin === post 작성자 id */}
-        {/* localStorage의 JWT 토큰 값 바꿔서 체크해보자 */}
-        {false && (
+        {isPostOwner && (
           <StAdminIconsWrapper>
             <Icon
               name="edit"
@@ -78,7 +91,9 @@ export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
             <Icon
               name="trash-2"
               size={24}
-              onIconClick={onDeleteClick}
+              onIconClick={(e: MouseEvent<HTMLElement>) =>
+                void handleDeleteClick(e)
+              }
             />
           </StAdminIconsWrapper>
         )}
