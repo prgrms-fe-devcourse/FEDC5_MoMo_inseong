@@ -24,6 +24,7 @@ export const ScheduledMain = () => {
     );
 
   const [cardsOfThisweek, setCardsOfThisweek] = useState<IPost[][]>([]);
+  console.log('여기ㄴㄴ렌더링');
 
   useEffect(() => {
     setCardsOfThisweek([] as IPost[][]);

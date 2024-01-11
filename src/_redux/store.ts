@@ -1,3 +1,4 @@
+import allUsersSlice from './slices/allUsersSlice';
 import channelsSlice from './slices/channelsSlice';
 import heartsSlice from './slices/heartsSlice';
 import loginSlice from './slices/loginSlice';
@@ -22,6 +23,7 @@ export const store = configureStore({
     getPostDetail: getPostDetailSlice,
     putPost: putPostSlice,
     today: todaySlice,
+    allUsers: allUsersSlice,
   },
 });
 
