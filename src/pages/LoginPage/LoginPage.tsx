@@ -1,36 +1,64 @@
 import styled from '@emotion/styled';
-import React, { FormEvent, KeyboardEvent, useRef, useState } from 'react';
+import React, {
+  FormEvent,
+  KeyboardEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postApi } from '@/api/apis';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
+import { getItem, setItem } from '@/utils/storage';
 import { Button } from '@common/Button/Button';
 import { InputCompound } from '@common/Input/InputCompound';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loginError, setloginError] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [loginError, setLoginError] = useState<string>('');
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const handleLogin = async (e: FormEvent | KeyboardEvent) => {
+  const handleLogin = async (
+    e: FormEvent<HTMLDivElement> | KeyboardEvent<HTMLInputElement>,
+  ) => {
     e.preventDefault();
+    setLoginError('');
 
     try {
-      const response = await postApi('/login', { email, password });
-      if (!response) {
-        setloginError('로그인 정보가 잘못 되었습니다.');
+      const response = (await postApi('/login', { email, password })) as {
+        data?: { token?: string };
+      };
+
+      if (
+        !response ||
+        !response.data ||
+        typeof response.data.token !== 'string'
+      ) {
+        setLoginError('로그인 정보가 잘못 되었습니다.');
         emailRef.current?.focus();
         return;
       }
+
+      const token = response.data.token;
+      setItem('JWT', token);
       navigate('/');
     } catch (e) {
-      console.log(e);
+      setLoginError('로그인에 실패했습니다.');
+      emailRef.current?.focus();
+      console.error(e);
     }
   };
+
+  useEffect(() => {
+    if (getItem('JWT')) {
+      navigate('/');
+    }
+  }, [navigate]);
 
   const handleOnKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -45,7 +73,6 @@ export const LoginPage = () => {
         <StVerticalLine />
         <StLoginFormContainer>
           <StFormTitle>로그인</StFormTitle>
-
           <StInputText>
             <InputCompound style={{ width: '300px' }}>
               <InputCompound.Text
@@ -110,7 +137,6 @@ const StLoginFormContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background-color: 'blue';
 `;
 
 const StFormTitle = styled.h1`
