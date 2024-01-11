@@ -3,15 +3,21 @@ import { Badge } from './Badge';
 import { DetailTimeTablePage } from './DetailTimeTablePage';
 import { PostContents } from './PostContents';
 import { PostIcon } from './PostIcon';
-import { IPost, IPostTitleCustom } from '@/api/_types/apiModels';
+import { IPost, IPostTitleCustom, IUser } from '@/api/_types/apiModels';
 
 interface DetailPostProps {
   pageNumber: number;
   response: IPost;
+  loginUser: IUser | null;
 }
 
-export const DetailPost = ({ pageNumber, response }: DetailPostProps) => {
+export const DetailPost = ({
+  pageNumber,
+  response,
+  loginUser,
+}: DetailPostProps) => {
   const responseTitle = JSON.parse(response.title) as IPostTitleCustom;
+
   return (
     <StPostContainer>
       {/* Post or TimeTable*/}
@@ -19,14 +25,13 @@ export const DetailPost = ({ pageNumber, response }: DetailPostProps) => {
       {pageNumber === 2 && <DetailTimeTablePage />}
 
       {/* Badge */}
-      {responseTitle.tags.length && (
+      {responseTitle.tags.length > 0 && (
         <Badge
           kind="tag"
           data={responseTitle.tags}
         />
       )}
-      {/* Todo: 아래 멘션 태그 클릭 시 해당 유저 프로필로 이동 */}
-      {responseTitle.mentions.length && (
+      {responseTitle.mentions.length > 0 && (
         <Badge
           kind="mention"
           data={responseTitle.mentions}
@@ -34,7 +39,10 @@ export const DetailPost = ({ pageNumber, response }: DetailPostProps) => {
       )}
 
       {/* Icon */}
-      <PostIcon />
+      <PostIcon
+        loginUser={loginUser}
+        apiResponse={response}
+      />
     </StPostContainer>
   );
 };

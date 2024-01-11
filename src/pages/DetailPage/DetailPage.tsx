@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { getUserInfo } from '../../_redux/slices/userSlice';
 import { DetailComment } from './DetailComment/DetailComment';
 import { DetailMeetDescription } from './DetailMeetDescription';
 import { DetailPost } from './DetailPost/DetailPost';
 import { DetailTab } from './DetailTab';
-import { useSelector } from '@/_redux/hooks';
+import { useDispatch, useSelector } from '@/_redux/hooks';
 import { RootStateType } from '@/_redux/store';
 import { IComment, IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
@@ -23,19 +24,10 @@ export const DetailPage = () => {
     setPageNumber(2);
   };
   const { response, error, isLoading } = useAxios<IPost>(() =>
-    // getApi('posts/${_id}');
-    getApi('posts/6597691a888bed1583ee96f8'),
+    getApi('posts/659ec238ac7d872340671491'),
   );
-  // 하트 아이콘 클릭 시 좋아요 올라가는지 체크
-  // 이를 위해 redux를 적용시켜야 한다.
-  const isLogin = useSelector((state: RootStateType) => state.auth.isLogin);
-  useEffect(() => {
-    console.log('로그인 상태:', isLogin);
-  }, [isLogin]);
-
-  // PR : 1. 아래 useEffect에서 디펜던시 어레이를 넣어야 하는지, 혹은 수정되어야 할 부분은 없는지..
-  //      2. 리팩토링 해야하는 부분은 없는지.
-  //      3. 코드에 as 없애고 싶은데 어케 없애야 하나요 ;ㅅ;
+  const isLogin = useSelector((state: RootStateType) => state.userInfo);
+  const dispatch = useDispatch();
   useEffect(() => {
     const handleAPIError = () => {
       alert('API로부터 데이터를 받아올 때 에러가 발생했습니다.');
@@ -44,9 +36,9 @@ export const DetailPage = () => {
     if (error) {
       handleAPIError();
     }
-  }, [error, navigate]);
-  // console.log(response);
-  // console.log('title' in response && JSON.parse(response.title));
+    void dispatch(getUserInfo());
+  }, [error, navigate, dispatch]);
+  // console.log(isLogin);
 
   return isLoading ? (
     <Spinner />
@@ -62,13 +54,15 @@ export const DetailPage = () => {
           handleTimeTableClick={handleTimeTableClick}
         />
         {/* 본문 내용 */}
-        {/* 필요한 것 : 본문 이미지, contents, tag, badge,  */}
         <DetailPost
           pageNumber={pageNumber}
           response={response}
+          isLogin={isLogin.user ? true : false}
+          loginUser={isLogin.user ? isLogin.user : null}
         />
         <hr />
         {/* 댓글 */}
+        {/* 여기도 isLogin이 필요해 */}
         <DetailComment comments={response.comments as IComment[]} />
       </StDetailContainer>
     </StSideMarginWrapper>
