@@ -28,23 +28,18 @@ export const postApiJWT = async <T>(
   console.log('postApiJWT result: ', res);
   return res;
 };
-export const putApiJWT = async (url: string, data: object) => {
-  try {
-    const res = await customAxiosJWT().post(url, data);
-    console.log('putApiJWT result: ', res);
-    return res;
-  } catch (e) {
-    console.error(e);
-  }
+// <D>
+export const putApiJWT = async <T, D>(url: string, data?: D) => {
+  const res: AxiosResponse<T> = await customAxiosJWT().put(url, data);
+  console.log('putApiJWT result: ', res);
+  return res;
 };
-export const deleteApiJWT = async (url: string, data: object) => {
-  try {
-    const res = await customAxiosJWT().delete(url, { data: data });
-    console.log('deleteApiJWT result: ', res);
-    return res;
-  } catch (e) {
-    console.error(e);
-  }
+export const deleteApiJWT = async <T>(url: string, data: object) => {
+  const res: AxiosResponse<T> = await customAxiosJWT().delete(url, {
+    data: data,
+  });
+  console.log('deleteApiJWT result: ', res);
+  return res;
 };
 
 // ----------
