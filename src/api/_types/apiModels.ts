@@ -114,7 +114,7 @@ export interface IPostTitleCustom {
   vote: IVote[]; // [{id: 'dfnkdflad', votedDate: ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ']}] <== 날짜 아니라 타임테이블 배열 인덱스
 
   // cardId: string; // 포스트 _id
-  author: string; // Post author는 User 지만, 컴포넌트에 전달할땐 User.fullName을 줘야함!
+  author: string; // 검색결과의 IPost에서 유저id가 author에옴.. 그래서 여기에서 저장해주는게 낫습니다.
   // isLiked: ILike[] | string[]; // 포스트 좋아요는 포스트 likes 중에서 user로 필터링해서 찾아야합니다
 }
 

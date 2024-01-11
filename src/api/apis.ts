@@ -7,21 +7,17 @@ export const getApi = async <T>(url: string) => {
   return res; //{data: Array(1), status: 200, statusText: '', headers: AxiosHeaders, config: {…},}
 };
 
-export const postApi = async (url: string, data: object) => {
-  try {
-    const res = await customAxios().post(url, data);
-    console.log('postApi result: ', res);
-    return res;
-  } catch (e) {
-    console.error(e);
-  }
+export const postApi = async <T>(url: string, data: object) => {
+  const res: AxiosResponse<T> = await customAxios().post(url, data);
+  // console.log('postApi result: ', res);
+  return res;
 };
 
 // with JWT ----------------
 
 export const getApiJWT = async <T>(url: string) => {
   const res: AxiosResponse<T> = await customAxiosJWT().get(url);
-  console.log('get api jwt result: ', res);
+  // console.log('get api jwt result: ', res);
   return res; //
 };
 export const postApiJWT = async <T>(
@@ -29,20 +25,18 @@ export const postApiJWT = async <T>(
   data?: object, //
 ) => {
   const res: AxiosResponse<T> = await customAxiosJWT().post(url, data);
-  console.log('postApiJWT result: ', res);
+  // console.log('postApiJWT result: ', res);
   return res;
 };
 // <D>
 export const putApiJWT = async <T, D>(url: string, data?: D) => {
   const res: AxiosResponse<T> = await customAxiosJWT().put(url, data);
-  console.log('putApiJWT result: ', res);
+  // console.log('putApiJWT result: ', res);
   return res;
 };
 export const deleteApiJWT = async <T>(url: string, data: object) => {
-  const res: AxiosResponse<T> = await customAxiosJWT().delete(url, {
-    data: data,
-  });
-  console.log('deleteApiJWT result: ', res);
+  const res: AxiosResponse<T> = await customAxiosJWT().delete(url, { data });
+  // console.log('deleteApiJWT result: ', res);
   return res;
 };
 
@@ -56,7 +50,7 @@ export const useGetApi = <T>(url: string) => {
     await customAxios()
       .get(url)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setResponse(res);
       })
       .catch((error) => {

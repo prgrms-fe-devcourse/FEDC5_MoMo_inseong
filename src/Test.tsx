@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getHearts } from './_redux/slices/heartsSlice';
 import { getIsLogin } from './_redux/slices/loginSlice';
@@ -10,16 +11,16 @@ export const Test = () => {
   const userId = useSelector((state: RootStateType) => state.auth.userId);
   console.log('hearts state', hearts);
   console.log('userId state', userId);
-
+  useEffect(() => {
+    dispatch(getIsLogin())
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  }, []);
   return (
     <>
       <button
         onClick={() => {
           dispatch(getHearts('hi'));
-
-          dispatch(getIsLogin())
-            .then((res) => console.log(res))
-            .catch((err) => console.error(err));
 
           // dispatch(getChannelsData())
           //   .then((res) => console.log(res))
