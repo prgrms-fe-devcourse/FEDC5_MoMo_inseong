@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   validateConfirmPassword,
@@ -10,6 +10,7 @@ import {
 import { postApi } from '@/api/apis';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
+import { getItem } from '@/utils/storage';
 import { Button } from '@common/Button/Button';
 import { InputCompound } from '@common/Input/InputCompound';
 
@@ -58,6 +59,12 @@ export const SignUpPage = () => {
       console.log(e);
     }
   };
+
+  useEffect(() => {
+    if (getItem('JWT')) {
+      navigate('/');
+    }
+  }, [navigate]);
 
   const handleOnKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
