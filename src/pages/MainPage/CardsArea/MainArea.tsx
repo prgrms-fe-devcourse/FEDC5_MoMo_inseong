@@ -1,17 +1,11 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { ScheduledMain } from './ScheduledMain';
-import { WhenCards } from './WhenCards';
-// import { ILike } from '@/api/_types/apiModels';
-// import { postApiJWT } from '@/api/apis';
-// import useAxios from '@/api/useAxios';
+import { UnsheduledCards } from './UnsheduledCards';
 import { Tab } from '@common/Tab/Tab';
 
 export const MainArea = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-  // const { response, error, isLoading } = useAxios<ILike>(() =>
-  //   postApiJWT('/likes/create', { postId: '65963987cd1f0813f5ab851a' }),
-  // );
   return (
     <div>
       <StTabsWrapper>
@@ -30,7 +24,7 @@ export const MainArea = () => {
           handleTabClick={() => setSelectedTab(1)}
         />
       </StTabsWrapper>
-      <div>{selectedTab === 0 ? <WhenCards /> : <ScheduledMain />}</div>
+      <div>{selectedTab === 0 ? <UnsheduledCards /> : <ScheduledMain />}</div>
     </div>
   );
 };

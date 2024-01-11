@@ -5,7 +5,7 @@ const { VITE_API_BASE_URL } = import.meta.env;
 
 export const customAxios = (): AxiosInstance => {
   const axiosInstance = axios.create({
-    baseURL: VITE_API_BASE_URL as string,
+    baseURL: VITE_API_BASE_URL,
   });
 
   return axiosInstance;
@@ -13,7 +13,7 @@ export const customAxios = (): AxiosInstance => {
 export const customAxiosJWT = (): AxiosInstance => {
   const jwt = getItem('JWT') as string;
   const axiosInstance = axios.create({
-    baseURL: VITE_API_BASE_URL as string,
+    baseURL: VITE_API_BASE_URL,
     headers: { Authorization: `Bearer ${jwt}` },
   });
 
