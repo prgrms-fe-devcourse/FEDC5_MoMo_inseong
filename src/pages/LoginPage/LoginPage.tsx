@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import React, { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from '@/_redux/hooks';
+import { getUserInfo } from '@/_redux/slices/userSlice';
+import { IUser } from '@/api/_types/apiModels';
 import { postApi } from '@/api/apis';
 import { theme } from '@/style/theme';
 import { getItem, setItem } from '@/utils/storage';
@@ -12,23 +15,46 @@ export const LoginPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  const dispatch = useDispatch();
+  const handleLogin = async (
+    e: FormEvent<HTMLDivElement> | KeyboardEvent<HTMLInputElement>,
+  ) => {
     e.preventDefault();
 
-    if (!email) {
-      console.error('이메일 주소를 입력해주세요.');
-      return;
-    }
-    if (!password) {
-      console.error('비밀번호를 입력해주세요.');
-      return;
-    }
+    await postApi<{
+      user: IUser;
+      token: string;
+    }>('/login', { email, password })
+      .then((res) => {
+        setItem('JWT', res.data.token);
+        void dispatch(getUserInfo());
+        navigate('/');
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoginError('로그인 정보가 잘못 되었습니다.');
+        emailRef.current?.focus();
+        return;
+      }
 
-    const url = '/login';
-    const data = { email, password };
-    try {
-      const response = await postApi(url, data);
-      console.log('Response:', response);
+      const token = response.data.token;
+      setItem('JWT', token);
+      navigate('/');
+    } catch (e) {
+      setLoginError('로그인에 실패했습니다.');
+      emailRef.current?.focus();
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    if (getItem('JWT')) {
       navigate('/');
     } catch (error) {
       console.error('Error:', error);
