@@ -1,20 +1,18 @@
 import styled from '@emotion/styled';
-import React, { FormEvent, useState } from 'react';
+import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from '@/_redux/hooks';
 import { getUserInfo } from '@/_redux/slices/userSlice';
 import { IUser } from '@/api/_types/apiModels';
 import { postApi } from '@/api/apis';
+import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
 import { getItem, setItem } from '@/utils/storage';
 import { Button } from '@common/Button/Button';
 import { InputCompound } from '@common/Input/InputCompound';
 
 export const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const navigate = useNavigate();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -23,10 +21,9 @@ export const LoginPage = () => {
 
   const dispatch = useDispatch();
   const handleLogin = async (
-    e: FormEvent<HTMLDivElement> | KeyboardEvent<HTMLInputElement>,
+    e: FormEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>,
   ) => {
     e.preventDefault();
-
     await postApi<{
       user: IUser;
       token: string;
@@ -40,67 +37,62 @@ export const LoginPage = () => {
         console.log(err);
         setLoginError('로그인 정보가 잘못 되었습니다.');
         emailRef.current?.focus();
-        return;
-      }
-
-      const token = response.data.token;
-      setItem('JWT', token);
-      navigate('/');
-    } catch (e) {
-      setLoginError('로그인에 실패했습니다.');
-      emailRef.current?.focus();
-      console.error(e);
-    }
+      });
   };
 
   useEffect(() => {
     if (getItem('JWT')) {
       navigate('/');
-    } catch (error) {
-      console.error('Error:', error);
+    }
+  }, [navigate]);
+  const handleOnKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      void handleLogin(e);
     }
   };
 
   return (
-    <StLoginContainer>
-      <StDescriptionContainer>LOGO TEXT</StDescriptionContainer>
-      <StVerticalLine />
-      <StLoginFormContainer>
-        <StFormTitle>로그인</StFormTitle>
-        {/* <StInputContainer>
-          <Input placeholder="이메일" />
-        </StInputContainer>
-        <StInputContainer>
-          <Input
-            placeholder="비밀번호"
-            type="password"
+    <StSideMarginWrapper>
+      <StLoginContainer>
+        <StDescriptionContainer>LOGO TEXT</StDescriptionContainer>
+        <StVerticalLine />
+        <StLoginFormContainer>
+          <StFormTitle>로그인</StFormTitle>
+          <StInputText>
+            <InputCompound style={{ width: '300px' }}>
+              <InputCompound.Text
+                placeholder="이메일"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                ref={emailRef}
+                onKeyUp={handleOnKeyUp}
+              />
+            </InputCompound>
+            {loginError}
+          </StInputText>
+          <StInputText>
+            <InputCompound style={{ width: '300px' }}>
+              <InputCompound.Text
+                placeholder="비밀번호"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                ref={passwordRef}
+                onKeyUp={handleOnKeyUp}
+              />
+            </InputCompound>
+          </StInputText>
+          <Button
+            label={'확인'}
+            type="submit"
+            onClick={handleLogin}
           />
-        </StInputContainer> */}
-        <InputTest style={{ width: '300px' }}>
-          <InputTest.Text
-            placeholder="이메일"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </InputTest>
-        <InputTest style={{ width: '300px' }}>
-          <InputTest.Text
-            placeholder="비밀번호"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </InputTest>
-        <Button
-          label="확인"
-          type="submit"
-          onClick={handleLogin}
-        />
-        <StSignupLink onClick={() => navigate('/signUp')}>
-          회원가입
-        </StSignupLink>
-      </StLoginFormContainer>
-    </StLoginContainer>
+          <StSignupLink onClick={() => navigate('/signUp')}>
+            회원가입
+          </StSignupLink>
+        </StLoginFormContainer>
+      </StLoginContainer>
+    </StSideMarginWrapper>
   );
 };
 
@@ -130,8 +122,6 @@ const StLoginFormContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background-color: 'blue';
-  gap: 25px;
 `;
 
 const StFormTitle = styled.h1`
