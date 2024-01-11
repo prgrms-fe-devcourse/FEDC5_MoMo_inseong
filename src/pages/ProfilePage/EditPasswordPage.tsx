@@ -1,6 +1,15 @@
 import styled from '@emotion/styled';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
+import {
+  validateConfirmPassword,
+  validatePassword,
+} from '../SignupPage/validation';
+import { IUser } from '@/api/_types/apiModels';
+import { getApiJWT, postApi, putApiJWT } from '@/api/apis';
+import useAxios from '@/api/useAxios';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
+import { theme } from '@/style/theme';
 import { Button } from '@common/Button/Button';
 import { Icon } from '@common/Icon/Icon';
 import { InputCompound } from '@common/Input/InputCompound';
@@ -8,6 +17,65 @@ import { Profile } from '@common/Profile/Profile';
 
 export const EditPasswordPage = () => {
   const navigate = useNavigate();
+
+  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+
+  const [passwordError, setPasswordError] = useState('');
+  const [newPasswordError, setNewPasswordError] = useState('');
+  const [confirmError, setConfirmError] = useState('');
+
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const newPasswordRef = useRef<HTMLInputElement>(null);
+  const confirmRef = useRef<HTMLInputElement>(null);
+
+  const { response } = useAxios<IUser>(() => getApiJWT<IUser>('/auth-user'));
+
+  const handleUpdatePassword = async () => {
+    setPasswordError('');
+
+    if (newPassword !== confirm) {
+      setConfirmError('비밀번호가 동일하지 않습니다.');
+      confirmRef.current?.focus();
+      return;
+    }
+
+    try {
+      const returnValue = await postApi('/login', {
+        email: response.email,
+        password,
+      });
+      if (returnValue.status === 200) {
+        const res = await putApiJWT('/settings/update-password', {
+          password: newPassword,
+        });
+
+        if (res.status === 200) {
+          navigate('/');
+        }
+      } else {
+        setPasswordError('비밀번호가 옳지 않습니다.');
+        passwordRef.current?.focus();
+      }
+    } catch (err) {
+      setPasswordError('비밀번호가 옳지 않습니다.');
+      passwordRef.current?.focus();
+      console.error(err);
+    }
+  };
+
+  const passwordCheckHandler = (value: string) => {
+    setNewPasswordError(validatePassword(value));
+    if (confirm.length !== 0) {
+      setConfirmError(validateConfirmPassword(value, confirm));
+    }
+  };
+
+  const confirmCheckHandler = (value: string) => {
+    setConfirmError(validateConfirmPassword(newPassword, value));
+  };
+
   return (
     <StSideMarginWrapper>
       <StProfileActionsContainer>
@@ -23,31 +91,57 @@ export const EditPasswordPage = () => {
           _id="test"
           imageSize={110}
         />
-        <Button label="완료" />
+        <Button
+          label="완료"
+          handleButtonClick={() => void handleUpdatePassword()}
+        />
       </StProfileActionsContainer>
       <StProfileForm>
         <StInputText>비밀번호</StInputText>
-        <InputCompound>
-          <InputCompound.Text
-            placeholder="비밀번호"
-            type="password"
-          />
-        </InputCompound>
+        <StInputForm>
+          <InputCompound>
+            <InputCompound.Text
+              placeholder="비밀번호"
+              type="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
+          </InputCompound>
+          {passwordError}
+        </StInputForm>
 
         <StInputText>새 비밀번호</StInputText>
-        <InputCompound>
-          <InputCompound.Text
-            placeholder="새 비밀번호"
-            type="password"
-          />
-        </InputCompound>
+        <StInputForm>
+          <InputCompound>
+            <InputCompound.Text
+              placeholder="새 비밀번호"
+              type="password"
+              value={newPassword}
+              onChange={(e) => {
+                setNewPassword(e.target.value);
+                passwordCheckHandler(e.target.value);
+              }}
+            />
+          </InputCompound>
+          {newPasswordError}
+        </StInputForm>
         <StInputText>새 비밀번호 확인</StInputText>
-        <InputCompound>
-          <InputCompound.Text
-            placeholder="새 비밀번호 확인"
-            type="password"
-          />
-        </InputCompound>
+        <StInputForm>
+          <InputCompound>
+            <InputCompound.Text
+              placeholder="새 비밀번호 확인"
+              type="password"
+              value={confirm}
+              onChange={(e) => {
+                setConfirm(e.target.value);
+                confirmCheckHandler(e.target.value);
+              }}
+            />
+          </InputCompound>
+          {confirmError}
+        </StInputForm>
       </StProfileForm>
     </StSideMarginWrapper>
   );
@@ -67,4 +161,10 @@ const StProfileActionsContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 32px;
+`;
+
+const StInputForm = styled.div`
+  height: 85px;
+  font-size: 14px;
+  color: ${theme.colors.red};
 `;
