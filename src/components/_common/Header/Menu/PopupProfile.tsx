@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
 import { memo } from 'react';
+import { postApiJWT } from '@/api/apis';
 import { Icon } from '@common/Icon/Icon';
 import { Profile } from '@common/Profile/Profile';
 
 export interface PopupProfileProps {
   userId: string;
   fullName: string;
-  image: string;
+  image?: string;
   setIsVisible?: (arg: boolean) => void;
 }
 
@@ -15,12 +16,18 @@ export const PopupProfile = memo(
     const handleVisibility = () => {
       setIsVisible && setIsVisible(false);
     };
+
+    const handleOnLogout = () => {
+      handleVisibility();
+      void postApiJWT('/logout');
+      localStorage.removeItem('JWT');
+    };
     return (
       <StContainer>
         <StTitle>내 정보</StTitle>
         <StRouter onClick={handleVisibility}>
           <Profile
-            image={image}
+            image={image || ''}
             fullName={fullName}
             _id={userId}
             status={'Profile'}
@@ -36,7 +43,7 @@ export const PopupProfile = memo(
             />
           </StIconBox>
         </StRouter>
-        <StRouter onClick={handleVisibility}>
+        <StRouter onClick={handleOnLogout}>
           <StIconBox content={'"로그아웃"'}>
             <Icon
               name="log-out"

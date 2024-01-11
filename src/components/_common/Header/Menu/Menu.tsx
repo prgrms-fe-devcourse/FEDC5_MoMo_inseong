@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Notification, NotificationExtractType } from './Notification';
 import { notificationMockup } from './NotificatonMockup';
 import { PopupProfile, PopupProfileProps } from './PopupProfile';
-import { popupProfileMockup } from './PopupProfileMockup';
+import { useSelector } from '@/_redux/hooks';
 import { Icon } from '@common/Icon/Icon';
 import { Tooltip } from '@common/Tooltip/Tooltip';
 
@@ -18,6 +18,8 @@ interface MenuProps {
 }
 
 export const Menu = ({ initialMode }: MenuProps) => {
+  const userInfo = useSelector((state) => state.userInfo.user);
+
   const [notifications, setNotification] = useState<NotificationExtractType[]>(
     [],
   );
@@ -33,7 +35,11 @@ export const Menu = ({ initialMode }: MenuProps) => {
   useEffect(() => {
     setNotification(notificationMockup as NotificationExtractType[]);
 
-    setPopupProfile(popupProfileMockup as PopupProfileProps);
+    setPopupProfile({
+      userId: userInfo?._id,
+      image: userInfo?.image || '',
+      fullName: userInfo?.fullName,
+    } as PopupProfileProps);
   }, []);
 
   return (
