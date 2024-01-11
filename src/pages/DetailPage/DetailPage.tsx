@@ -24,7 +24,7 @@ export const DetailPage = () => {
     setPageNumber(2);
   };
   const { response, error, isLoading } = useAxios<IPost>(() =>
-    getApi('posts/659ec238ac7d872340671491'),
+    getApi('posts/659fd50e02198c4985ff803f'),
   );
   const isLogin = useSelector((state: RootStateType) => state.userInfo);
   const dispatch = useDispatch();
@@ -38,7 +38,6 @@ export const DetailPage = () => {
     }
     void dispatch(getUserInfo());
   }, [error, navigate, dispatch]);
-  // console.log(isLogin);
 
   return isLoading ? (
     <Spinner />
@@ -57,7 +56,6 @@ export const DetailPage = () => {
         <DetailPost
           pageNumber={pageNumber}
           response={response}
-          isLogin={isLogin.user ? true : false}
           loginUser={isLogin.user ? isLogin.user : null}
         />
         <hr />
