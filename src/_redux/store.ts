@@ -7,6 +7,7 @@ import { getAuthorPostSlice } from './slices/postSlices/getAuthorPostSlice';
 import { getChannelPostsSlice } from './slices/postSlices/getChannelPostSlice';
 import { getPostDetailSlice } from './slices/postSlices/getPostSlice';
 import { putPostSlice } from './slices/postSlices/putPostSlice';
+import userInfoSlice from './slices/userSlice';
 import { configureStore } from '@reduxjs/toolkit';
 
 export const store = configureStore({
@@ -20,6 +21,7 @@ export const store = configureStore({
     getChannelPost: getChannelPostsSlice,
     getPostDetail: getPostDetailSlice,
     putPost: putPostSlice,
+    userInfo: userInfoSlice,
   },
 });
 

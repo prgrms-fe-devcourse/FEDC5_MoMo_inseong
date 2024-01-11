@@ -35,7 +35,7 @@ const userInfoSlice = createSlice({
     builder.addCase(
       getUserInfo.fulfilled,
       (state, action: PayloadAction<IUser>) => {
-        state.isLoading = true;
+        state.isLoading = false;
         state.user = action.payload;
       },
     );
