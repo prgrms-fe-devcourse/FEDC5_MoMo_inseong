@@ -6,12 +6,14 @@ import { Tag } from '@common/Tag/Tag';
 interface InputProps {
   tags: string[];
   setTags: (arg: string[]) => void;
+  onTagRemove?: (tagName: string) => void;
   style?: CSSProperties;
 }
 
 export const InputTags = ({
   tags = [],
   setTags = () => {},
+  onTagRemove, 
   ...props
 }: InputProps) => {
   const handleTagRemove = (indexToRemove: number) => {
@@ -31,7 +33,9 @@ export const InputTags = ({
           />
           <Icon
             name="x"
-            onIconClick={() => handleTagRemove(index)}
+            onIconClick={() =>
+              onTagRemove ? onTagRemove(tag) : handleTagRemove(index)
+            }
           />
         </StTag>
       ))}
