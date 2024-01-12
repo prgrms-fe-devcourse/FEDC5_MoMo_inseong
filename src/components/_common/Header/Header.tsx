@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { Menu } from './Menu/Menu';
+import './header.css';
 import { useSelector } from '@/_redux/hooks';
 import logo from '@/assets/logo.png';
 import { Button } from '@common/Button/Button';
@@ -18,6 +19,13 @@ export const Header = () => {
               style={{ height: '55px' }}
               src={logo}
             />
+            <div
+              style={{
+                fontFamily: 'seolleimcool-SemiBold',
+                minWidth: '100px',
+              }}>
+              모두의 모임
+            </div>
           </StLogo>
           {isLogin ? (
             <Menu />
@@ -72,6 +80,7 @@ const StContainer = styled.div`
 `;
 
 const StLogo = styled.a`
-  display: inline-block;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 `;
