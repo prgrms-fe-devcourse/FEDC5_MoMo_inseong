@@ -27,7 +27,6 @@ interface IStWrapper {
   height?: number | string;
   maxWidth?: number | string;
   maxHeight?: number | string;
-  shadowColor?: string;
 }
 
 interface ISetIsVisible {
@@ -48,7 +47,6 @@ export const Tooltip = memo(
     height = 300,
     maxWidth = 'none',
     maxHeight = 'none',
-    shadowColor = '#0000006f',
     gap,
     offset,
     ...props
@@ -94,7 +92,6 @@ export const Tooltip = memo(
             height={height}
             maxWidth={maxWidth}
             maxHeight={maxHeight}
-            shadowColor={shadowColor}
             style={positionStyles}>
             {isValidElement(content)
               ? cloneElement(content, {
@@ -141,7 +138,7 @@ const StContentBox = styled.div<IStWrapper>`
     typeof maxHeight === 'number' ? maxHeight + 'px' : maxHeight};
 
   border-radius: 8px;
-  box-shadow: 0 0 0.6rem ${({ shadowColor }) => shadowColor};
+  box-shadow: 0 0 0.6rem ${({ theme }) => theme.colors.shadowColor};
   overflow: hidden;
 
   overscroll-behavior: contain;
