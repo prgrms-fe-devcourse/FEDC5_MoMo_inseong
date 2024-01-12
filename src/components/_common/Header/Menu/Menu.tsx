@@ -5,6 +5,7 @@ import { notificationMockup } from './NotificatonMockup';
 import { PopupProfile, PopupProfileProps } from './PopupProfile';
 import { useSelector } from '@/_redux/hooks';
 import { Icon } from '@common/Icon/Icon';
+import { Profile } from '@common/Profile/Profile';
 import { Tooltip } from '@common/Tooltip/Tooltip';
 
 // type ModeType = 'light' | 'dark';
@@ -71,9 +72,13 @@ export const Menu = () => {
           content={<PopupProfile {...popupProfile} />}
           height={'fit-content'}
           offset={-90}>
-          <StProfileImg
-            src={popupProfile.image}
-            alt={popupProfile.fullName}
+          <Profile
+            image={popupProfile.image || ''}
+            fullName={popupProfile.fullName}
+            status="Profile"
+            _id={popupProfile.userId}
+            fontSize={14}
+            imageSize={32}
           />
         </Tooltip>
       </StTooltipWrapper>
@@ -122,9 +127,3 @@ const StTooltipWrapper = styled.li`
 //     font-size: 20px;
 //   }
 // `;
-
-const StProfileImg = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: 100%;
-`;
