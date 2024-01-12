@@ -76,7 +76,7 @@ export const Menu = () => {
             image={popupProfile.image || ''}
             fullName={popupProfile.fullName}
             status="Profile"
-            _id={popupProfile.userId}
+            // _id={popupProfile.userId}
             fontSize={14}
             imageSize={32}
           />
