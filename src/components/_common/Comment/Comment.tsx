@@ -18,7 +18,7 @@ interface CommentProps {
   mode: 'readonly' | 'edit';
   nickname?: string;
   handleEditChange: () => void;
-  handleDeleteClick?: () => void;
+  handleDeleteClick: () => void;
 }
 
 export const Comment = ({

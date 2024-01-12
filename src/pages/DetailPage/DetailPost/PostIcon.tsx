@@ -49,11 +49,7 @@ export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
     const isPostDelete = confirm('정말 삭제하시겠습니까?');
     if (!isPostDelete) return;
 
-    await deleteApiJWT<ILike>('/posts/delete', { id: apiResponse._id }) // postId
-      .then(() => {
-        setIsHeart('');
-      })
-      .catch((err) => console.log(err));
+    await deleteApiJWT<IPost>('/posts/delete', { id: apiResponse._id }); // postId
 
     alert('삭제되었습니다.');
     navigate('/');

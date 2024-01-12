@@ -1,23 +1,34 @@
 import { useState } from 'react';
 import { IComment, IUser } from '@/api/_types/apiModels';
+import { deleteApiJWT } from '@/api/apis';
 import { Comment } from '@common/Comment/Comment';
 
 interface CommentListProps {
   comments: IComment[] | string[];
   loginUser: IUser | null;
+  postId: string;
 }
 
-export const CommentList = ({ comments, loginUser }: CommentListProps) => {
+export const CommentList = ({
+  comments,
+  loginUser,
+  postId,
+}: CommentListProps) => {
   const [mode, setMode] = useState<'readonly' | 'edit'>('readonly');
 
   const handleEditChange = () => {
     mode === 'readonly' ? setMode('edit') : setMode('readonly');
   };
 
+  const deleteComment = async () => {
+    await deleteApiJWT<IComment>('/comments/delete', { id: postId });
+  };
+
   const handleDeleteClick = () => {
     const isDelete = confirm('댓글을 삭제하시겠습니까?');
     if (!isDelete) return;
 
+    void deleteComment();
     alert('삭제되었습니다.');
   };
 
