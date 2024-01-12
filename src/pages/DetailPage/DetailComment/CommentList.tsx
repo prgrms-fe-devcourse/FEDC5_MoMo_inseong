@@ -24,24 +24,6 @@ export const CommentList = ({ comments, loginUser }: CommentListProps) => {
     void dispatch(deleteComment(id));
   };
 
-  const isIComment = (
-    comments: IComment[] | string[],
-  ): comments is IComment[] => {
-    return (
-      comments.length > 0 &&
-      comments.every(
-        (item) =>
-          typeof item === 'object' &&
-          '_id' in item &&
-          'comment' in item &&
-          'author' in item &&
-          'post' in item &&
-          'createdAt' in item &&
-          'updatedAt' in item,
-      )
-    );
-  };
-
   return (
     isIComment(comments) &&
     comments.map((comment, idx) => {
