@@ -13,9 +13,9 @@ interface CommentProps {
   image: string;
   author: string;
   createdAt: string;
+  isMine: boolean;
   comment: string;
   mode: 'readonly' | 'edit';
-  isMine: boolean;
   nickname?: string;
   handleEditChange: () => void;
   handleDeleteClick?: () => void;
@@ -59,7 +59,8 @@ export const Comment = ({
         {/* 댓글 작성자인지 체크 */}
         {isMine && (
           <StCommentedManage>
-            {mode !== 'edit' && (
+            {/* 현재 댓글 수정 기능은 비활성화 되어 있습니다. */}
+            {false && mode !== 'edit' && (
               <Icon
                 onIconClick={handleEditChange}
                 name="edit-3"

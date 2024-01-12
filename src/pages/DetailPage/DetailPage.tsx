@@ -8,7 +8,7 @@ import { DetailPost } from './DetailPost/DetailPost';
 import { DetailTab } from './DetailTab';
 import { useDispatch, useSelector } from '@/_redux/hooks';
 import { RootStateType } from '@/_redux/store';
-import { IComment, IPost } from '@/api/_types/apiModels';
+import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
@@ -24,7 +24,7 @@ export const DetailPage = () => {
     setPageNumber(2);
   };
   const { response, error, isLoading } = useAxios<IPost>(() =>
-    getApi('posts/659fd50e02198c4985ff803f'),
+    getApi('posts/659f38c58a4e7d2ec43e4b50'),
   );
   const isLogin = useSelector((state: RootStateType) => state.userInfo);
   const dispatch = useDispatch();
