@@ -1,27 +1,24 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { MyCards } from './MyCards';
 import { MyJoinCards } from './MyJoinCards';
 import { MyLikesCards } from './MyLikesCards';
-import { ProfileTab } from './ProfileTab';
+import { MyProfileTab, UserProfileTab } from './ProfileTab';
+import { UserCards } from './UserCards';
+import { UserJoinCards } from './UserJoinCards';
 import { useSelector } from '@/_redux/hooks';
-import { IUser } from '@/api/_types/apiModels';
-import { getApi } from '@/api/apis';
-import useAxios from '@/api/useAxios';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { Button } from '@common/Button/Button';
 import { Profile } from '@common/Profile/Profile';
 
 export const ProfilePage = () => {
-  const { id } = useParams();
-  const [pageNumber, setPageNumber] = useState(1);
   const navigate = useNavigate();
-
-  const userInfo = useSelector((state) => state.userInfo.user?._id);
-  const { response, error, isLoading } = useAxios<IUser>(() =>
-    getApi(`/users/${id}`),
-  );
+  const { id } = useParams();
+  const userId = useSelector((state) => state.userInfo.user?._id);
+  const [pageNumber, setPageNumber] = useState(id === userId ? 1 : 4);
+  console.log(pageNumber);
 
   return (
     <StSideMarginWrapper>
@@ -46,19 +43,31 @@ export const ProfilePage = () => {
         )}
       </StProfileActionsContainer>
       <StProfileContainer>
-        <ProfileTab
-          pageNumber={pageNumber}
-          handleCreatePostClick={() => setPageNumber(1)}
-          handleAttendedPostClick={() => setPageNumber(2)}
-          handleInterestedPostClick={() => setPageNumber(3)}
-        />
+        {id === userId ? (
+          <MyProfileTab
+            pageNumber={pageNumber}
+            handleCreatePostClick={() => setPageNumber(1)}
+            handleAttendedPostClick={() => setPageNumber(2)}
+            handleInterestedPostClick={() => setPageNumber(3)}
+          />
+        ) : (
+          <UserProfileTab
+            pageNumber={pageNumber}
+            handleUserCards={() => setPageNumber(4)}
+            handleUserJoinCards={() => setPageNumber(5)}
+          />
+        )}
       </StProfileContainer>
       {pageNumber === 1 ? (
         <MyCards />
       ) : pageNumber === 2 ? (
         <MyJoinCards />
-      ) : (
+      ) : pageNumber === 3 ? (
         <MyLikesCards />
+      ) : pageNumber === 4 ? (
+        <UserCards userId={id || ''} />
+      ) : (
+        <UserJoinCards userId={id || ''} />
       )}
     </StSideMarginWrapper>
   );

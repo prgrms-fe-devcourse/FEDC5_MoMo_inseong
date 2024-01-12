@@ -3,12 +3,14 @@ import { Tab } from '@common/Tab/Tab';
 
 interface ProfileTabProps {
   pageNumber: number;
-  handleCreatePostClick: () => void;
-  handleAttendedPostClick: () => void;
-  handleInterestedPostClick: () => void;
+  handleCreatePostClick?: () => void;
+  handleAttendedPostClick?: () => void;
+  handleInterestedPostClick?: () => void;
+  handleUserCards?: () => void;
+  handleUserJoinCards?: () => void;
 }
 
-export const ProfileTab = ({
+export const MyProfileTab = ({
   pageNumber,
   handleCreatePostClick,
   handleAttendedPostClick,
@@ -42,6 +44,36 @@ export const ProfileTab = ({
             isActive={pageNumber === 3}
             isJustify={true}
             handleTabClick={handleInterestedPostClick}
+          />
+        </StTabWrapper>
+      </StTabContainer>
+    </>
+  );
+};
+export const UserProfileTab = ({
+  pageNumber,
+  handleUserCards,
+  handleUserJoinCards,
+}: ProfileTabProps) => {
+  return (
+    <>
+      <StTabContainer>
+        <StTabWrapper>
+          <Tab
+            label="유저가 만든 모임"
+            width={320}
+            isActive={pageNumber === 4}
+            isJustify={true}
+            handleTabClick={handleUserCards}
+          />
+        </StTabWrapper>
+        <StTabWrapper>
+          <Tab
+            label="유저가 참여한 모임"
+            width={320}
+            isActive={pageNumber === 5}
+            isJustify={true}
+            handleTabClick={handleUserJoinCards}
           />
         </StTabWrapper>
       </StTabContainer>
