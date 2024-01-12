@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import { memo } from 'react';
+import { useDispatch } from '@/_redux/hooks';
+import { initUserInfo } from '@/_redux/slices/userSlice';
 import { postApiJWT } from '@/api/apis';
 import { Icon } from '@common/Icon/Icon';
 import { Profile } from '@common/Profile/Profile';
@@ -16,11 +18,13 @@ export const PopupProfile = memo(
     const handleVisibility = () => {
       setIsVisible && setIsVisible(false);
     };
-
+    const dispatch = useDispatch();
     const handleOnLogout = () => {
       handleVisibility();
       void postApiJWT('/logout');
+      void dispatch(initUserInfo());
       localStorage.removeItem('JWT');
+      window.location.reload();
     };
     return (
       <StContainer>

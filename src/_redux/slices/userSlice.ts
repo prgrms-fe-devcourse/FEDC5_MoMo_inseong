@@ -28,7 +28,11 @@ export const getUserInfo = createAsyncThunk('authUser', async () => {
 const userInfoSlice = createSlice({
   name: 'userInfoSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    initUserInfo: (state) => {
+      state.user = null;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getUserInfo.pending, (state) => {
       state.isLoading = true;
@@ -38,7 +42,7 @@ const userInfoSlice = createSlice({
       (state, action: PayloadAction<IUser>) => {
         state.isLoading = false;
         state.user = action.payload;
-        // console.log(state.user); //{role: 'Regular', emailVerified: false, banned: false, isOnline: true, posts: Array(0), …}
+        // console.log(state.user); //{role: 'Regular', emailVerified: false, banned: false, isOnline: true, posts: Array(0),}
       },
     );
     builder.addCase(getUserInfo.rejected, (state) => {
@@ -55,5 +59,6 @@ const userInfoSlice = createSlice({
 export const shouldRedirect = (state: RootStateType) => state.userInfo;
 
 export const getUser = (state: RootStateType) => state.userInfo.user;
+export const { initUserInfo } = userInfoSlice.actions;
 
 export default userInfoSlice.reducer;
