@@ -16,15 +16,12 @@ const preventLoginLoader = () => {
   const {
     userInfo: { user },
   } = store.getState();
-
   if (user) {
     return redirect('/');
   }
   return null;
 };
-const {
-  userInfo: { user },
-} = store.getState();
+
 export const router = createBrowserRouter([
   {
     Component: App,
@@ -34,10 +31,7 @@ export const router = createBrowserRouter([
         path: '/',
         element: (
           <>
-            <Header
-              isLogin={user ? true : false}
-              // initialMode={'light'}
-            />
+            <Header />
             <Outlet />
           </>
         ),
