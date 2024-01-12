@@ -40,8 +40,6 @@ export const CommentInput = ({ loginUser, postId }: CommentInputProps) => {
     void handlePostComment();
     setText('');
   };
-  // console.log('loginUser : ', loginUser);
-  // console.log(text);
 
   return (
     <StCommentInputContainer>

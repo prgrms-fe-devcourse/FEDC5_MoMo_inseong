@@ -3,7 +3,6 @@ import { isIComment } from '../IsIComment';
 import { useDispatch } from '@/_redux/hooks';
 import { deleteComment } from '@/_redux/slices/postSlices/getPostSlice';
 import { IComment, IUser } from '@/api/_types/apiModels';
-import { deleteApiJWT } from '@/api/apis';
 import { Comment } from '@common/Comment/Comment';
 
 interface CommentListProps {
