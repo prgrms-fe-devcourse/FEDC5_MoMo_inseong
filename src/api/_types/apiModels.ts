@@ -106,11 +106,11 @@ export interface IPostTitleCustom {
   contents: string; // '본문'
   status: 'Opened' | 'Scheduled' | 'Closed'; // 모집 중 | 모임 예정 | 모임 종료
   tags: string[]; // ['tag1','tag2','tag3','tag4']
-  mentions: IMentionedUser[] | []; // [{id: '23', fullName: 'MinSuKim'}]
+  mentions: IMentionedUser[]; // [{id: '23', fullName: 'MinSuKim'}]
   meetDate: string[]; // 변경 // 투표 시작,끝 날짜 ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ'])
   peopleLimit: number;
 
-  vote: IVote[]; // [{id: 'dfnkdflad', votedDate: ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ']}] <== 날짜 아니라 타임테이블 배열 인덱스
+  vote: IVote; // [{id: 'dfnkdflad', votedDate: ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ']}] <== 날짜 아니라 타임테이블 배열 인덱스
 
   // cardId: string; // 포스트 _id
   author: string; // 검색결과의 IPost에서 유저id가 author에옴.. 그래서 여기에서 저장해주는게 낫습니다.
@@ -122,8 +122,15 @@ export interface IMentionedUser {
   fullName: string;
 }
 
-export interface IVote {
+interface IVotedUser {
   id: string;
   fullName: string;
-  votedDate: string[]; //[ '2023-12-12 22:00', '2023-12-12 22:30', '2023-12-12 23:00', '2023-12-12 22:00', '2023-12-12 22:00', '2023-12-12 22:00' ]
+}
+
+export interface ITimeVote {
+  [key: string]: IVotedUser[];
+}
+
+export interface IVote {
+  [key: string]: ITimeVote;
 }
