@@ -24,7 +24,7 @@ export const DetailMeetDescription = ({
   const responseAuthor = response.author as IUser;
   const resData: IResData = {
     postTitle: responseTitle.postTitle,
-    createdAt: FormatDate(responseAuthor.createdAt),
+    createdAt: FormatDate(response.createdAt),
     image: responseAuthor?.image || '',
     _id: responseAuthor._id,
     username: responseAuthor?.username ? responseAuthor.username : '',
