@@ -18,6 +18,7 @@ export const DetailComment = ({ response, loginUser }: DetailCommentProps) => {
       />
       <CommentList
         comments={response.comments}
+        postId={response._id}
         loginUser={loginUser}
       />
     </StCommentContainer>
