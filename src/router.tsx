@@ -11,12 +11,11 @@ import { ProfilePage } from './pages/ProfilePage/ProfilePage';
 import { SignUpPage } from './pages/SignupPage/SignupPage';
 import { Header } from '@common/Header/Header';
 
-/* loder */
-const preventLoginLoder = () => {
+/* loader */
+const preventLoginLoader = () => {
   const {
     userInfo: { user },
   } = store.getState();
-
   if (user) {
     return redirect('/');
   }
@@ -32,10 +31,7 @@ export const router = createBrowserRouter([
         path: '/',
         element: (
           <>
-            <Header
-              isLogin={true}
-              initialMode={'light'}
-            />
+            <Header />
             <Outlet />
           </>
         ),
@@ -64,7 +60,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/login',
-        loader: preventLoginLoder,
+        loader: preventLoginLoader,
         element: <LoginPage />,
       },
       {

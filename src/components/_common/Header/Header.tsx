@@ -1,26 +1,37 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { Menu } from './Menu/Menu';
+import { useSelector } from '@/_redux/hooks';
+import logo from '@/assets/logo.png';
+import { Button } from '@common/Button/Button';
 
-//FIXME: 실제 isLogin은 리덕스로 관리되어야 함
-interface HeaderProps {
-  isLogin: boolean;
-  initialMode: 'dark' | 'light';
-}
-
-export const Header = ({ isLogin, initialMode }: HeaderProps) => {
+export const Header = () => {
   const navigate = useNavigate();
+  const isLogin = useSelector((state) => state.userInfo.user);
+
   return (
     <StWrapper>
       <StFixedContainer>
         <StContainer>
-          <StLogo onClick={() => navigate('/')}>MoMo</StLogo>
+          <StLogo onClick={() => navigate('/')}>
+            <img
+              style={{ height: '55px' }}
+              src={logo}
+            />
+          </StLogo>
           {isLogin ? (
-            <Menu initialMode={initialMode} />
+            <Menu />
           ) : (
-            <StLoginButton onClick={() => navigate('/login')}>
-              로그인
-            </StLoginButton>
+            <>
+              <Button
+                color="BLUE"
+                isOutline={true}
+                width={70}
+                height={30}
+                label="로그인"
+                handleButtonClick={() => navigate('/login')}
+              />
+            </>
           )}
         </StContainer>
       </StFixedContainer>
@@ -53,25 +64,14 @@ const StContainer = styled.div`
   width: 100%;
   height: 100%;
   max-width: 1024px;
+  padding: 0px 20px;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
-//FIXME: 로고 svg로 변경
 const StLogo = styled.a`
   display: inline-block;
-  padding: 0.8rem 1.2rem;
-  background-color: #fd6b6b5e;
   cursor: pointer;
-`;
-
-//FIXME: Button 공통 컴포넌트 사용
-const StLoginButton = styled.button`
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  background-color: #1374d5;
-  color: white;
-  font-size: 14px;
 `;

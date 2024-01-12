@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
+import { FormatDate } from '@/pages/DetailPage/FormatDate';
 import { GREY, LIGHT_GREY } from '@/style/colorConstants';
 import { theme } from '@/style/theme';
 import { Button } from '@common/Button/Button';
@@ -12,11 +13,12 @@ interface CommentProps {
   image: string;
   author: string;
   createdAt: string;
+  isMine: boolean;
   comment: string;
   mode: 'readonly' | 'edit';
-  isMine: boolean;
+  nickname?: string;
   handleEditChange: () => void;
-  handleDeleteClick?: () => void;
+  handleDeleteClick: () => void;
 }
 
 export const Comment = ({
@@ -27,6 +29,7 @@ export const Comment = ({
   isMine,
   mode,
   comment,
+  nickname = '',
   handleEditChange,
   handleDeleteClick,
 }: CommentProps) => {
@@ -45,18 +48,19 @@ export const Comment = ({
         <StCommentedUser>
           <Profile
             image={image}
-            fullName={author}
+            fullName={nickname || author}
             imageSize={32}
             fontSize={16}
             _id={_id}
           />
-          <StCreatedAt>{`(${createdAt})`}</StCreatedAt>
+          <StCreatedAt>{`(${FormatDate(createdAt)})`}</StCreatedAt>
         </StCommentedUser>
 
         {/* 댓글 작성자인지 체크 */}
         {isMine && (
           <StCommentedManage>
-            {mode !== 'edit' && (
+            {/* 현재 댓글 수정 기능은 비활성화 되어 있습니다. */}
+            {false && mode !== 'edit' && (
               <Icon
                 onIconClick={handleEditChange}
                 name="edit-3"
@@ -126,6 +130,7 @@ const StCommentedUser = styled.div`
 const StCreatedAt = styled.span`
   color: ${GREY};
   font-size: 12px;
+  margin-left: 8px;
 `;
 
 const StCommentedManage = styled.div`

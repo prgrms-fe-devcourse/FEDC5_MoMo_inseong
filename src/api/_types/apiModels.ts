@@ -60,6 +60,7 @@ export interface INotification {
   follow?: string; // 사용자 id
   comment?: IComment;
   message?: string; // 메시지 id
+  like?: ILike;
   createdAt: string;
   updatedAt: string;
 }

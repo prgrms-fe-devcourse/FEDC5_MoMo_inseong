@@ -1,16 +1,43 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import { DUMMY_DATA } from '../DummyData';
+import { useDispatch } from '@/_redux/hooks';
+import { postComment } from '@/_redux/slices/postSlices/getPostSlice';
+import { IUser } from '@/api/_types/apiModels';
+// import { postApiJWT } from '@/api/apis';
 import { theme } from '@/style/theme';
 import { Button } from '@common/Button/Button';
 import { Profile } from '@common/Profile/Profile';
 
-export const CommentInput = () => {
+interface CommentInputProps {
+  loginUser: IUser | null;
+  postId: string;
+}
+
+export const CommentInput = ({ loginUser, postId }: CommentInputProps) => {
+  const navigate = useNavigate();
   const [text, setText] = useState('');
+  const dispatch = useDispatch();
+
+  const handlePostComment = () => {
+    const data = { comment: text, postId: postId };
+    void dispatch(postComment(data));
+  };
+
   const handleButtonClick = () => {
-    if (!text) return;
-    // Data 전송
+    if (!loginUser) {
+      const isUserNeedLogin = confirm('로그인이 필요합니다.');
+      isUserNeedLogin && navigate('/login');
+      return;
+    }
+
+    if (!text) {
+      alert('댓글을 입력해주세요.');
+      return;
+    }
+
+    void handlePostComment();
     setText('');
   };
 
@@ -19,10 +46,10 @@ export const CommentInput = () => {
       <StCommentInputWrapper>
         <Profile
           status="ProfileImage"
-          image={DUMMY_DATA.image}
+          image={loginUser && loginUser.image ? loginUser.image : ''}
           imageSize={32}
-          _id={DUMMY_DATA._id}
-          fullName={DUMMY_DATA.author}
+          _id={loginUser ? loginUser._id : ''}
+          fullName={loginUser ? loginUser.fullName : ''}
         />
         <TextareaAutosize
           className="commentTextarea"
@@ -43,8 +70,7 @@ export const CommentInput = () => {
 };
 
 const StCommentInputContainer = styled.div`
-  margin-top: 32px;
-  margin-bottom: 8px;
+  margin-top: 16px;
   padding: 16px;
 
   & .commentTextarea {

@@ -1,40 +1,49 @@
 import styled from '@emotion/styled';
-import { DUMMY_DATA } from '../DummyData';
 import { Badge } from './Badge';
 import { DetailTimeTablePage } from './DetailTimeTablePage';
 import { PostContents } from './PostContents';
 import { PostIcon } from './PostIcon';
+import { IPost, IPostTitleCustom, IUser } from '@/api/_types/apiModels';
 
-type DetailPostType = {
+interface DetailPostProps {
   pageNumber: number;
-};
+  response: IPost;
+  loginUser: IUser | null;
+}
 
-export const DetailPost = ({ pageNumber }: DetailPostType) => {
+export const DetailPost = ({
+  pageNumber,
+  response,
+  loginUser,
+}: DetailPostProps) => {
+  const responseTitle = JSON.parse(response.title) as IPostTitleCustom;
+
   return (
-    <>
-      <StPostContainer>
-        {/* Post or TimeTable*/}
-        {pageNumber === 1 && <PostContents />}
-        {pageNumber === 2 && <DetailTimeTablePage />}
+    <StPostContainer>
+      {/* Post or TimeTable*/}
+      {pageNumber === 1 && <PostContents response={response} />}
+      {pageNumber === 2 && <DetailTimeTablePage />}
 
-        {/* Badge */}
-        {DUMMY_DATA.tags.length && (
-          <Badge
-            kind="tag"
-            data={DUMMY_DATA.tags}
-          />
-        )}
-        {DUMMY_DATA.mentions.length && (
-          <Badge
-            kind="mention"
-            data={DUMMY_DATA.mentions}
-          />
-        )}
+      {/* Badge */}
+      {responseTitle.tags.length > 0 && (
+        <Badge
+          kind="tag"
+          data={responseTitle.tags}
+        />
+      )}
+      {responseTitle.mentions.length > 0 && (
+        <Badge
+          kind="mention"
+          data={responseTitle.mentions}
+        />
+      )}
 
-        {/* Icon */}
-        <PostIcon />
-      </StPostContainer>
-    </>
+      {/* Icon */}
+      <PostIcon
+        loginUser={loginUser}
+        apiResponse={response}
+      />
+    </StPostContainer>
   );
 };
 

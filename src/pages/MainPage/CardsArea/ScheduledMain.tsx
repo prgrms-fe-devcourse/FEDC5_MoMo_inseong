@@ -1,9 +1,8 @@
 // 이날모일래 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { ScheduledCards } from './ScheduledCards';
-import { RootStateType } from '@/_redux/store';
+import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import { theme } from '@/style/theme';
@@ -14,9 +13,7 @@ import { Spinner } from '@common/Spinner/Spinner';
 export const ScheduledMain = () => {
   const [page, setPage] = useState(0); // 오늘주0, 이후 +7, -7 씩
 
-  const today = new Date(
-    useSelector((state: RootStateType) => state.today.today),
-  );
+  const today = new Date(useSelector((state) => state.today.today));
   const thisWeek = new Array(7)
     .fill(0)
     .map((_, i) =>

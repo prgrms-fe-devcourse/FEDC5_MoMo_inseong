@@ -11,8 +11,6 @@ import { Icon } from '@common/Icon/Icon';
 import { InputCompound } from '@common/Input/InputCompound';
 import { Profile } from '@common/Profile/Profile';
 
-// TODO : 일정 기간마다 get 재요청
-
 export const OnlineUsers = () => {
   const [allUsers, setAllUsers] = useState<IUser[]>([]);
   const {
@@ -20,6 +18,7 @@ export const OnlineUsers = () => {
     error: allUserError,
     isLoading: isAllUserLoading,
   } = useAxios<IUser[]>(() => getApi('/users/get-users'));
+
   useEffect(() => {
     if (!isAllUserLoading && !allUserError) {
       setAllUsers(allUserResp);
@@ -52,6 +51,7 @@ export const OnlineUsers = () => {
       return errors;
     },
   });
+
   useEffect(() => {
     if (values.trim() === '' && allUsers && !isLoading) {
       setOnlineUsers(allUsers);
