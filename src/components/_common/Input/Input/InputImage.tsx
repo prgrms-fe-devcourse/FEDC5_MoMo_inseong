@@ -1,24 +1,30 @@
 import styled from '@emotion/styled';
-import { CSSProperties, useState } from 'react';
+import { CSSProperties } from 'react';
 import InputUpload from '../InputUpload';
 import { theme } from '@/style/theme';
 import { Icon } from '@common/Icon/Icon';
 
 interface InputProps {
   image?: string;
+  setDisplayImage: (arg: string | null) => void;
+  setUploadImage: (arg: File | null) => void;
   style?: CSSProperties;
 }
 
-export const InputImage = ({ image: initialImage, ...props }: InputProps) => {
-  const [image, setImage] = useState<string | null>(initialImage || null);
-
-  // TODO: 추후 데이터 관련하여 다시 확인..
+export const InputImage = ({
+  image,
+  setDisplayImage,
+  setUploadImage,
+  ...props
+}: InputProps) => {
+  // TODO: 추후 데이터 관련하여 다시 확인.. << 수정 완료(by 동건) >>
   const handleImageChange = (uploadedFile: File) => {
-    setImage(URL.createObjectURL(uploadedFile));
+    setDisplayImage(URL.createObjectURL(uploadedFile));
+    setUploadImage(uploadedFile);
   };
 
   const handleImageRemove = () => {
-    setImage(null);
+    setDisplayImage(null);
   };
 
   const handleImageZoom = () => {
@@ -31,7 +37,10 @@ export const InputImage = ({ image: initialImage, ...props }: InputProps) => {
       {!image ? (
         <StImageContainer style={{ ...props.style }}>
           <StyledUpload>
-            <InputUpload onChange={handleImageChange}>
+            {/* FIXME: name 하드코딩으로 일단 해놓겠습니다 _ _ */}
+            <InputUpload
+              name="image"
+              onChange={handleImageChange}>
               <Icon name="plus" />
             </InputUpload>
           </StyledUpload>
