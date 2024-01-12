@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { getUserInfo } from '../../_redux/slices/userSlice';
 import { DetailComment } from './DetailComment/DetailComment';
 import { DetailMeetDescription } from './DetailMeetDescription';
@@ -13,6 +14,7 @@ import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { Spinner } from '@common/Spinner/Spinner';
 
 export const DetailPage = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [pageNumber, setPageNumber] = useState(1);
   const handlePostClick = () => {
@@ -39,10 +41,18 @@ export const DetailPage = () => {
       handleAPIError();
     }
     void dispatch(getUserInfo());
-    void dispatch(getPostDetail('65a0aeeb3906f20212de84f8'));
-  }, [error, navigate, dispatch]);
+    if (!id) return;
+    void dispatch(getPostDetail(id));
+  }, [error, navigate, dispatch, id]);
 
-  if (isLoading) return <Spinner />;
+  if (isLoading)
+    return (
+      <>
+        <StSpinnerWrapper>
+          <Spinner size={36} />
+        </StSpinnerWrapper>
+      </>
+    );
 
   return (
     response && (
@@ -76,4 +86,11 @@ export const DetailPage = () => {
 
 const StDetailContainer = styled.div`
   padding: 32px;
+`;
+
+const StSpinnerWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
 `;
