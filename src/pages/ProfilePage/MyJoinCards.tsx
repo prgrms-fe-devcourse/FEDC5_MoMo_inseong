@@ -1,43 +1,43 @@
-import styled from '@emotion/styled';
+import { useEffect, useState } from 'react';
+import { StCardsWrapper } from './profilePageStyles';
 import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
-import useAxios from '@/api/useAxios';
 import { Card } from '@common/Card/Card';
 import { Spinner } from '@common/Spinner/Spinner';
 
 export const MyJoinCards = () => {
-  const userId = useSelector((state) => state.auth.userId);
-  console.log('---', userId);
+  const userId = useSelector((state) => state.userInfo.user?._id);
+  const [allJoinedPosts, setAllJoinedPosts] = useState<IPost[]>([]);
 
-  // getApi(`posts/author/${userId}`),
+  const getJoinedData = async () => {
+    return (await getApi<IPost[]>(`/search/all/participants.*${userId}`)).data;
+  };
+  useEffect(() => {
+    setAllJoinedPosts([] as IPost[]);
+    if (!userId) return;
+    void getJoinedData().then((res) => {
+      setAllJoinedPosts(res);
+    });
+  }, [userId]);
+
   return (
     <>
-      {/* <StCardsWrapper>
-        {isLoading ? (
+      <StCardsWrapper>
+        {!allJoinedPosts ? (
           <Spinner />
-        ) : (
-          !error &&
-          response &&
-          response.map((post, idx) => (
+        ) : allJoinedPosts.length > 0 ? (
+          allJoinedPosts.map((likedPost, idx) => (
             <Card
               key={idx}
-              cardData={post}
-              handleCardClick={() => ''}
+              cardData={likedPost}
+              handleCardClick={() => ``}
             />
           ))
+        ) : (
+          <div>모임에 참여해보세요!</div>
         )}
-      </StCardsWrapper> */}
+      </StCardsWrapper>
     </>
   );
 };
-
-const StCardsWrapper = styled.div`
-  margin-top: 23px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, max-content));
-  justify-content: center;
-  gap: 64px;
-  width: 100%;
-  box-sizing: border-box;
-`;

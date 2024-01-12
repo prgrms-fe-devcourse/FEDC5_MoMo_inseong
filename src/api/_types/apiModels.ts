@@ -111,6 +111,7 @@ export interface IPostTitleCustom {
   peopleLimit: number;
 
   vote: IVote[]; // [{id: 'dfnkdflad', votedDate: ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ']}] <== 날짜 아니라 타임테이블 배열 인덱스
+  participants: string[]; // 이 모임에 참여(투표)한 사람들 id 배열
 
   // cardId: string; // 포스트 _id
   author: string; // 검색결과의 IPost에서 유저id가 author에옴.. 그래서 여기에서 저장해주는게 낫습니다.
