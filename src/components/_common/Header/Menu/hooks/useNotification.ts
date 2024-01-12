@@ -3,6 +3,7 @@ import type { NotificationExtractType } from '../Notification';
 import type { INotification, IPost } from '@/api/_types/apiModels';
 import { getApi, getApiJWT } from '@/api/apis';
 import useAxios from '@/api/useAxios';
+import { parseTitle } from '@/utils/parseTitle';
 
 export const useNotification = () => {
   const {
@@ -61,13 +62,18 @@ export const useNotification = () => {
                 isSeen,
               } as NotificationExtractType;
 
+              //FIXME: 콘솔
+              console.log(postTitles.find(({ id }) => id === post)?.title);
+
+              const customTitle = parseTitle(
+                postTitles.find(({ id }) => id === post)?.title as string,
+              );
+
               // COMMENT | LIKE | METION 각 케이스에 맞는 데이터 가공
               if ('comment' in notification) {
                 props.type = 'COMMENT';
                 props.details = {
-                  postTitle:
-                    postTitles.find(({ id }) => id === post)?.title ??
-                    'unknown title',
+                  postTitle: customTitle.postTitle,
                   postId: post as string,
                   commentId: comment?._id ?? '',
                   comment: comment?.comment,
@@ -75,18 +81,14 @@ export const useNotification = () => {
               } else if ('like' in notification) {
                 props.type = 'LIKE';
                 props.details = {
-                  postTitle:
-                    postTitles.find(({ id }) => id === post)?.title ??
-                    'unknown title',
+                  postTitle: customTitle.postTitle,
                   postId: post as string,
                 };
               } else if ('message' in notification) {
                 //FIXME: MESSAGE를 쓰지 않으므로 MENTION으로 대체
                 props.type = 'MENTION';
                 props.details = {
-                  postTitle:
-                    postTitles.find(({ id }) => id === post)?.title ??
-                    'unknown title',
+                  postTitle: customTitle.postTitle,
                   postId: post as string,
                 };
               }
