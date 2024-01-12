@@ -13,12 +13,12 @@ export const DetailComment = ({ response, loginUser }: DetailCommentProps) => {
     <StCommentContainer>
       <StCommentPicket>댓글</StCommentPicket>
       <CommentInput
-        loginUser={loginUser ?? null}
+        loginUser={loginUser}
         postId={response._id}
       />
       <CommentList
-        comments={response.comments}
         loginUser={loginUser}
+        comments={response.comments}
       />
     </StCommentContainer>
   );

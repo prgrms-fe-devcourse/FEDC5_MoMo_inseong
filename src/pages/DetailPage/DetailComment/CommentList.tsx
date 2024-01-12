@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { isIComment } from '../IsIComment';
+import { useDispatch } from '@/_redux/hooks';
+import { deleteComment } from '@/_redux/slices/postSlices/getPostSlice';
 import { IComment, IUser } from '@/api/_types/apiModels';
-import { deleteApiJWT } from '@/api/apis';
 import { Comment } from '@common/Comment/Comment';
 
 interface CommentListProps {
@@ -10,39 +12,16 @@ interface CommentListProps {
 
 export const CommentList = ({ comments, loginUser }: CommentListProps) => {
   const [mode, setMode] = useState<'readonly' | 'edit'>('readonly');
+  const dispatch = useDispatch();
 
   const handleEditChange = () => {
     mode === 'readonly' ? setMode('edit') : setMode('readonly');
   };
 
-  const deleteComment = async (id: string) => {
-    await deleteApiJWT<IComment>('/comments/delete', { id });
-  };
-
   const handleDeleteClick = (id: string) => {
     const isDelete = confirm('댓글을 삭제하시겠습니까?');
     if (!isDelete) return;
-
-    void deleteComment(id);
-    alert('삭제되었습니다.');
-  };
-
-  const isIComment = (
-    comments: IComment[] | string[],
-  ): comments is IComment[] => {
-    return (
-      comments.length > 0 &&
-      comments.every(
-        (item) =>
-          typeof item === 'object' &&
-          '_id' in item &&
-          'comment' in item &&
-          'author' in item &&
-          'post' in item &&
-          'createdAt' in item &&
-          'updatedAt' in item,
-      )
-    );
+    void dispatch(deleteComment(id));
   };
 
   return (
