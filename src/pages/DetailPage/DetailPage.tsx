@@ -24,7 +24,7 @@ export const DetailPage = () => {
     setPageNumber(2);
   };
   const { response, error, isLoading } = useAxios<IPost>(() =>
-    getApi('posts/659f38c58a4e7d2ec43e4b50'),
+    getApi('posts/65a09a76e24214783e0db5c9'),
   );
   const isLogin = useSelector((state: RootStateType) => state.userInfo);
   const dispatch = useDispatch();
