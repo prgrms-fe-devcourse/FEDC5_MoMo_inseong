@@ -14,22 +14,23 @@ import { Button } from '@common/Button/Button';
 import { Profile } from '@common/Profile/Profile';
 
 export const ProfilePage = () => {
-  const navigate = useNavigate();
   const { id } = useParams();
-  const userId = useSelector((state) => state.userInfo.user?._id);
-  const [pageNumber, setPageNumber] = useState(id === userId ? 1 : 4);
-  console.log(pageNumber);
+  const userInfo = useSelector((state) => state.userInfo.user);
+  const [tabNumber, setTabNumber] = useState(id === userInfo?._id ? 1 : 4);
+  const navigate = useNavigate();
 
   return (
     <StSideMarginWrapper>
       <StProfileActionsContainer>
-        <Profile
-          image={response.image || ''}
-          fullName={response.username ? response.username : response.fullName}
-          _id={response._id}
-          fontSize={16}
-        />
-        {userInfo === id && (
+        {userInfo && (
+          <Profile
+            image={userInfo.image || ''}
+            fullName={userInfo.username ? userInfo.username : userInfo.fullName}
+            _id={userInfo._id}
+            fontSize={16}
+          />
+        )}
+        {userInfo?._id === id && (
           <StButtonsContainer>
             <Button
               label="프로필 수정"
@@ -43,28 +44,28 @@ export const ProfilePage = () => {
         )}
       </StProfileActionsContainer>
       <StProfileContainer>
-        {id === userId ? (
+        {id === userInfo?._id ? (
           <MyProfileTab
-            pageNumber={pageNumber}
-            handleCreatePostClick={() => setPageNumber(1)}
-            handleAttendedPostClick={() => setPageNumber(2)}
-            handleInterestedPostClick={() => setPageNumber(3)}
+            tabNumber={tabNumber}
+            handleCreatePostClick={() => setTabNumber(1)}
+            handleAttendedPostClick={() => setTabNumber(2)}
+            handleInterestedPostClick={() => setTabNumber(3)}
           />
         ) : (
           <UserProfileTab
-            pageNumber={pageNumber}
-            handleUserCards={() => setPageNumber(4)}
-            handleUserJoinCards={() => setPageNumber(5)}
+            tabNumber={tabNumber}
+            handleUserCards={() => setTabNumber(4)}
+            handleUserJoinCards={() => setTabNumber(5)}
           />
         )}
       </StProfileContainer>
-      {pageNumber === 1 ? (
+      {tabNumber === 1 ? (
         <MyCards />
-      ) : pageNumber === 2 ? (
+      ) : tabNumber === 2 ? (
         <MyJoinCards />
-      ) : pageNumber === 3 ? (
+      ) : tabNumber === 3 ? (
         <MyLikesCards />
-      ) : pageNumber === 4 ? (
+      ) : tabNumber === 4 ? (
         <UserCards userId={id || ''} />
       ) : (
         <UserJoinCards userId={id || ''} />

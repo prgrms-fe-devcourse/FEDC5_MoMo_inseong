@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Tab } from '@common/Tab/Tab';
 
 interface ProfileTabProps {
-  pageNumber: number;
+  tabNumber: number;
   handleCreatePostClick?: () => void;
   handleAttendedPostClick?: () => void;
   handleInterestedPostClick?: () => void;
@@ -11,7 +11,7 @@ interface ProfileTabProps {
 }
 
 export const MyProfileTab = ({
-  pageNumber,
+  tabNumber,
   handleCreatePostClick,
   handleAttendedPostClick,
   handleInterestedPostClick,
@@ -23,7 +23,7 @@ export const MyProfileTab = ({
           <Tab
             label="내가 만든 모임"
             width={320}
-            isActive={pageNumber === 1}
+            isActive={tabNumber === 1}
             isJustify={true}
             handleTabClick={handleCreatePostClick}
           />
@@ -32,7 +32,7 @@ export const MyProfileTab = ({
           <Tab
             label="참여한 모임"
             width={320}
-            isActive={pageNumber === 2}
+            isActive={tabNumber === 2}
             isJustify={true}
             handleTabClick={handleAttendedPostClick}
           />
@@ -41,7 +41,7 @@ export const MyProfileTab = ({
           <Tab
             label="관심 모임"
             width={320}
-            isActive={pageNumber === 3}
+            isActive={tabNumber === 3}
             isJustify={true}
             handleTabClick={handleInterestedPostClick}
           />
@@ -50,8 +50,9 @@ export const MyProfileTab = ({
     </>
   );
 };
+
 export const UserProfileTab = ({
-  pageNumber,
+  tabNumber,
   handleUserCards,
   handleUserJoinCards,
 }: ProfileTabProps) => {
@@ -62,7 +63,7 @@ export const UserProfileTab = ({
           <Tab
             label="유저가 만든 모임"
             width={320}
-            isActive={pageNumber === 4}
+            isActive={tabNumber === 4}
             isJustify={true}
             handleTabClick={handleUserCards}
           />
@@ -71,7 +72,7 @@ export const UserProfileTab = ({
           <Tab
             label="유저가 참여한 모임"
             width={320}
-            isActive={pageNumber === 5}
+            isActive={tabNumber === 5}
             isJustify={true}
             handleTabClick={handleUserJoinCards}
           />
