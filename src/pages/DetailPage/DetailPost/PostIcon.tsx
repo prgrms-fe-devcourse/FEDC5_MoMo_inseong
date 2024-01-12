@@ -1,35 +1,86 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
-import { DUMMY_DATA } from '../DummyData';
+import { MouseEvent, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ILike, IPost, IUser } from '@/api/_types/apiModels';
+import { deleteApiJWT, postApiJWT } from '@/api/apis';
 import { Icon } from '@common/Icon/Icon';
 
-export const PostIcon = () => {
-  const [isHeartClick, setIsHeartClick] = useState(false);
-  const onHeartClick = () => {
-    setIsHeartClick(!isHeartClick);
+interface PostIconProps {
+  apiResponse: IPost;
+  loginUser: IUser | null;
+}
+
+export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
+  const [isHeart, setIsHeart] = useState('');
+  const [isPostOwner, setIsPostOwner] = useState(false);
+  const navigate = useNavigate();
+  // console.log('loginUser data : ', loginUser._id);
+  // console.log('response data : ', apiResponse._id);
+
+  const handleHeartClick = async (e: MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    if (!loginUser) {
+      const isUserNeedLogin = confirm('로그인이 필요합니다.');
+      isUserNeedLogin && navigate('/login');
+      return;
+    }
+    // 좋아요 안한 상태 => 좋아요
+    if (!isHeart) {
+      await postApiJWT<ILike>('/likes/create', { postId: apiResponse._id })
+        .then((res) => {
+          setIsHeart(res.data._id);
+        })
+        .catch((err) => console.log(err));
+    }
+
+    // 좋아요 했던 상태 => 좋아요 취소
+    else if (isHeart) {
+      await deleteApiJWT<ILike>('/likes/delete', {
+        id: isHeart,
+      })
+        .then(() => {
+          setIsHeart('');
+        })
+        .catch((err) => console.log(err));
+    }
   };
-  const onDeleteClick = () => {
+
+  const handleDeleteClick = async (e: MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
     const isPostDelete = confirm('정말 삭제하시겠습니까?');
     if (!isPostDelete) return;
+
+    await deleteApiJWT<IPost>('/posts/delete', { id: apiResponse._id }); // postId
+
     alert('삭제되었습니다.');
-    // TODO:
-    // 해당 post 삭제 API 호출
-    // main page로 redirect
+    navigate('/');
   };
+
+  useEffect(() => {
+    const LoginUserId = loginUser && loginUser._id;
+    const PostLike = apiResponse.likes as ILike[];
+    const result = PostLike?.find((like) => like.user === LoginUserId);
+
+    setIsHeart(result ? result._id : '');
+    setIsPostOwner(LoginUserId === (apiResponse.author as IUser)._id);
+  }, [loginUser, apiResponse]);
+
   return (
     <>
       <StIconContainer>
-        <HeartIconsWrapper>
+        <StIconsWrapper>
           <Icon
             name="heart"
             size={24}
-            isFill={isHeartClick}
-            onIconClick={onHeartClick}
+            isFill={!!isHeart}
+            onIconClick={(e: MouseEvent<HTMLElement>) =>
+              void handleHeartClick(e)
+            }
           />
-        </HeartIconsWrapper>
-        {/* loggedInId랑 postId랑 같은 사람, 즉 글 작성자만 / 추후 수정 예정 */}
-        {DUMMY_DATA._id && (
-          <AdminIconsWrapper>
+        </StIconsWrapper>
+        {/* isLogin === post 작성자 id */}
+        {isPostOwner && (
+          <StAdminIconsWrapper>
             <Icon
               name="edit"
               size={24}
@@ -37,9 +88,11 @@ export const PostIcon = () => {
             <Icon
               name="trash-2"
               size={24}
-              onIconClick={onDeleteClick}
+              onIconClick={(e: MouseEvent<HTMLElement>) =>
+                void handleDeleteClick(e)
+              }
             />
-          </AdminIconsWrapper>
+          </StAdminIconsWrapper>
         )}
       </StIconContainer>
     </>
@@ -49,17 +102,15 @@ const StIconContainer = styled.div`
   margin-top: 8px;
   display: flex;
   align-items: center;
+  padding: 4px 0;
 `;
 
-const HeartIconsWrapper = styled.div`
-  margin: 16px 0;
-  width: 50%;
+const StIconsWrapper = styled.div`
+  flex-grow: 1;
 `;
-const AdminIconsWrapper = styled.div`
-  width: 50%;
-  text-align: right;
-  & > span:first-of-type {
-    margin-right: 8px;
-    margin-right: 24px;
+
+const StAdminIconsWrapper = styled.div`
+  & > span:last-of-type {
+    margin-left: 24px;
   }
 `;

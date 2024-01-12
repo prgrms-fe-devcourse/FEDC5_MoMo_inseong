@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router';
 import { IMentionedUser } from '@/api/_types/apiModels';
 import { Tag } from '@common/Tag/Tag';
 
@@ -8,33 +9,34 @@ interface BadgeProps {
 }
 
 export const Badge = ({ kind, data }: BadgeProps) => {
+  const navigate = useNavigate();
   return (
-    <>
-      <StBadgeContainer>
-        {kind === 'tag' &&
-          (data as string[]).map((tag, index) => (
-            <StBadge key={`tag-${index}`}>
-              <Tag
-                name={`#${tag}`}
-                hasMouseCursor={false}
-                marginRight={2}
-                fontSize={14}
-              />
-            </StBadge>
-          ))}
-        {kind === 'mention' &&
-          (data as IMentionedUser[]).map((mention) => (
-            <StBadge key={`mention-${mention._id}`}>
-              <Tag
-                name={'@' + mention.fullName}
-                hasMouseCursor={true}
-                marginRight={2}
-                fontSize={14}
-              />
-            </StBadge>
-          ))}
-      </StBadgeContainer>
-    </>
+    <StBadgeContainer>
+      {kind === 'tag' &&
+        (data as string[]).map((tag, index) => (
+          <StBadge key={`tag-${index}`}>
+            <Tag
+              name={`#${tag}`}
+              hasMouseCursor={false}
+              marginRight={2}
+              fontSize={12}
+            />
+          </StBadge>
+        ))}
+      {kind === 'mention' &&
+        (data as IMentionedUser[]).map((mention, index) => (
+          <StBadge
+            key={`mention-${mention._id}-${index}`}
+            onClick={() => navigate(`/profile/${mention._id}`)}>
+            <Tag
+              name={'@' + mention.fullName}
+              hasMouseCursor={true}
+              marginRight={2}
+              fontSize={12}
+            />
+          </StBadge>
+        ))}
+    </StBadgeContainer>
   );
 };
 

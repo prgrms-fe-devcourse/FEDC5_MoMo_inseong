@@ -1,30 +1,49 @@
 import { useState } from 'react';
-import { DUMMY_DATA } from '../DummyData';
+import { isIComment } from '../IsIComment';
+import { useDispatch } from '@/_redux/hooks';
+import { deleteComment } from '@/_redux/slices/postSlices/getPostSlice';
+import { IComment, IUser } from '@/api/_types/apiModels';
 import { Comment } from '@common/Comment/Comment';
 
-export const CommentList = () => {
+interface CommentListProps {
+  comments: IComment[] | string[];
+  loginUser: IUser | null;
+}
+
+export const CommentList = ({ comments, loginUser }: CommentListProps) => {
   const [mode, setMode] = useState<'readonly' | 'edit'>('readonly');
+  const dispatch = useDispatch();
 
   const handleEditChange = () => {
     mode === 'readonly' ? setMode('edit') : setMode('readonly');
   };
-  const handleDeleteClick = () => {
+
+  const handleDeleteClick = (id: string) => {
     const isDelete = confirm('댓글을 삭제하시겠습니까?');
     if (!isDelete) return;
-    alert('삭제되었습니다.');
+    void dispatch(deleteComment(id));
   };
 
   return (
-    <Comment
-      _id={DUMMY_DATA._id}
-      image={DUMMY_DATA.image}
-      author={DUMMY_DATA.author}
-      createdAt={DUMMY_DATA.createdAt}
-      isMine={DUMMY_DATA.isMine}
-      mode={mode}
-      comment={DUMMY_DATA.contents}
-      handleEditChange={handleEditChange}
-      handleDeleteClick={handleDeleteClick}
-    />
+    isIComment(comments) &&
+    comments.map((comment, idx) => {
+      return (
+        <Comment
+          key={idx}
+          _id={comment._id}
+          image={comment.author.image as string}
+          author={comment.author.fullName}
+          createdAt={comment.createdAt}
+          isMine={
+            loginUser === null ? false : comment.author._id === loginUser._id
+          }
+          mode={mode}
+          comment={comment.comment}
+          nickname={comment.author.username}
+          handleEditChange={handleEditChange}
+          handleDeleteClick={() => handleDeleteClick(comment._id)}
+        />
+      );
+    })
   );
 };
