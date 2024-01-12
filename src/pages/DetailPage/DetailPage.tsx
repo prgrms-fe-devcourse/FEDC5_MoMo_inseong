@@ -61,7 +61,6 @@ export const DetailPage = () => {
         <hr />
         {/* 댓글 */}
         <DetailComment
-          // comments={response.comments as IComment[]}
           response={response}
           loginUser={isLogin.user ?? null}
         />
