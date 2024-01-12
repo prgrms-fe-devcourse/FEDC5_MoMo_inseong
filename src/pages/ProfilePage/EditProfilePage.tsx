@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { validateFullName } from '../SignupPage/validation';
 import { useSelector } from '@/_redux/hooks';
 import { postApiJWT, putApiJWT } from '@/api/apis';
