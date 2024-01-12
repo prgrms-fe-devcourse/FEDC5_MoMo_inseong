@@ -38,7 +38,7 @@ export const PopupProfile = memo(
             fontSize={16}
           />
         </StRouter>
-        <StRouter onClick={handleVisibility}>
+        {/* <StRouter onClick={handleVisibility}>
           <StIconBox content={'"설정"'}>
             <Icon
               name="settings"
@@ -46,7 +46,7 @@ export const PopupProfile = memo(
               showBackground={false}
             />
           </StIconBox>
-        </StRouter>
+        </StRouter> */}
         <StRouter onClick={handleOnLogout}>
           <StIconBox content={'"로그아웃"'}>
             <Icon
