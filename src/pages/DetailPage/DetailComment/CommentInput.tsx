@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
 import { useDispatch } from '@/_redux/hooks';
 import { postComment } from '@/_redux/slices/postSlices/getPostSlice';
@@ -15,6 +16,7 @@ interface CommentInputProps {
 }
 
 export const CommentInput = ({ loginUser, postId }: CommentInputProps) => {
+  const navigate = useNavigate();
   const [text, setText] = useState('');
   const dispatch = useDispatch();
 
@@ -24,6 +26,12 @@ export const CommentInput = ({ loginUser, postId }: CommentInputProps) => {
   };
 
   const handleButtonClick = () => {
+    if (!loginUser) {
+      const isUserNeedLogin = confirm('로그인이 필요합니다.');
+      isUserNeedLogin && navigate('/login');
+      return;
+    }
+
     if (!text) {
       alert('댓글을 입력해주세요.');
       return;

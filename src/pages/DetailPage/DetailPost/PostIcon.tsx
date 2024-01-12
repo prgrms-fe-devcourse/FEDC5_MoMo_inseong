@@ -20,7 +20,8 @@ export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
   const handleHeartClick = async (e: MouseEvent<HTMLElement>) => {
     e.stopPropagation();
     if (!loginUser) {
-      alert('로그인 후 이용해주세요.');
+      const isUserNeedLogin = confirm('로그인이 필요합니다.');
+      isUserNeedLogin && navigate('/login');
       return;
     }
     // 좋아요 안한 상태 => 좋아요
