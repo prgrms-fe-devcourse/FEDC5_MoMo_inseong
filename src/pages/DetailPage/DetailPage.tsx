@@ -7,10 +7,8 @@ import { DetailMeetDescription } from './DetailMeetDescription';
 import { DetailPost } from './DetailPost/DetailPost';
 import { DetailTab } from './DetailTab';
 import { useDispatch, useSelector } from '@/_redux/hooks';
+import { getPostDetail } from '@/_redux/slices/postSlices/getPostSlice';
 import { RootStateType } from '@/_redux/store';
-import { IPost } from '@/api/_types/apiModels';
-import { getApi } from '@/api/apis';
-import useAxios from '@/api/useAxios';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { Spinner } from '@common/Spinner/Spinner';
 
@@ -23,11 +21,15 @@ export const DetailPage = () => {
   const handleTimeTableClick = () => {
     setPageNumber(2);
   };
-  const { response, error, isLoading } = useAxios<IPost>(() =>
-    getApi('posts/65a0a52944e42e7dd05870f1'),
-  );
-  const isLogin = useSelector((state: RootStateType) => state.userInfo);
+
   const dispatch = useDispatch();
+  const isLogin = useSelector((state: RootStateType) => state.userInfo);
+  const {
+    isLoading,
+    post: response,
+    error,
+  } = useSelector((state: RootStateType) => state.getPostDetail);
+
   useEffect(() => {
     const handleAPIError = () => {
       alert('API로부터 데이터를 받아올 때 에러가 발생했습니다.');
@@ -37,35 +39,38 @@ export const DetailPage = () => {
       handleAPIError();
     }
     void dispatch(getUserInfo());
+    void dispatch(getPostDetail('65a0aeeb3906f20212de84f8'));
   }, [error, navigate, dispatch]);
 
-  return isLoading ? (
-    <Spinner />
-  ) : (
-    <StSideMarginWrapper>
-      <StDetailContainer>
-        {/* 타이틀, 생성 시간 */}
-        <DetailMeetDescription response={response} />
-        {/* 탭 */}
-        <DetailTab
-          pageNumber={pageNumber}
-          handlePostClick={handlePostClick}
-          handleTimeTableClick={handleTimeTableClick}
-        />
-        {/* 본문 내용 */}
-        <DetailPost
-          pageNumber={pageNumber}
-          response={response}
-          loginUser={isLogin.user ?? null}
-        />
-        <hr />
-        {/* 댓글 */}
-        <DetailComment
-          response={response}
-          loginUser={isLogin.user ?? null}
-        />
-      </StDetailContainer>
-    </StSideMarginWrapper>
+  if (isLoading) return <Spinner />;
+
+  return (
+    response && (
+      <StSideMarginWrapper>
+        <StDetailContainer>
+          {/* 타이틀, 생성 시간 */}
+          <DetailMeetDescription response={response} />
+          {/* 탭 */}
+          <DetailTab
+            pageNumber={pageNumber}
+            handlePostClick={handlePostClick}
+            handleTimeTableClick={handleTimeTableClick}
+          />
+          {/* 본문 내용 */}
+          <DetailPost
+            pageNumber={pageNumber}
+            response={response}
+            loginUser={isLogin.user ?? null}
+          />
+          <hr />
+          {/* 댓글 */}
+          <DetailComment
+            response={response}
+            loginUser={isLogin.user ?? null}
+          />
+        </StDetailContainer>
+      </StSideMarginWrapper>
+    )
   );
 };
 
