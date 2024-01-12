@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
   validateConfirmPassword,
   validatePassword,
 } from '../SignupPage/validation';
+import { useSelector } from '@/_redux/hooks';
 import { IUser } from '@/api/_types/apiModels';
 import { getApiJWT, postApi, putApiJWT } from '@/api/apis';
 import useAxios from '@/api/useAxios';
@@ -21,16 +22,19 @@ export const EditPasswordPage = () => {
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [displayImage, setDisplayImage] = useState<string | null>(null);
 
   const [passwordError, setPasswordError] = useState('');
   const [newPasswordError, setNewPasswordError] = useState('');
   const [confirmError, setConfirmError] = useState('');
 
   const passwordRef = useRef<HTMLInputElement>(null);
-  const newPasswordRef = useRef<HTMLInputElement>(null);
+  // const newPasswordRef = useRef<HTMLInputElement>(null);
   const confirmRef = useRef<HTMLInputElement>(null);
 
   const { response } = useAxios<IUser>(() => getApiJWT<IUser>('/auth-user'));
+
+  const userInfo = useSelector((state) => state.userInfo.user);
 
   const handleUpdatePassword = async () => {
     setPasswordError('');
@@ -76,6 +80,12 @@ export const EditPasswordPage = () => {
     setConfirmError(validateConfirmPassword(newPassword, value));
   };
 
+  useEffect(() => {
+    if (userInfo?.image) {
+      setDisplayImage(userInfo.image);
+    }
+  }, [userInfo]);
+
   return (
     <StSideMarginWrapper>
       <StProfileActionsContainer>
@@ -86,9 +96,8 @@ export const EditPasswordPage = () => {
         />
         <Profile
           status="ProfileImage"
-          image=""
-          fullName="test"
-          _id="test"
+          image={displayImage || ''}
+          fullName=""
           imageSize={110}
         />
         <Button

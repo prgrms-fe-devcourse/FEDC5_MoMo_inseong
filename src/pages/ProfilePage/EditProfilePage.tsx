@@ -2,9 +2,8 @@ import styled from '@emotion/styled';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { validateFullName } from '../SignupPage/validation';
-import { IUser } from '@/api/_types/apiModels';
-import { getApiJWT, postApiJWT, putApiJWT } from '@/api/apis';
-import useAxios from '@/api/useAxios';
+import { useSelector } from '@/_redux/hooks';
+import { postApiJWT, putApiJWT } from '@/api/apis';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
 import { Button } from '@common/Button/Button';
@@ -25,15 +24,15 @@ export const EditProfilePage = () => {
   const fullNameRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
 
-  const { response } = useAxios<IUser>(() => getApiJWT<IUser>('/auth-user'));
+  const userInfo = useSelector((state) => state.userInfo.user);
 
   useEffect(() => {
-    setFullName(response?.fullName || '');
-    setUsername(response?.username || '');
-    if (response?.image) {
-      setDisplayImage(response.image);
+    setFullName(userInfo?.fullName || '');
+    setUsername(userInfo?.username || '');
+    if (userInfo?.image) {
+      setDisplayImage(userInfo.image);
     }
-  }, [response]);
+  }, [userInfo]);
 
   const navigate = useNavigate();
 
@@ -92,15 +91,20 @@ export const EditProfilePage = () => {
           onIconClick={() => navigate(-1)}
         />
         <StImageContainer>
-          {/* TODO: 클릭시 이동 못하도록 진행 */}
           <Profile
             status="ProfileImage"
             image={displayImage || ''}
-            fullName="test"
-            _id="test"
+            fullName=""
             imageSize={110}
-            style={{ backgroundImage: `url(${displayImage})` }}
           />
+          {/* <StXIcon
+            name="x"
+            size={24}
+            onIconClick={() => {
+              setUploadImage(null);
+              setDisplayImage('');
+            }}
+          /> */}
           <InputUpload onChange={handleImageChange}>
             <StEditIcon
               name="edit"
@@ -108,6 +112,7 @@ export const EditProfilePage = () => {
             />
           </InputUpload>
         </StImageContainer>
+
         <Button
           label="완료"
           handleButtonClick={() => void handleUpdateProfile()}
@@ -168,6 +173,9 @@ const StProfileActionsContainer = styled.div`
 
 const StImageContainer = styled.div`
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const StEditIcon = styled(Icon)`
@@ -176,6 +184,7 @@ const StEditIcon = styled(Icon)`
   right: 0;
   transform: translate(50%, 50%);
   cursor: pointer;
+  right: 10px;
 `;
 
 const StInputForm = styled.div`
@@ -183,3 +192,10 @@ const StInputForm = styled.div`
   font-size: 14px;
   color: ${theme.colors.red};
 `;
+
+// const StXIcon = styled(Icon)`
+//   position: absolute;
+//   bottom: -15px;
+//   left: -10px;
+//   cursor: pointer;
+// `;
