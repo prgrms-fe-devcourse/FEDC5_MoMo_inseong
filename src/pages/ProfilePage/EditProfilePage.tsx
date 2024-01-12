@@ -97,14 +97,6 @@ export const EditProfilePage = () => {
             fullName=""
             imageSize={110}
           />
-          {/* <StXIcon
-            name="x"
-            size={24}
-            onIconClick={() => {
-              setUploadImage(null);
-              setDisplayImage('');
-            }}
-          /> */}
           <InputUpload onChange={handleImageChange}>
             <StEditIcon
               name="edit"
@@ -192,10 +184,3 @@ const StInputForm = styled.div`
   font-size: 14px;
   color: ${theme.colors.red};
 `;
-
-// const StXIcon = styled(Icon)`
-//   position: absolute;
-//   bottom: -15px;
-//   left: -10px;
-//   cursor: pointer;
-// `;
