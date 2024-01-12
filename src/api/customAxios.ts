@@ -15,7 +15,7 @@ export const customAxiosJWT = (): AxiosInstance => {
 
   const jwt = getItem('JWT', '') as string;
   const axiosInstance = axios.create({
-    baseURL: VITE_API_BASE_URL as string,
+    baseURL: VITE_API_BASE_URL,
     headers: { Authorization: `Bearer ${jwt}` },
   });
 
