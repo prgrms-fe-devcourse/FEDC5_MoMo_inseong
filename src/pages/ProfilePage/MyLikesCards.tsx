@@ -7,24 +7,22 @@ import { Card } from '@common/Card/Card';
 import { Spinner } from '@common/Spinner/Spinner';
 
 export const MyLikesCards = () => {
-  const userInfo = useSelector((state) => state.userInfo.user);
-  console.log(userInfo);
+  const userInfo = useSelector((state) => state.userInfo.user?._id);
   const { response, error, isLoading } = useAxios<IPost[]>(() =>
     getApi(`/posts/author/${userInfo}`),
   );
-  console.log(response);
 
   return (
     <>
       <StCardsWrapper>
         {isLoading ? (
           <Spinner />
-        ) : !error && response ? (
+        ) : !error && response.length > 0 ? (
           response.map((post, idx) => {
             const { likes } = post;
             return (
               likes &&
-              Array.isArray(likes) &&
+              userInfo &&
               typeof likes[0] === 'string' &&
               likes?.includes(userInfo) && (
                 <Card
