@@ -7,17 +7,17 @@ import { useSelector } from '@/_redux/hooks';
 import { Icon } from '@common/Icon/Icon';
 import { Tooltip } from '@common/Tooltip/Tooltip';
 
-type ModeType = 'light' | 'dark';
+// type ModeType = 'light' | 'dark';
 
-interface IDarkMode {
-  mode: ModeType;
-}
+// interface IDarkMode {
+//   mode: ModeType;
+// }
 
-interface MenuProps {
-  initialMode: ModeType;
-}
+// interface MenuProps {
+//   initialMode: ModeType;
+// }
 
-export const Menu = ({ initialMode }: MenuProps) => {
+export const Menu = () => {
   const userInfo = useSelector((state) => state.userInfo.user);
 
   const [notifications, setNotification] = useState<NotificationExtractType[]>(
@@ -26,10 +26,10 @@ export const Menu = ({ initialMode }: MenuProps) => {
   const [popupProfile, setPopupProfile] = useState<PopupProfileProps>(
     {} as PopupProfileProps,
   );
-  const [mode, setMode] = useState(initialMode); // 초기 테마 상태
+  // const [mode, setMode] = useState(initialMode); // 초기 테마 상태
 
   // 테마 토글 함수
-  const handleToggleMode = () => setMode(mode === 'light' ? 'dark' : 'light');
+  // const handleToggleMode = () => setMode(mode === 'light' ? 'dark' : 'light');
 
   //FIXME: 비동기 함수는 따로 추상화 필요
   useEffect(() => {
@@ -44,13 +44,14 @@ export const Menu = ({ initialMode }: MenuProps) => {
 
   return (
     <StContainer>
-      <StTooltipWrapper>
+      {/* TODO : 다크모드 */}
+      {/* <StTooltipWrapper>
         <ToggleButton
           mode={mode}
           onClick={handleToggleMode}>
           <IconContainer mode={mode} />
         </ToggleButton>
-      </StTooltipWrapper>
+      </StTooltipWrapper> */}
       <StTooltipWrapper>
         <Tooltip
           content={<Notification data={notifications} />}
@@ -96,31 +97,31 @@ const StTooltipWrapper = styled.li`
 `;
 
 //FIXME: 다크모드 토글 버튼
-const ToggleButton = styled.div<IDarkMode>`
-  position: relative;
-  width: 50px;
-  height: 25px;
-  border-radius: 25px;
-  background-color: ${({ mode }) => (mode === 'light' ? '#FFD580' : '#333')};
-  transition: background-color 0.3s ease;
-  cursor: pointer;
-`;
+// const ToggleButton = styled.div<IDarkMode>`
+//   position: relative;
+//   width: 50px;
+//   height: 25px;
+//   border-radius: 25px;
+//   background-color: ${({ mode }) => (mode === 'light' ? '#FFD580' : '#333')};
+//   transition: background-color 0.3s ease;
+//   cursor: pointer;
+// `;
 
-//FIXME: 다크모드 아이콘
-const IconContainer = styled.div<IDarkMode>`
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  top: -10%;
-  left: ${({ mode }) => (mode === 'light' ? '25px' : '0px')};
-  transition: left 0.3s ease;
+// //FIXME: 다크모드 아이콘
+// const IconContainer = styled.div<IDarkMode>`
+//   position: absolute;
+//   width: 20px;
+//   height: 20px;
+//   top: -10%;
+//   left: ${({ mode }) => (mode === 'light' ? '25px' : '0px')};
+//   transition: left 0.3s ease;
 
-  &::before {
-    content: ${({ mode }) => (mode === 'light' ? '"🌞"' : '"🌜"')};
-    position: absolute;
-    font-size: 20px;
-  }
-`;
+//   &::before {
+//     content: ${({ mode }) => (mode === 'light' ? '"🌞"' : '"🌜"')};
+//     position: absolute;
+//     font-size: 20px;
+//   }
+// `;
 
 const StProfileImg = styled.img`
   width: 32px;
