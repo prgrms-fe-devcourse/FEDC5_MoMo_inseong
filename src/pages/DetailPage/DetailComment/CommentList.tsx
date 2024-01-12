@@ -9,14 +9,9 @@ import { Comment } from '@common/Comment/Comment';
 interface CommentListProps {
   comments: IComment[] | string[];
   loginUser: IUser | null;
-  postId: string;
 }
 
-export const CommentList = ({
-  comments,
-  loginUser,
-  postId,
-}: CommentListProps) => {
+export const CommentList = ({ comments, loginUser }: CommentListProps) => {
   const [mode, setMode] = useState<'readonly' | 'edit'>('readonly');
   const dispatch = useDispatch();
 
