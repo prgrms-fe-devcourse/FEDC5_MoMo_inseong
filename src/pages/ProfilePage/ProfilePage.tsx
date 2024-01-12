@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { MyCards } from './MyCards';
+import { MyJoinCards } from './MyJoinCards';
+import { MyLikesCards } from './MyLikesCards';
 import { ProfileTab } from './ProfileTab';
-import { SearchCards } from './SearchCards';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { Button } from '@common/Button/Button';
 import { Profile } from '@common/Profile/Profile';
@@ -39,7 +41,13 @@ export const ProfilePage = () => {
           handleInterestedPostClick={() => setPageNumber(3)}
         />
       </StProfileContainer>
-      <SearchCards />
+      {pageNumber === 1 ? (
+        <MyCards />
+      ) : pageNumber === 2 ? (
+        <MyJoinCards />
+      ) : (
+        <MyLikesCards />
+      )}
     </StSideMarginWrapper>
   );
 };
