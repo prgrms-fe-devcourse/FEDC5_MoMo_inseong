@@ -21,7 +21,6 @@ const initialState: IUserData = {
  */
 export const getUserInfo = createAsyncThunk('authUser', async () => {
   const response = await getApiJWT<IUser>('/auth-user');
-  console.log('getUserInfo response', response);
   return response.data;
 });
 
@@ -42,7 +41,6 @@ const userInfoSlice = createSlice({
       (state, action: PayloadAction<IUser>) => {
         state.isLoading = false;
         state.user = action.payload;
-        // console.log(state.user); //{role: 'Regular', emailVerified: false, banned: false, isOnline: true, posts: Array(0),}
       },
     );
     builder.addCase(getUserInfo.rejected, (state) => {

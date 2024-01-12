@@ -1,38 +1,36 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { MyCards } from './MyCards';
 import { MyJoinCards } from './MyJoinCards';
 import { MyLikesCards } from './MyLikesCards';
-import { ProfileTab } from './ProfileTab';
+import { MyProfileTab, UserProfileTab } from './ProfileTab';
+import { UserCards } from './UserCards';
+import { UserJoinCards } from './UserJoinCards';
 import { useSelector } from '@/_redux/hooks';
-import { IUser } from '@/api/_types/apiModels';
-import { getApi } from '@/api/apis';
-import useAxios from '@/api/useAxios';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { Button } from '@common/Button/Button';
 import { Profile } from '@common/Profile/Profile';
 
 export const ProfilePage = () => {
   const { id } = useParams();
-  const [pageNumber, setPageNumber] = useState(1);
+  const userInfo = useSelector((state) => state.userInfo.user);
+  const [tabNumber, setTabNumber] = useState(id === userInfo?._id ? 1 : 4);
   const navigate = useNavigate();
-
-  const userInfo = useSelector((state) => state.userInfo.user?._id);
-  const { response, error, isLoading } = useAxios<IUser>(() =>
-    getApi(`/users/${id}`),
-  );
 
   return (
     <StSideMarginWrapper>
       <StProfileActionsContainer>
-        <Profile
-          image={response.image || ''}
-          fullName={response.username ? response.username : response.fullName}
-          _id={response._id}
-          fontSize={16}
-        />
-        {userInfo === id && (
+        {userInfo && (
+          <Profile
+            image={userInfo.image || ''}
+            fullName={userInfo.username ? userInfo.username : userInfo.fullName}
+            _id={userInfo._id}
+            fontSize={16}
+          />
+        )}
+        {userInfo?._id === id && (
           <StButtonsContainer>
             <Button
               label="프로필 수정"
@@ -46,19 +44,31 @@ export const ProfilePage = () => {
         )}
       </StProfileActionsContainer>
       <StProfileContainer>
-        <ProfileTab
-          pageNumber={pageNumber}
-          handleCreatePostClick={() => setPageNumber(1)}
-          handleAttendedPostClick={() => setPageNumber(2)}
-          handleInterestedPostClick={() => setPageNumber(3)}
-        />
+        {id === userInfo?._id ? (
+          <MyProfileTab
+            tabNumber={tabNumber}
+            handleCreatePostClick={() => setTabNumber(1)}
+            handleAttendedPostClick={() => setTabNumber(2)}
+            handleInterestedPostClick={() => setTabNumber(3)}
+          />
+        ) : (
+          <UserProfileTab
+            tabNumber={tabNumber}
+            handleUserCards={() => setTabNumber(4)}
+            handleUserJoinCards={() => setTabNumber(5)}
+          />
+        )}
       </StProfileContainer>
-      {pageNumber === 1 ? (
+      {tabNumber === 1 ? (
         <MyCards />
-      ) : pageNumber === 2 ? (
+      ) : tabNumber === 2 ? (
         <MyJoinCards />
-      ) : (
+      ) : tabNumber === 3 ? (
         <MyLikesCards />
+      ) : tabNumber === 4 ? (
+        <UserCards userId={id || ''} />
+      ) : (
+        <UserJoinCards userId={id || ''} />
       )}
     </StSideMarginWrapper>
   );
