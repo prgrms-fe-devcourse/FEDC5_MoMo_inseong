@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import { StCardsWrapper } from './profilePageStyles';
 import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
@@ -11,7 +11,7 @@ export const MyCards = () => {
   const { response, error, isLoading } = useAxios<IPost[]>(() =>
     getApi(`/posts/author/${userInfo}`),
   );
-  console.log(response);
+
   return (
     <>
       <StCardsWrapper>
@@ -32,13 +32,3 @@ export const MyCards = () => {
     </>
   );
 };
-
-const StCardsWrapper = styled.div`
-  margin-top: 23px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, max-content));
-  justify-content: center;
-  gap: 64px;
-  width: 100%;
-  box-sizing: border-box;
-`;

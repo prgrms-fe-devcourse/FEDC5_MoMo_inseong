@@ -8,7 +8,7 @@ export interface IUser {
   banned: boolean; // 사용되지 않음
   isOnline: boolean;
   posts: IPost[] | string[]; //
-  likes: ILike[] | string[]; //
+  likes: ILike[]; //
   comments: string[] | [];
   followers: string[] | [];
   following: string[] | [];
@@ -87,7 +87,7 @@ export interface IMessage {
 // Post 모델
 
 export interface IPost {
-  likes?: ILike[] | string[];
+  likes?: ILike[];
   comments: IComment[] | string[];
   _id: string;
   image?: string;
