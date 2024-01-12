@@ -3,14 +3,20 @@ import { isIComment } from '../IsIComment';
 import { useDispatch } from '@/_redux/hooks';
 import { deleteComment } from '@/_redux/slices/postSlices/getPostSlice';
 import { IComment, IUser } from '@/api/_types/apiModels';
+import { deleteApiJWT } from '@/api/apis';
 import { Comment } from '@common/Comment/Comment';
 
 interface CommentListProps {
   comments: IComment[] | string[];
   loginUser: IUser | null;
+  postId: string;
 }
 
-export const CommentList = ({ comments, loginUser }: CommentListProps) => {
+export const CommentList = ({
+  comments,
+  loginUser,
+  postId,
+}: CommentListProps) => {
   const [mode, setMode] = useState<'readonly' | 'edit'>('readonly');
   const dispatch = useDispatch();
 
