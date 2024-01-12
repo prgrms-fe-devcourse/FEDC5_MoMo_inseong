@@ -118,10 +118,9 @@ const StContainer = styled.div`
 `;
 
 const StTitle = styled.header`
-  font-weight: bold;
   color: black;
-  padding: 1rem 8px 1rem 8px;
-  border-bottom: 2px solid #dfdfdf;
+  padding: 6px 8px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.grey.default};
 `;
 
 const StContentScrollWrapper = styled.article`

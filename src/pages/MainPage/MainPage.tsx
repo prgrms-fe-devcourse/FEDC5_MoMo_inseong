@@ -24,7 +24,6 @@ export const MainPage = () => {
 
 const StMainWrapper = styled.div`
   display: flex;
-  gap: 50px;
   padding: 20px 0px;
   box-sizing: border-box;
 `;
@@ -37,7 +36,12 @@ const StMainSide = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
+
+  ${({ theme }) => theme.mediaQueries.medium} {
+    display: none;
+  }
 `;
 const StMainArea = styled.div`
+  margin-left: 50px;
   flex-grow: 1;
 `;

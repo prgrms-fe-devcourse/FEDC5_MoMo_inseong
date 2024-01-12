@@ -32,6 +32,7 @@ export const theme = {
       default: '#ffffff',
       dark: '#333333',
     },
+    shadowColor: '#6c6c6c7a',
   },
   // 기본 padding, 헤더 높이, z-index 등
   space: {
@@ -68,7 +69,7 @@ export const theme = {
 
       &::-webkit-scrollbar-thumb {
         height: 30%;
-        background: #228BB4;
+        background: #364954;
 
         border-radius: 10px;
       }
