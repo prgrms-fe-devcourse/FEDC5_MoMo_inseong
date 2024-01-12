@@ -107,7 +107,7 @@ export interface IPostTitleCustom {
   contents: string; // '본문'
   status: 'Opened' | 'Scheduled' | 'Closed'; // 모집 중 | 모임 예정 | 모임 종료
   tags: string[]; // ['tag1','tag2','tag3','tag4']
-  mentions: IMentionedUser[] | []; // [{id: '23', fullName: 'MinSuKim'}]
+  mentions: IMentionedUser[]; // [{id: '23', fullName: 'MinSuKim'}]
   meetDate: string[]; // 변경 // 투표 시작,끝 날짜 ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ'])
   peopleLimit: number;
 
@@ -124,8 +124,15 @@ export interface IMentionedUser {
   fullName: string;
 }
 
-export interface IVote {
+interface IVotedUser {
   id: string;
   fullName: string;
-  votedDate: string[]; //[ '2023-12-12 22:00', '2023-12-12 22:30', '2023-12-12 23:00', '2023-12-12 22:00', '2023-12-12 22:00', '2023-12-12 22:00' ]
+}
+
+export interface ITimeVote {
+  [key: string]: IVotedUser[];
+}
+
+export interface IVote {
+  [key: string]: ITimeVote;
 }
