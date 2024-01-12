@@ -101,7 +101,7 @@ const StIconContainer = styled.div`
   margin-top: 8px;
   display: flex;
   align-items: center;
-  padding: 8px 0;
+  padding: 4px 0;
 `;
 
 const StIconsWrapper = styled.div`

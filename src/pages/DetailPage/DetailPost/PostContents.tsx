@@ -32,7 +32,7 @@ export const StPostContainer = styled.div`
 `;
 
 const StPostContents = styled.pre`
-  font-size: 18px;
+  font-size: 16px;
   margin: 32px 0;
   white-space: pre-wrap;
 `;

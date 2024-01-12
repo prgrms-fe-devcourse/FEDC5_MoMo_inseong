@@ -19,7 +19,7 @@ export const Badge = ({ kind, data }: BadgeProps) => {
               name={`#${tag}`}
               hasMouseCursor={false}
               marginRight={2}
-              fontSize={14}
+              fontSize={12}
             />
           </StBadge>
         ))}
@@ -32,7 +32,7 @@ export const Badge = ({ kind, data }: BadgeProps) => {
               name={'@' + mention.fullName}
               hasMouseCursor={true}
               marginRight={2}
-              fontSize={14}
+              fontSize={12}
             />
           </StBadge>
         ))}

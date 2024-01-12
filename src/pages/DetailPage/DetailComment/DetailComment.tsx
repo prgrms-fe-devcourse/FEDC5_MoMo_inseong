@@ -25,11 +25,11 @@ export const DetailComment = ({ response, loginUser }: DetailCommentProps) => {
 };
 
 const StCommentContainer = styled.div`
-  margin-top: 16px;
-  padding: 32px 16px;
+  margin-top: 8px;
+  padding: 16px;
 `;
 
 const StCommentPicket = styled.div`
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 600;
 `;
