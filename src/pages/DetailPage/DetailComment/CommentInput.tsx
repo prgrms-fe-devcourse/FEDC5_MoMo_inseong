@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
-import { IComment, IUser } from '@/api/_types/apiModels';
-import { postApiJWT } from '@/api/apis';
+import { useDispatch } from '@/_redux/hooks';
+import { postComment } from '@/_redux/slices/postSlices/getPostSlice';
+import { IUser } from '@/api/_types/apiModels';
+// import { postApiJWT } from '@/api/apis';
 import { theme } from '@/style/theme';
 import { Button } from '@common/Button/Button';
 import { Profile } from '@common/Profile/Profile';
@@ -14,12 +16,11 @@ interface CommentInputProps {
 
 export const CommentInput = ({ loginUser, postId }: CommentInputProps) => {
   const [text, setText] = useState('');
+  const dispatch = useDispatch();
 
-  const postComment = async () => {
-    await postApiJWT<IComment>('/comments/create', {
-      comment: text,
-      postId: postId,
-    });
+  const handlePostComment = () => {
+    const data = { comment: text, postId: postId };
+    void dispatch(postComment(data));
   };
 
   const handleButtonClick = () => {
@@ -28,11 +29,9 @@ export const CommentInput = ({ loginUser, postId }: CommentInputProps) => {
       return;
     }
 
-    void postComment();
+    void handlePostComment();
     setText('');
   };
-  // console.log('loginUser : ', loginUser);
-  // console.log(text);
 
   return (
     <StCommentInputContainer>
