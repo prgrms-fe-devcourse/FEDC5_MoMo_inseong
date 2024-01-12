@@ -21,13 +21,18 @@ const initialState: IUserData = {
  */
 export const getUserInfo = createAsyncThunk('authUser', async () => {
   const response = await getApiJWT<IUser>('/auth-user');
+  console.log('getUserInfo response', response);
   return response.data;
 });
 
 const userInfoSlice = createSlice({
   name: 'userInfoSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    initUserInfo: (state) => {
+      state.user = null;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getUserInfo.pending, (state) => {
       state.isLoading = true;
@@ -37,6 +42,7 @@ const userInfoSlice = createSlice({
       (state, action: PayloadAction<IUser>) => {
         state.isLoading = false;
         state.user = action.payload;
+        // console.log(state.user); //{role: 'Regular', emailVerified: false, banned: false, isOnline: true, posts: Array(0),}
       },
     );
     builder.addCase(getUserInfo.rejected, (state) => {
@@ -51,5 +57,8 @@ const userInfoSlice = createSlice({
  * @example const 변수 = useSelector(shouldRedirect);
  */
 export const shouldRedirect = (state: RootStateType) => state.userInfo;
+
+export const getUser = (state: RootStateType) => state.userInfo.user;
+export const { initUserInfo } = userInfoSlice.actions;
 
 export default userInfoSlice.reducer;

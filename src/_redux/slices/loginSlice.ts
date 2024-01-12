@@ -23,7 +23,7 @@ const initialState: IUserData = {
  * const dispatch = useDispatch();
  * dispatch(getIsLogin);
  */
-export const getIsLogin = createAsyncThunk('authUser', async () => {
+export const getIsLogin = createAsyncThunk('authUserLogin', async () => {
   const response = await getApiJWT<IUser>('/auth-user');
   return response.data._id;
 });

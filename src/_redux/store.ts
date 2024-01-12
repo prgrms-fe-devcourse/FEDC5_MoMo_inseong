@@ -10,23 +10,46 @@ import { getPostDetailSlice } from './slices/postSlices/getPostSlice';
 import { putPostSlice } from './slices/postSlices/putPostSlice';
 import todaySlice from './slices/todaySlice';
 import userInfoSlice from './slices/userSlice';
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+  persistReducer,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
+const rootReducer = combineReducers({
+  channels: channelsSlice,
+  auth: loginSlice,
+  hearts: heartsSlice,
+  createPost: createPostSlice,
+  deletePost: deletePostSlice,
+  getAuthorPost: getAuthorPostSlice,
+  getChannelPost: getChannelPostsSlice,
+  getPostDetail: getPostDetailSlice,
+  putPost: putPostSlice,
+  today: todaySlice,
+  allUsers: allUsersSlice,
+  userInfo: userInfoSlice,
+});
+const persistConfig = {
+  key: 'root',
+  storage,
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
-  reducer: {
-    channels: channelsSlice,
-    auth: loginSlice,
-    hearts: heartsSlice,
-    createPost: createPostSlice,
-    deletePost: deletePostSlice,
-    getAuthorPost: getAuthorPostSlice,
-    getChannelPost: getChannelPostsSlice,
-    getPostDetail: getPostDetailSlice,
-    putPost: putPostSlice,
-    today: todaySlice,
-    allUsers: allUsersSlice,
-    userInfo: userInfoSlice,
-  },
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
 export type RootStateType = ReturnType<typeof store.getState>;
