@@ -10,13 +10,12 @@ import { Calendar } from './Calendar';
 import { Slider } from './Slider';
 import useClickAway from './UseClickAway';
 import { useDispatch, useSelector } from '@/_redux/hooks';
-import { createPost } from '@/_redux/slices/postSlices/createPostSlice';
 import { getUserInfo } from '@/_redux/slices/userSlice';
 import type { IPostTitleCustom } from '@/api/_types/apiModels';
 import { theme } from '@/style/theme';
+import { createIVote } from '@/utils/createIVote';
 import { getDatesBetween } from '@/utils/getDatesBetween';
 import { Button } from '@common/Button/Button';
-import { Icon } from '@common/Icon/Icon';
 import { InputContainer } from '@common/Input/Input/InputContainer';
 import { InputCompound } from '@common/Input/InputCompound';
 import { Spinner } from '@common/Spinner/Spinner';
@@ -24,6 +23,11 @@ import { Spinner } from '@common/Spinner/Spinner';
 interface CreateMeetingModalProps extends HTMLAttributes<HTMLDivElement> {
   visible?: boolean;
   onClose?: () => void;
+}
+
+interface IallUser {
+  _id: string;
+  fullName: string;
 }
 
 export const CreateMeetingModal = ({
@@ -35,9 +39,22 @@ export const CreateMeetingModal = ({
   //FIXME: 에러핸들링 필요
   const { isLoading, user } = useSelector((state) => state.userInfo);
   const { channels } = useSelector((state) => state.channels);
-  const [image, setImage] = useState<File | null>(null);
+  const { allUsers } = useSelector((state) => state.allUsers);
+
+  const [postTitle, setPostTitle] = useState('');
+  const [contents, setContents] = useState('');
+  const [isUndetermined, setIsUndetermined] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [mentionInput, setMentionInput] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState<IallUser[]>([]);
+
+  const [displayImage, setDisplayImage] = useState<string | null>(null);
+  const [uploadImage, setUploadImage] = useState<File | null>(null);
+
+  const [allUserList, setAllUserList] = useState<IallUser[]>([]);
   const [count, setCount] = useState(1);
-  const [mentions, setMentions] = useState<string[]>([]);
+  const [mentions, setMentions] = useState<IallUser[]>([]);
   const [tags, setTags] = useState<string[]>([]);
 
   const modalRef = useClickAway(() => {
@@ -52,48 +69,34 @@ export const CreateMeetingModal = ({
     event.preventDefault();
     if (user == null) return alert('로그인이 필요한 서비스입니다.');
 
-    if (event.target instanceof HTMLFormElement) {
-      const postTitle = (
-        event.target.elements.namedItem('postTitle') as HTMLInputElement
-      ).value;
-      const contents = (
-        event.target.elements.namedItem('contents') as HTMLInputElement
-      ).value;
-      const undetermined = (
-        event.target.elements.namedItem('undetermined') as HTMLInputElement
-      ).value;
-      const startDate = (
-        event.target.elements.namedItem('start') as HTMLInputElement
-      ).value;
-      const endDate = (
-        event.target.elements.namedItem('end') as HTMLInputElement
-      ).value;
+    const meetDates = getDatesBetween(new Date(startDate), new Date(endDate));
 
+    if (event.target instanceof HTMLFormElement) {
       // 커스텀필드
       const postTitleCustom: IPostTitleCustom = {
         postTitle,
         contents,
-        status: undetermined === 'on' ? 'Opened' : 'Scheduled',
+        status: isUndetermined ? 'Opened' : 'Scheduled',
         tags,
-        mentions: mentions.map((fullName) => ({ _id: 'dummy', fullName })),
-        meetDate: getDatesBetween(new Date(startDate), new Date(endDate)),
+        mentions: mentions,
+        meetDate: meetDates,
         peopleLimit: count,
-        vote: [],
+        vote: createIVote(meetDates),
         author: user.fullName,
       };
 
       const data = {
         title: JSON.stringify(postTitleCustom),
-        image: image == null ? ('null' as const) : image,
+        image: uploadImage == null ? ('null' as const) : uploadImage,
         channelId:
-          endDate == null
-            ? (channels.find(({ name }) => name === '언제 모일까?')
+          endDate === startDate
+            ? (channels.find(({ name }) => name === '이날모일래')
                 ?._id as string)
-            : (channels.find(({ name }) => name === '이날 모일래?')
+            : (channels.find(({ name }) => name === '언제모일까')
                 ?._id as string),
       };
-
-      void dispatch(createPost(data));
+      console.log(data);
+      // void dispatch(createPost(data));
     }
   };
 
@@ -103,33 +106,58 @@ export const CreateMeetingModal = ({
     }
   }, []);
 
+  useEffect(() => {
+    const updatedUserList = allUsers.map((user) => ({
+      _id: user._id,
+      fullName: user.username ? user.username : user.fullName,
+    }));
+
+    setAllUserList(updatedUserList);
+  }, [allUsers]);
+
+  useEffect(() => {
+    const filtered = allUserList.filter(
+      (user) =>
+        user.fullName.toLowerCase().includes(mentionInput.toLowerCase()) &&
+        !mentions.some((mention) => mention._id === user._id),
+    );
+    setFilteredUsers(filtered);
+  }, [mentionInput, allUserList, mentions]);
+
   if (isLoading) return <Spinner />;
 
   return (
     <StBackgroundDim style={{ display: visible ? 'block' : 'none' }}>
       <StClose>
-        <Icon
+        {/* TODO: 추후 수정 */}
+        {/* <Icon
           name="x"
           showBackground={true}
-        />
+        /> */}
       </StClose>
       <StModalContainer
         ref={modalRef}
         {...props}>
         <StTitle>모임</StTitle>
         <StForm onSubmit={handleOnSubmit}>
-          <InputContainer>
+          <InputContainer style={{ width: '350px' }}>
             <InputCompound.Text
               placeholder="제목"
-              name="postTitle"
+              value={postTitle}
+              onChange={(e) => setPostTitle(e.target.value)}
             />
           </InputContainer>
-          <InputContainer>
+          <InputContainer style={{ width: '350px' }}>
             <InputCompound.TextArea
               placeholder="설명"
-              name="contents"
+              value={contents}
+              onChange={(e) => setContents(e.target.value)}
             />
-            <InputCompound.Image setImage={(arg) => setImage(arg)} />
+            <InputCompound.Image
+              image={displayImage || ''}
+              setDisplayImage={setDisplayImage}
+              setUploadImage={setUploadImage}
+            />
           </InputContainer>
           <StRangeContainer>
             <StRangeTitle>인원</StRangeTitle>
@@ -143,43 +171,94 @@ export const CreateMeetingModal = ({
           <StCalendarContainer>
             <Calendar
               title="시작"
-              name="start"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
             />
             <StDivider />
             <Calendar
               title="끝"
-              name="end"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
             />
             <StCheckboxContainer>
               <StCheckbox
                 type="checkbox"
-                name="undetermined"
+                checked={isUndetermined}
+                onChange={() => setIsUndetermined(!isUndetermined)}
               />
               <StCheckboxLabel>미정</StCheckboxLabel>
             </StCheckboxContainer>
           </StCalendarContainer>
-          <InputContainer>
-            <InputCompound.Text
-              placeholder="멘션"
-              onKeyUp={(e) => {
-                if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
-                  const value = e.target.value;
-                  setMentions((prev) => [...prev, value]);
-                  e.target.value = '';
-                }
-              }}
-            />
-            <InputCompound.Tags
-              tags={mentions}
-              setTags={(arg) => setMentions(arg)}
-            />
-          </InputContainer>
-          <InputContainer>
+          <StInputContainerWithDropdown>
+            <InputContainer style={{ width: '350px' }}>
+              <InputCompound.Text
+                placeholder="멘션"
+                value={mentionInput}
+                onChange={(e) => setMentionInput(e.target.value)}
+                onKeyUp={(e) => {
+                  if (
+                    e.key === 'Enter' &&
+                    e.target instanceof HTMLInputElement
+                  ) {
+                    const value = e.target.value;
+                    const user = filteredUsers.find(
+                      ({ fullName }) => fullName === value,
+                    );
+
+                    if (user) {
+                      setMentions((prev) => [
+                        ...prev,
+                        { fullName: user.fullName, _id: user._id },
+                      ]);
+                      e.target.value = '';
+                    }
+                  }
+                }}
+              />
+
+              <InputCompound.Tags
+                tags={mentions.map((mention) => mention.fullName)}
+                setTags={(newTags) => {
+                  const updatedMentions = newTags.map((tagName) => {
+                    return (
+                      mentions.find(
+                        (mention) => mention.fullName === tagName,
+                      ) || { _id: '', fullName: tagName }
+                    );
+                  });
+                  setMentions(updatedMentions);
+                }}
+                onTagRemove={(tagName) => {
+                  const mentionToRemove = mentions.find(
+                    (mention) => mention.fullName === tagName,
+                  );
+                  if (mentionToRemove) {
+                    setMentions(
+                      mentions.filter(
+                        (mention) => mention._id !== mentionToRemove._id,
+                      ),
+                    );
+                  }
+                }}
+              />
+            </InputContainer>
+
+            {mentionInput && (
+              <StFilteredUserList>
+                {filteredUsers.map((user) => (
+                  <div key={user._id}>{user.fullName}</div>
+                ))}
+              </StFilteredUserList>
+            )}
+          </StInputContainerWithDropdown>
+
+          <InputContainer style={{ width: '350px' }}>
             <InputCompound.Text
               placeholder="태그"
               onKeyUp={(e) => {
                 if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
                   const value = e.target.value;
+
                   setTags((prev) => [...prev, value]);
                   e.target.value = '';
                 }
@@ -190,6 +269,7 @@ export const CreateMeetingModal = ({
               setTags={(arg) => setTags(arg)}
             />
           </InputContainer>
+
           <Button label="만들기" />
         </StForm>
       </StModalContainer>
@@ -208,7 +288,7 @@ const StBackgroundDim = styled.div`
 `;
 
 const StModalContainer = styled.div`
-  position: absolute;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -217,7 +297,7 @@ const StModalContainer = styled.div`
   top: 50%;
   left: 50%;
   height: 85%;
-  width: 32%;
+  width: 450px;
   border-radius: 8px;
 
   transform: translate(-50%, -50%);
@@ -251,8 +331,7 @@ const StTitle = styled.h1`
   margin-bottom: 50px;
 `;
 
-const StForm = styled.form`
-  width: 400px;
+const StForm = styled.div`
   gap: 20px;
   display: flex;
   align-items: center;
@@ -262,7 +341,7 @@ const StForm = styled.form`
 `;
 
 const StRangeContainer = styled.div`
-  width: 400px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -314,4 +393,25 @@ const StCheckbox = styled.input`
 const StCheckboxLabel = styled.span`
   font-size: 16px;
   color: ${theme.colors.primaryBlue};
+`;
+
+const StFilteredUserList = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 10;
+  padding: 10px 0;
+  margin-top: 2px;
+  box-sizing: border-box;
+`;
+
+const StInputContainerWithDropdown = styled.div`
+  position: relative;
+  width: 350px;
 `;

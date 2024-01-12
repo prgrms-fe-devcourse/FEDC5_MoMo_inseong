@@ -6,19 +6,25 @@ import { Icon } from '@common/Icon/Icon';
 
 interface InputProps {
   image?: string;
-  setImage: (arg: File | null) => void;
+  setDisplayImage: (arg: string | null) => void;
+  setUploadImage: (arg: File | null) => void;
   style?: CSSProperties;
 }
 
-export const InputImage = ({ image, setImage, ...props }: InputProps) => {
+export const InputImage = ({
+  image,
+  setDisplayImage,
+  setUploadImage,
+  ...props
+}: InputProps) => {
   // TODO: 추후 데이터 관련하여 다시 확인.. << 수정 완료(by 동건) >>
   const handleImageChange = (uploadedFile: File) => {
-    // setImage(URL.createObjectURL(uploadedFile));
-    setImage(uploadedFile);
+    setDisplayImage(URL.createObjectURL(uploadedFile));
+    setUploadImage(uploadedFile);
   };
 
   const handleImageRemove = () => {
-    setImage(null);
+    setDisplayImage(null);
   };
 
   const handleImageZoom = () => {
