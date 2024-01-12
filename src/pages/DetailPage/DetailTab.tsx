@@ -39,7 +39,7 @@ export const DetailTab = ({
 };
 
 const StTabContainer = styled.div`
-  margin-top: 32px;
+  margin-top: 8px;
   display: flex;
 `;
 

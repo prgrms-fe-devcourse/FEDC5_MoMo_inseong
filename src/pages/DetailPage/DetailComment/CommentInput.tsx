@@ -62,8 +62,7 @@ export const CommentInput = ({ loginUser, postId }: CommentInputProps) => {
 };
 
 const StCommentInputContainer = styled.div`
-  margin-top: 32px;
-  margin-bottom: 8px;
+  margin-top: 16px;
   padding: 16px;
 
   & .commentTextarea {
