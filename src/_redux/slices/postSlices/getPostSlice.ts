@@ -1,7 +1,12 @@
 import { getPostInitialState as initialState } from './initialState';
-import { IPost } from '@/api/_types/apiModels';
-import { getApi } from '@/api/apis';
+import { IComment, IPost } from '@/api/_types/apiModels';
+import { deleteApiJWT, getApi, postApiJWT } from '@/api/apis';
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
+interface IpostCommentParams {
+  comment: string;
+  postId: string;
+}
 
 // 특정 포스트 상세보기
 export const getPostDetail = createAsyncThunk(
@@ -12,22 +17,84 @@ export const getPostDetail = createAsyncThunk(
   },
 );
 
+export const postComment = createAsyncThunk(
+  'postComment',
+  async ({ comment, postId }: IpostCommentParams) => {
+    const response = await postApiJWT<IComment>('/comments/create', {
+      comment,
+      postId,
+    });
+    return response.data;
+  },
+);
+
+export const deleteComment = createAsyncThunk(
+  'deleteComment',
+  async (id: string) => {
+    const response = await deleteApiJWT<IComment>('/comments/delete', { id });
+    return response.data;
+  },
+);
+
 export const getPostDetailSlice = createSlice({
   name: 'getPostDetailSlice',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    // ### getPostDetail ###
     builder.addCase(getPostDetail.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(
       getPostDetail.fulfilled,
-      (state, aciton: PayloadAction<IPost>) => {
+      (state, action: PayloadAction<IPost>) => {
         state.isLoading = false;
-        state.post = aciton.payload;
+        state.post = action.payload;
       },
     );
     builder.addCase(getPostDetail.rejected, (state) => {
+      state.isLoading = false;
+    });
+    // ### postComment ###
+    builder.addCase(postComment.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(
+      postComment.fulfilled,
+      (state, action: PayloadAction<IComment>) => {
+        state.isLoading = false;
+        if (state.post) {
+          const comments = [
+            ...(state.post.comments as IComment[]),
+            action.payload,
+          ];
+          state.post = { ...state.post, comments };
+        }
+      },
+    );
+    builder.addCase(postComment.rejected, (state) => {
+      state.isLoading = false;
+    });
+    // ### deleteComment ###
+    builder.addCase(deleteComment.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(
+      deleteComment.fulfilled,
+      (state, action: PayloadAction<IComment>) => {
+        state.isLoading = false;
+
+        // console.log(action.payload._id);
+
+        if (state.post && state.post.comments) {
+          const comments = state.post.comments.filter(
+            (comment) => comment._id !== action.payload._id,
+          );
+          state.post = { ...state.post, comments };
+        }
+      },
+    );
+    builder.addCase(deleteComment.rejected, (state) => {
       state.isLoading = false;
     });
   },

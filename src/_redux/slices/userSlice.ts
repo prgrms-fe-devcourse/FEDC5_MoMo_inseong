@@ -27,7 +27,11 @@ export const getUserInfo = createAsyncThunk('authUser', async () => {
 const userInfoSlice = createSlice({
   name: 'userInfoSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    initUserInfo: (state) => {
+      state.user = null;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getUserInfo.pending, (state) => {
       state.isLoading = true;
@@ -51,5 +55,8 @@ const userInfoSlice = createSlice({
  * @example const 변수 = useSelector(shouldRedirect);
  */
 export const shouldRedirect = (state: RootStateType) => state.userInfo;
+
+export const getUser = (state: RootStateType) => state.userInfo.user;
+export const { initUserInfo } = userInfoSlice.actions;
 
 export default userInfoSlice.reducer;

@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { PopupProfile } from './PopupProfile';
-import { popupProfileMockup } from './PopupProfileMockup';
 import { Profile } from '@common/Profile/Profile';
 import { Tooltip } from '@common/Tooltip/Tooltip';
 
 const meta: Meta<typeof PopupProfile> = {
   component: PopupProfile,
-  args: popupProfileMockup,
 };
 
 export default meta;
@@ -27,8 +25,8 @@ export const Default: StoryType = {
         offset={-80}>
         <Profile
           image={'https://picsum.photos/200'}
-          fullName={args.fullName}
-          _id={args.userId}
+          fullName={'스토리북'}
+          _id={''}
           status={'ProfileImage'}
           style={{ width: '48px' }}
         />

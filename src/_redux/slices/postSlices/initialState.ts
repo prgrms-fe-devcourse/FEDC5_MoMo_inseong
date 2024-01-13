@@ -1,4 +1,4 @@
-import { IPost } from '@/api/_types/apiModels';
+import { IComment, IPost } from '@/api/_types/apiModels';
 import { AxiosError } from 'axios';
 
 // interface ICustomPost extends Omit<IPost, 'title'> {
@@ -20,6 +20,10 @@ interface IpostState {
 
 interface IpostsState {
   posts: IPost[];
+}
+
+export interface IcommentState {
+  comments: IComment[];
 }
 
 export const baseState: IinitialState = {

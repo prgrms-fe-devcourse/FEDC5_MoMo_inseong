@@ -49,6 +49,7 @@ export const SignUpPage = () => {
       }
     }
 
+
     await postApi('/signup', { email, password, fullName })
       .then(() => {
         // TODO: 아이디 중복 처리

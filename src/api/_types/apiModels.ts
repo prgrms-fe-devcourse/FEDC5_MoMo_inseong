@@ -8,7 +8,7 @@ export interface IUser {
   banned: boolean; // 사용되지 않음
   isOnline: boolean;
   posts: IPost[] | string[]; //
-  likes: ILike[] | string[]; //
+  likes: ILike[]; //
   comments: string[] | [];
   followers: string[] | [];
   following: string[] | [];
@@ -88,7 +88,7 @@ export interface IMessage {
 // Post 모델
 
 export interface IPost {
-  likes?: ILike[] | string[];
+  likes?: ILike[];
   comments: IComment[] | string[];
   _id: string;
   image?: string;
@@ -107,14 +107,16 @@ export interface IPostTitleCustom {
   contents: string; // '본문'
   status: 'Opened' | 'Scheduled' | 'Closed'; // 모집 중 | 모임 예정 | 모임 종료
   tags: string[]; // ['tag1','tag2','tag3','tag4']
-  mentions: IMentionedUser[] | []; // [{id: '23', fullName: 'MinSuKim'}]
+  mentions: IMentionedUser[]; // [{id: '23', fullName: 'MinSuKim'}]
   meetDate: string[]; // 변경 // 투표 시작,끝 날짜 ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ'])
   peopleLimit: number;
 
   vote: IVote[]; // [{id: 'dfnkdflad', votedDate: ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ']}] <== 날짜 아니라 타임테이블 배열 인덱스
+  participants: string[]; // 이 모임에 참여(투표)한 사람들 id 배열
+
 
   // cardId: string; // 포스트 _id
-  author: string; // Post author는 User 지만, 컴포넌트에 전달할땐 User.fullName을 줘야함!
+  author: string; // 검색결과의 IPost에서 유저id가 author에옴.. 그래서 여기에서 저장해주는게 낫습니다.
   // isLiked: ILike[] | string[]; // 포스트 좋아요는 포스트 likes 중에서 user로 필터링해서 찾아야합니다
 }
 
@@ -123,8 +125,15 @@ export interface IMentionedUser {
   fullName: string;
 }
 
-export interface IVote {
+interface IVotedUser {
   id: string;
   fullName: string;
-  votedDate: string[]; //[ '2023-12-12 22:00', '2023-12-12 22:30', '2023-12-12 23:00', '2023-12-12 22:00', '2023-12-12 22:00', '2023-12-12 22:00' ]
+}
+
+export interface ITimeVote {
+  [key: string]: IVotedUser[];
+}
+
+export interface IVote {
+  [key: string]: ITimeVote;
 }

@@ -1,33 +1,61 @@
 import styled from '@emotion/styled';
 import { memo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from '@/_redux/hooks';
+import { initUserInfo } from '@/_redux/slices/userSlice';
+import { postApiJWT } from '@/api/apis';
 import { Icon } from '@common/Icon/Icon';
 import { Profile } from '@common/Profile/Profile';
+import { Spinner } from '@common/Spinner/Spinner';
 
 export interface PopupProfileProps {
-  userId: string;
-  fullName: string;
-  image: string;
   setIsVisible?: (arg: boolean) => void;
 }
 
-export const PopupProfile = memo(
-  ({ userId, image, fullName, setIsVisible }: PopupProfileProps) => {
-    const handleVisibility = () => {
-      setIsVisible && setIsVisible(false);
-    };
-    return (
-      <StContainer>
-        <StTitle>내 정보</StTitle>
-        <StRouter onClick={handleVisibility}>
+export const PopupProfile = memo(({ setIsVisible }: PopupProfileProps) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isLoading: isLoginLoading, user } = useSelector(
+    (state) => state.userInfo,
+  );
+
+  const handleVisibility = () => {
+    setIsVisible && setIsVisible(false);
+  };
+
+  const handleRouteToProfile = () => {
+    handleVisibility();
+    navigate(`/profile/${user?._id}`);
+  };
+
+  const handleOnLogout = () => {
+    handleVisibility();
+
+    void postApiJWT('/logout');
+    void dispatch(initUserInfo());
+
+    localStorage.removeItem('JWT');
+    navigate('/');
+
+    window.location.reload();
+  };
+  return (
+    <StContainer>
+      <StTitle>내 정보</StTitle>
+      {isLoginLoading ? (
+        <Spinner />
+      ) : (
+        <StRouter onClick={handleRouteToProfile}>
           <Profile
-            image={image}
-            fullName={fullName}
-            _id={userId}
+            image={user?.image || ''}
+            fullName={user?.username || (user?.fullName as string)}
+            _id={user?._id}
             status={'Profile'}
             fontSize={16}
           />
         </StRouter>
-        <StRouter onClick={handleVisibility}>
+      )}
+      {/* <StRouter onClick={handleVisibility}>
           <StIconBox content={'"설정"'}>
             <Icon
               name="settings"
@@ -35,20 +63,19 @@ export const PopupProfile = memo(
               showBackground={false}
             />
           </StIconBox>
-        </StRouter>
-        <StRouter onClick={handleVisibility}>
-          <StIconBox content={'"로그아웃"'}>
-            <Icon
-              name="log-out"
-              strokeWidth={2}
-              showBackground={false}
-            />
-          </StIconBox>
-        </StRouter>
-      </StContainer>
-    );
-  },
-);
+        </StRouter> */}
+      <StRouter onClick={handleOnLogout}>
+        <StIconBox content={'"로그아웃"'}>
+          <Icon
+            name="log-out"
+            strokeWidth={2}
+            showBackground={false}
+          />
+        </StIconBox>
+      </StRouter>
+    </StContainer>
+  );
+});
 
 /* style */
 const StContainer = styled.article`

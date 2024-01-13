@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, TextareaHTMLAttributes } from 'react';
 import { theme } from '@/style/theme';
 
-interface InputProps {
+interface InputProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   fontSize?: number;
   placeholder?: string;
   style?: CSSProperties;
