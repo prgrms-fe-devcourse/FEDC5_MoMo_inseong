@@ -1,22 +1,44 @@
 import styled from '@emotion/styled';
 import { PropsWithChildren, forwardRef } from 'react';
-import { IVote } from '../../TimeTable';
+
+const days = ['일', '월', '화', '수', '목', '금', '토'];
 
 interface VoteScrollWrapperProps extends PropsWithChildren {
-  vote: IVote;
+  times: string[];
+  meetDate: string[];
 }
 
 export const VoteScrollWrapper = forwardRef<
   HTMLDivElement,
   VoteScrollWrapperProps
->(({ children, vote }, ref) => {
+>(({ children, times, meetDate }, ref) => {
   return (
     <StScrollWrapper ref={ref}>
+      <StHeader>
+        <StRowHeader>
+          {meetDate.map((format, i) => {
+            const fullDate = new Date(format);
+            const day = fullDate.getDay();
+            const month = fullDate.getMonth() + 1;
+            const date = fullDate.getDate();
+
+            return (
+              <div
+                key={i}
+                style={{
+                  flexShrink: '0',
+                  fontWeight: 700,
+                }}>
+                <div>{`${month}/${date}`}</div>
+                <div>{days[day]}</div>
+              </div>
+            );
+          })}
+        </StRowHeader>
+      </StHeader>
       <StBody>
         <StColumnHeader>
-          {Object.keys(Object.values(vote)[0]).map(
-            (time, i) => i % 2 === 0 && <span key={i}>{time}</span>,
-          )}
+          {times.map((time, i) => i % 2 === 0 && <span key={i}>{time}</span>)}
           <div style={{ paddingTop: '1px' }}></div>
         </StColumnHeader>
         {children}
@@ -25,15 +47,47 @@ export const VoteScrollWrapper = forwardRef<
   );
 });
 
-const StColumnHeader = styled.div`
-  position: absolute;
-  top: -6px;
+const StHeader = styled.div`
+  /* position: relative; */
+  padding-left: 36px;
+`;
+
+const StRowHeader = styled.div`
+  position: sticky;
+  top: 0;
+  /* FIXME: 전역으로 관리 필요 */
   left: 0;
-  bottom: 6px;
-  width: 36px;
+  right: 0;
+  height: 42px;
+  padding-left: 36px;
 
   font-family: ${({ theme }) => theme.fonts};
-  font-size: 10px;
+  font-size: 16px;
+  font-weight: 700px;
+  text-align: center;
+
+  display: flex;
+  gap: 8px;
+`;
+
+const StBody = styled.div`
+  position: relative;
+  display: flex;
+  gap: 8px;
+  flex-direction: row;
+  padding-top: 8px;
+  padding-left: 36px;
+`;
+
+const StColumnHeader = styled.div`
+  position: sticky;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 42px;
+
+  font-family: ${({ theme }) => theme.fonts};
+  font-size: 16px;
   font-weight: 500px;
   text-align: center;
 
@@ -43,15 +97,10 @@ const StColumnHeader = styled.div`
   align-items: center;
 `;
 
-const StBody = styled.div`
-  position: relative;
-  padding-left: 36px;
-`;
-
 const StScrollWrapper = styled.div`
   position: relative;
-  max-width: 200px;
-  max-height: 264px;
+  max-width: 400px;
+  max-height: 464px;
   padding-right: 6px;
   padding-top: 8px;
 

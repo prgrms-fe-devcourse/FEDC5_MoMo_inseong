@@ -43,6 +43,29 @@ export const useVotingTimeTable = ({
   // 드래그 시작점의 투표 여부
   const isVoted = useRef(false);
 
+  // 투표된 내용을 저장하고 반환
+  const modifyMyVote = useCallback((id: string, fullName: string) => {
+    const modifiedVote = vote;
+    const entries = Object.entries(vote);
+
+    for (let i = 0; i < entries.length; i++) {
+      for (let j = 0; j < Object.keys(entries[0][1]).length; j++) {
+        if (prevMyVotes.current[i][j]) {
+          const date = entries[i][0];
+          const timeVote = entries[i][1];
+
+          const time = Object.keys(timeVote)[j];
+          const users = Object.values(timeVote)[j];
+
+          const reflected = [...users, { id, fullName }];
+          modifiedVote[date][time] = reflected;
+        }
+      }
+    }
+
+    return modifiedVote;
+  }, []);
+
   const onMouseMove = (event: MouseEvent) => {
     if (
       isTargetContains(event, dragAreaRef.current) &&
@@ -201,7 +224,7 @@ export const useVotingTimeTable = ({
     onMouseUp,
   });
 
-  return { dragAreaRef, totalVoteAreaRef };
+  return { dragAreaRef, totalVoteAreaRef, modifyMyVote };
 };
 
 /* utils */

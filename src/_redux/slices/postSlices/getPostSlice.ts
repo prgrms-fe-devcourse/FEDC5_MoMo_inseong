@@ -1,6 +1,12 @@
 import { getPostInitialState as initialState } from './initialState';
-import { IComment, IPost } from '@/api/_types/apiModels';
+import {
+  IComment,
+  IPost,
+  IPostTitleCustom,
+  IVote,
+} from '@/api/_types/apiModels';
 import { deleteApiJWT, getApi, postApiJWT } from '@/api/apis';
+import { parseTitle } from '@/utils/parseTitle';
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 interface IpostCommentParams {
@@ -36,10 +42,24 @@ export const deleteComment = createAsyncThunk(
   },
 );
 
-export const getPostDetailSlice = createSlice({
+//TODO: postSlice로 개명 예정
+const getPostDetailSlice = createSlice({
   name: 'getPostDetailSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    modifyVoteState: (state, action: PayloadAction<IVote>) => {
+      if (state.post != null) {
+        const modifiedPostTitle: IPostTitleCustom = {
+          ...parseTitle(state.post.title),
+          vote: action.payload,
+        };
+        state.post = {
+          ...state.post,
+          title: JSON.stringify(modifiedPostTitle),
+        };
+      }
+    },
+  },
   extraReducers: (builder) => {
     // ### getPostDetail ###
     builder.addCase(getPostDetail.pending, (state) => {
@@ -88,8 +108,8 @@ export const getPostDetailSlice = createSlice({
 
         if (state.post && state.post.comments) {
           const comments = state.post.comments.filter(
-            (comment) => comment._id !== action.payload._id,
-          );
+            (comment) => (comment as IComment)._id !== action.payload._id,
+          ) as IComment[];
           state.post = { ...state.post, comments };
         }
       },
@@ -98,4 +118,8 @@ export const getPostDetailSlice = createSlice({
       state.isLoading = false;
     });
   },
-}).reducer;
+});
+
+export const { modifyVoteState } = getPostDetailSlice.actions;
+
+export const postSlice = getPostDetailSlice.reducer;

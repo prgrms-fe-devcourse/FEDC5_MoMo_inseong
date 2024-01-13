@@ -1,6 +1,15 @@
+import { TimeTable } from '../TimeTable/TimeTable';
 import { StPostContainer } from './PostContents';
+import { IPost } from '@/api/_types/apiModels';
 
-// TimeTable 들어올 곳
-export const DetailTimeTablePage = () => {
-  return <StPostContainer>hi</StPostContainer>;
+type DetailTimeTablePageType = {
+  post: IPost;
+};
+
+export const DetailTimeTablePage = ({ post }: DetailTimeTablePageType) => {
+  return (
+    <StPostContainer>
+      <TimeTable post={post} />
+    </StPostContainer>
+  );
 };

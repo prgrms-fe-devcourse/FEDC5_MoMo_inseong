@@ -123,7 +123,7 @@ export interface IMentionedUser {
   fullName: string;
 }
 
-interface IVotedUser {
+export interface IVotedUser {
   id: string;
   fullName: string;
 }
