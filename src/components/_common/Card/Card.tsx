@@ -96,7 +96,7 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
               status="Profile"
               fontSize={12}
               imageSize={14}
-              maxWidth={55}
+              maxWidth={50}
             />
           </StCardProfileWrapper>
         )}
