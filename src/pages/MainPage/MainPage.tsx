@@ -1,10 +1,17 @@
 import styled from '@emotion/styled';
+import { useEffect } from 'react';
 import { MainArea } from './CardsArea/MainArea';
 import { OnlineUsers } from './SideBar/OnlineUsers';
 import { SearchBox } from './SideBar/SearchBox';
+import { useDispatch } from '@/_redux/hooks';
+import { getUserInfo } from '@/_redux/slices/userSlice';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 
 export const MainPage = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    void dispatch(getUserInfo());
+  }, []);
   return (
     <StSideMarginWrapper>
       <StMainWrapper>

@@ -6,7 +6,7 @@ import { getItem, setItem } from '@/utils/storage';
 import { Tab } from '@common/Tab/Tab';
 
 export const MainArea = () => {
-  const [, setSelectedTab] = useState(0);
+  const [, setSelectedTab] = useState(getItem('mainTab', 0));
   const handleTabChange = (tab: number) => {
     setSelectedTab(tab);
     setItem('mainTab', tab);
