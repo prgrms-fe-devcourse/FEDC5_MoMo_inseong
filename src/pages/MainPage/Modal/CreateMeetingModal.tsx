@@ -83,6 +83,7 @@ export const CreateMeetingModal = ({
         peopleLimit: count,
         vote: createIVote(meetDates),
         author: user.fullName,
+        participants: [],
       };
 
       const data = {

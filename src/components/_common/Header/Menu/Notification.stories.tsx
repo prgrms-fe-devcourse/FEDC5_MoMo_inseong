@@ -1,13 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Notification, NotificationExtractType } from './Notification';
-import { notificationMockup } from './NotificatonMockup';
+import { Notification } from './Notification';
 import { Tooltip } from '@common/Tooltip/Tooltip';
 
 const meta: Meta<typeof Notification> = {
   component: Notification,
-  args: {
-    data: notificationMockup as NotificationExtractType[],
-  },
 };
 
 export default meta;
