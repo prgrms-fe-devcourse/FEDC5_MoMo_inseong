@@ -25,25 +25,16 @@ const statusValue = {
 
 export const Card = ({ cardData, handleCardClick }: ICardData) => {
   const parsedTitle: IPostTitleCustom = parseTitle(cardData.title);
+
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.userInfo.user);
   const { likes, _id: cardId, image, author: postAuthor } = cardData;
   const { postTitle, status, tags, meetDate, author } = parsedTitle;
 
   let isLiked = '';
-
   likes?.forEach((each) => {
-    if (typeof each === 'string') {
-      if (
-        userInfo &&
-        userInfo?.likes.some((eachLike) => eachLike._id === each)
-      ) {
-        isLiked = each;
-      }
-    } else {
-      if (each.user === userInfo?._id) {
-        isLiked = each._id;
-      }
+    if (typeof each !== 'string' && each.user === userInfo?._id) {
+      isLiked = each._id;
     }
   });
   const { hoverRef, isHovered } = useHover();
@@ -106,7 +97,6 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
             <Profile
               image={image || ''}
               fullName={author}
-              _id="1"
               status="Profile"
               fontSize={12}
               imageSize={14}

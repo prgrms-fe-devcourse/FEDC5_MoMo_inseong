@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { CSSProperties, MouseEvent, useState } from 'react';
+import { CSSProperties, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { theme } from '@/style/theme';
 
