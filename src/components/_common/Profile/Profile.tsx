@@ -33,8 +33,7 @@ export const Profile = ({
 }: ProfileProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
-  const handleUserClick = (e: MouseEvent<HTMLElement>) => {
-    e.stopPropagation();
+  const handleUserClick = () => {
     if (!_id) return;
     navigate(`/profile${params}/${_id}`);
   };
