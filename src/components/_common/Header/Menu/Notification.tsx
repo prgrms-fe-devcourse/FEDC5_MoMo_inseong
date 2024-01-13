@@ -104,11 +104,13 @@ export const Notification = memo(
                       </StContent>
                     </Link>
                   ) : type === 'LIKE' ? (
-                    <StSummary>
-                      <StBold>{fullName}</StBold>님이{' '}
-                      <StBold>{details.postTitle}</StBold> 모임을 북마크
-                      등록했습니다.
-                    </StSummary>
+                    <Link to={`/details/${details.postId}`}>
+                      <StSummary>
+                        <StBold>{fullName}</StBold>님이{' '}
+                        <StBold>{details.postTitle}</StBold> 모임을 북마크
+                        등록했습니다.
+                      </StSummary>
+                    </Link>
                   ) : type === 'FOLLOW' ? (
                     details.isCancel ? null : (
                       <StSummary>
