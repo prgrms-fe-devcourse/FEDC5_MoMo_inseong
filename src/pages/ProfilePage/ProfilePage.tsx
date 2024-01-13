@@ -9,6 +9,9 @@ import { MyProfileTab, UserProfileTab } from './ProfileTab';
 import { UserCards } from './UserCards';
 import { UserJoinCards } from './UserJoinCards';
 import { useSelector } from '@/_redux/hooks';
+import { IUser } from '@/api/_types/apiModels';
+import { getApi } from '@/api/apis';
+import useAxios from '@/api/useAxios';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { Button } from '@common/Button/Button';
 import { Profile } from '@common/Profile/Profile';
@@ -18,15 +21,16 @@ export const ProfilePage = () => {
   const userInfo = useSelector((state) => state.userInfo.user);
   const [tabNumber, setTabNumber] = useState(id === userInfo?._id ? 1 : 4);
   const navigate = useNavigate();
+  const { response, error } = useAxios<IUser>(() => getApi(`/users/${id}`));
 
   return (
     <StSideMarginWrapper>
       <StProfileActionsContainer>
-        {userInfo && (
+        {!error && response && (
           <Profile
-            image={userInfo.image || ''}
-            fullName={userInfo.username ? userInfo.username : userInfo.fullName}
-            _id={userInfo._id}
+            image={response.image || ''}
+            fullName={response.username ? response.username : response.fullName}
+            _id={response._id}
             fontSize={16}
           />
         )}
