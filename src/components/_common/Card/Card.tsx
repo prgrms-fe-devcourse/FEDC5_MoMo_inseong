@@ -66,7 +66,6 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
         postId: cardId,
       })
         .then((res) => {
-          console.log(res);
           setIsLike(res.data._id);
         })
         .catch((err) => console.log(err));
@@ -74,8 +73,7 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
       await deleteApiJWT<ILike>('/likes/delete', {
         id: isLike,
       })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           setIsLike('');
         })
         .catch((err) => console.log(err));
