@@ -1,17 +1,21 @@
 import styled from '@emotion/styled';
-import React, {
+import {
   HTMLAttributes,
   ReactElement,
   FormEvent as ReactFormEvent,
   useEffect,
+  useRef,
   useState,
 } from 'react';
+import { scheduledChannelId, unscheduledChannelId } from '../channelId';
 import { Calendar } from './Calendar';
 import { Slider } from './Slider';
-import useClickAway from './UseClickAway';
+// import useClickAway from './UseClickAway';
 import { useDispatch, useSelector } from '@/_redux/hooks';
+import { createPost } from '@/_redux/slices/postSlices/createPostSlice';
+import { putPost } from '@/_redux/slices/postSlices/putPostSlice';
 import { getUserInfo } from '@/_redux/slices/userSlice';
-import type { IPostTitleCustom } from '@/api/_types/apiModels';
+import type { IPost, IPostTitleCustom } from '@/api/_types/apiModels';
 import { theme } from '@/style/theme';
 import { createIVote } from '@/utils/createIVote';
 import { getDatesBetween } from '@/utils/getDatesBetween';
@@ -23,23 +27,25 @@ import { Spinner } from '@common/Spinner/Spinner';
 interface CreateMeetingModalProps extends HTMLAttributes<HTMLDivElement> {
   visible?: boolean;
   onClose?: () => void;
+  post?: IPost;
 }
 
 interface IallUser {
   _id: string;
   fullName: string;
 }
-
 export const CreateMeetingModal = ({
+  post,
   visible = false,
   onClose,
   ...props
 }: CreateMeetingModalProps): ReactElement => {
   const dispatch = useDispatch();
   //FIXME: 에러핸들링 필요
+  // const { channels } = useSelector((state) => state.channels);
   const { isLoading, user } = useSelector((state) => state.userInfo);
-  const { channels } = useSelector((state) => state.channels);
   const { allUsers } = useSelector((state) => state.allUsers);
+  // const navigate = useNavigate();
 
   const [postTitle, setPostTitle] = useState('');
   const [contents, setContents] = useState('');
@@ -57,22 +63,73 @@ export const CreateMeetingModal = ({
   const [mentions, setMentions] = useState<IallUser[]>([]);
   const [tags, setTags] = useState<string[]>([]);
 
-  const modalRef = useClickAway(() => {
-    if (onClose) onClose();
-  }) as React.MutableRefObject<HTMLDivElement | null>;
+  const [selectedMentionIndex, setSelectedMentionIndex] = useState<number>(-1);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (filteredUsers.length === 0) return;
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      setSelectedMentionIndex((prevIndex) =>
+        prevIndex < filteredUsers.length - 1 ? prevIndex + 1 : prevIndex,
+      );
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      setSelectedMentionIndex((prevIndex) =>
+        prevIndex > 0 ? prevIndex - 1 : prevIndex,
+      );
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      if (selectedMentionIndex !== -1) {
+        handleUserSelect(filteredUsers[selectedMentionIndex]);
+        setSelectedMentionIndex(-1);
+      }
+    }
+  };
 
   const handleSliderChange = (value: number) => {
     setCount(value);
   };
 
+  const modalRef = useRef<HTMLDivElement | null>(null);
+
   const handleOnSubmit = (event: ReactFormEvent) => {
     event.preventDefault();
     if (user == null) return alert('로그인이 필요한 서비스입니다.');
 
-    const meetDates = getDatesBetween(new Date(startDate), new Date(endDate));
+    // 수정
+    if (post) {
+      const props = JSON.parse(post.title) as IPostTitleCustom;
+      const updateTitleCustom: IPostTitleCustom = {
+        postTitle,
+        contents,
+        status: isUndetermined ? 'Opened' : 'Scheduled',
+        tags: tags,
+        mentions: mentions,
+        meetDate: props.meetDate,
+        peopleLimit: props.peopleLimit,
+        vote: props.vote,
+        author: props.author,
+        participants: props.participants,
+      };
 
-    if (event.target instanceof HTMLFormElement) {
-      // 커스텀필드
+      const data = {
+        postId: post._id,
+        title: JSON.stringify(updateTitleCustom),
+        image: uploadImage == null ? null : uploadImage,
+        channelId:
+          endDate === startDate ? scheduledChannelId : unscheduledChannelId,
+        imageToDeletePublicId:
+          displayImage === null && post.image !== null
+            ? post.imagePublicId
+            : '',
+      };
+
+      void dispatch(putPost(data));
+
+      // 등록
+    } else {
+      const meetDates = getDatesBetween(new Date(startDate), new Date(endDate));
+
       const postTitleCustom: IPostTitleCustom = {
         postTitle,
         contents,
@@ -90,16 +147,47 @@ export const CreateMeetingModal = ({
         title: JSON.stringify(postTitleCustom),
         image: uploadImage == null ? ('null' as const) : uploadImage,
         channelId:
-          endDate === startDate
-            ? (channels.find(({ name }) => name === '이날모일래')
-                ?._id as string)
-            : (channels.find(({ name }) => name === '언제모일까')
-                ?._id as string),
+          endDate === startDate ? scheduledChannelId : unscheduledChannelId,
       };
-      console.log(data);
-      // void dispatch(createPost(data));
+
+      void dispatch(createPost(data));
     }
   };
+
+  const handleUserSelect = (selectedUser: IallUser) => {
+    const isAlreadySelected = mentions.some(
+      (mention) => mention._id === selectedUser._id,
+    );
+
+    if (isAlreadySelected) {
+      setMentions((prevMentions) =>
+        prevMentions.filter((mention) => mention._id !== selectedUser._id),
+      );
+    } else {
+      setMentions((prevMentions) => [...prevMentions, selectedUser]);
+    }
+
+    setMentionInput('');
+  };
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        if (onClose) onClose();
+      }
+    };
+
+    if (visible) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [visible, onClose]);
 
   useEffect(() => {
     if (user == null) {
@@ -124,6 +212,54 @@ export const CreateMeetingModal = ({
     );
     setFilteredUsers(filtered);
   }, [mentionInput, allUserList, mentions]);
+
+  useEffect(() => {
+    if (visible) {
+      if (post) {
+        const {
+          postTitle,
+          contents,
+          mentions,
+          status,
+          peopleLimit,
+          tags,
+          meetDate,
+        } = JSON.parse(post.title) as IPostTitleCustom;
+
+        const [startDateISO, endDateISO]: string[] = [
+          meetDate[0],
+          meetDate[meetDate.length - 1],
+        ].map((date) => date.toString());
+        const startDateFormatted = startDateISO.split('T')[0];
+        const endDateFormatted = endDateISO.split('T')[0];
+
+        setPostTitle(postTitle);
+        setContents(contents);
+        setDisplayImage(post.image as string);
+        setCount(peopleLimit);
+        setStartDate(startDateFormatted);
+        setEndDate(endDateFormatted);
+        setIsUndetermined(status === 'Opened' ? true : false);
+        setMentions(mentions);
+        setTags(tags);
+      } else {
+        // post 값이 없을 때 초기값 설정
+        setPostTitle('');
+        setContents('');
+        setIsUndetermined(false);
+        setStartDate('');
+        setEndDate('');
+        setMentionInput('');
+        setFilteredUsers([]);
+        setDisplayImage(null);
+        setUploadImage(null);
+        // setAllUserList([]);
+        setCount(1);
+        setMentions([]);
+        setTags([]);
+      }
+    }
+  }, [visible, post]);
 
   if (isLoading) return <Spinner />;
 
@@ -196,22 +332,26 @@ export const CreateMeetingModal = ({
                 placeholder="멘션"
                 value={mentionInput}
                 onChange={(e) => setMentionInput(e.target.value)}
+                onKeyDown={handleKeyDown}
                 onKeyUp={(e) => {
                   if (
                     e.key === 'Enter' &&
                     e.target instanceof HTMLInputElement
                   ) {
-                    const value = e.target.value;
-                    const user = filteredUsers.find(
-                      ({ fullName }) => fullName === value,
-                    );
+                    e.preventDefault();
+                    const value = mentionInput.trim();
+                    if (value) {
+                      const user = filteredUsers.find(
+                        ({ fullName }) => fullName === value,
+                      );
 
-                    if (user) {
-                      setMentions((prev) => [
-                        ...prev,
-                        { fullName: user.fullName, _id: user._id },
-                      ]);
-                      e.target.value = '';
+                      if (user) {
+                        setMentions((prev) => [
+                          ...prev,
+                          { fullName: user.fullName, _id: user._id },
+                        ]);
+                        setMentionInput('');
+                      }
                     }
                   }
                 }}
@@ -244,10 +384,17 @@ export const CreateMeetingModal = ({
               />
             </InputContainer>
 
-            {mentionInput && (
+            {mentionInput && filteredUsers.length > 0 && (
               <StFilteredUserList>
-                {filteredUsers.map((user) => (
-                  <div key={user._id}>{user.fullName}</div>
+                {filteredUsers.map((user, index) => (
+                  <div
+                    key={user._id}
+                    onClick={() => handleUserSelect(user)}
+                    className={`user-item ${
+                      index === selectedMentionIndex ? 'active' : ''
+                    }`}>
+                    {user.fullName}
+                  </div>
                 ))}
               </StFilteredUserList>
             )}
@@ -271,7 +418,11 @@ export const CreateMeetingModal = ({
             />
           </InputContainer>
 
-          <Button label="만들기" />
+          <Button
+            label="만들기"
+            type="submit"
+            onClick={handleOnSubmit}
+          />
         </StForm>
       </StModalContainer>
     </StBackgroundDim>
@@ -396,6 +547,11 @@ const StCheckboxLabel = styled.span`
   color: ${theme.colors.primaryBlue};
 `;
 
+const StInputContainerWithDropdown = styled.div`
+  position: relative;
+  width: 350px;
+`;
+
 const StFilteredUserList = styled.div`
   position: absolute;
   top: 100%;
@@ -410,9 +566,17 @@ const StFilteredUserList = styled.div`
   padding: 10px 0;
   margin-top: 2px;
   box-sizing: border-box;
-`;
 
-const StInputContainerWithDropdown = styled.div`
-  position: relative;
-  width: 350px;
+  .user-item {
+    padding: 8px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: ${theme.colors.grey.bright};
+    }
+
+    &.active {
+      background-color: ${theme.colors.grey.bright};
+    }
+  }
 `;
