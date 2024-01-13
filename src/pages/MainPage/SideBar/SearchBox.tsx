@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { StSearchIconWrapper, StSideBlockWrapper } from './OnlineUsers';
 import { IPost, IUser } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
@@ -29,7 +30,7 @@ export const SearchBox = () => {
       return errors;
     },
   });
-
+  const navigate = useNavigate();
   return (
     <StSideBlockWrapper style={{ marginTop: '15px' }}>
       <div style={{ position: 'relative' }}>
@@ -61,17 +62,31 @@ export const SearchBox = () => {
           searcedResults.map(
             (result, idx) =>
               'title' in result && (
-                <StSearchResultWrapper key={idx}>
+                <StSearchResultWrapper
+                  key={idx}
+                  onClick={() => {
+                    navigate(`/details/${result._id}`);
+                  }}>
                   <StSearchResultTitle>
                     {parseTitle(result.title).postTitle}
                   </StSearchResultTitle>
                   <Profile
                     image={result.image || ''}
                     fullName={parseTitle(result.title).author}
-                    _id={result._id}
+                    _id={
+                      typeof result.author === 'string'
+                        ? result.author
+                        : result.author._id
+                    }
                     status="ProfileName"
                     fontSize={12}
-                    style={{ color: theme.colors.secondaryNavy.hover }}
+                    style={{
+                      color: theme.colors.secondaryNavy.hover,
+                      backgroundColor: theme.colors.grey.bright,
+                      width: 'fit-content',
+                      padding: '0px 10px',
+                      borderRadius: '5px',
+                    }}
                   />
                 </StSearchResultWrapper>
               ),
@@ -91,7 +106,14 @@ const StSearchResultWrapper = styled.div`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  margin-bottom: 15px;
+  padding: 10px 0px;
+  cursor: pointer;
+  &:not(:last-child) {
+    border-bottom: 1px solid ${({ theme }) => theme.colors.grey.light};
+  }
+  &:hover {
+    background: ${({ theme }) => theme.colors.grey.bright};
+  }
 `;
 const StSearchResultTitle = styled.div`
   font-size: 14px;

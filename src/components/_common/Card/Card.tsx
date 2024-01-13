@@ -5,7 +5,6 @@ import { useSelector } from '@/_redux/hooks';
 import { ILike, IPost, IPostTitleCustom } from '@/api/_types/apiModels';
 import { deleteApiJWT, postApiJWT } from '@/api/apis';
 import { createNotification } from '@/api/createNotification';
-import { useHover } from '@/hooks/useHover';
 import { theme } from '@/style/theme';
 import { parseTitle } from '@/utils/parseTitle';
 import { Icon } from '@common/Icon/Icon';
@@ -25,28 +24,18 @@ const statusValue = {
 
 export const Card = ({ cardData, handleCardClick }: ICardData) => {
   const parsedTitle: IPostTitleCustom = parseTitle(cardData.title);
+
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.userInfo.user);
   const { likes, _id: cardId, image, author: postAuthor } = cardData;
   const { postTitle, status, tags, meetDate, author } = parsedTitle;
 
   let isLiked = '';
-
   likes?.forEach((each) => {
-    if (typeof each === 'string') {
-      if (
-        userInfo &&
-        userInfo?.likes.some((eachLike) => eachLike._id === each)
-      ) {
-        isLiked = each;
-      }
-    } else {
-      if (each.user === userInfo?._id) {
-        isLiked = each._id;
-      }
+    if (typeof each !== 'string' && each.user === userInfo?._id) {
+      isLiked = each._id;
     }
   });
-  const { hoverRef, isHovered } = useHover();
 
   const [isLike, setIsLike] = useState(isLiked);
   useEffect(() => {
@@ -97,23 +86,20 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
     <>
       <StCardContainer
         onClick={() => handleCardClick(cardId)}
-        status={status}
-        ref={hoverRef}>
-        {isHovered ? (
-          <StCardStatus>{statusValue[status]}</StCardStatus>
-        ) : (
-          <StCardProfileWrapper>
-            <Profile
-              image={image || ''}
-              fullName={author}
-              _id="1"
-              status="Profile"
-              fontSize={12}
-              imageSize={14}
-              maxWidth={50}
-            />
-          </StCardProfileWrapper>
-        )}
+        status={status}>
+        <StCardStatus className="card-status">
+          {statusValue[status]}
+        </StCardStatus>
+        <StCardProfileWrapper>
+          <Profile
+            image={image || ''}
+            fullName={author}
+            status="Profile"
+            fontSize={12}
+            imageSize={14}
+            maxWidth={50}
+          />
+        </StCardProfileWrapper>
 
         <StCardTitle style={colorStyle}>{postTitle}</StCardTitle>
         <StCardDate style={colorStyle}>
@@ -177,6 +163,10 @@ const StCardContainer = styled.div<{ status: string }>`
   &:hover {
     cursor: pointer;
     background-color: #f1f2f3;
+
+    .card-status {
+      display: flex;
+    }
   }
   opacity: ${({ status }) => status === 'Closed' && 0.5};
 `;
@@ -196,7 +186,7 @@ const StCardStatus = styled.div<{ children: string }>`
   right: 0px;
   top: 0px;
   width: 74px;
-  display: flex;
+  display: none;
   height: 30px;
   border-radius: 0px 8px 0px 0px;
   justify-content: center;
@@ -207,6 +197,7 @@ const StCardStatus = styled.div<{ children: string }>`
       : theme.colors.secondaryNavy.default};
   color: ${(props) => props.theme.colors.beige};
   font-size: 14px;
+  z-index: 1;
 `;
 const StCardTitle = styled.div`
   font-size: 16px;
