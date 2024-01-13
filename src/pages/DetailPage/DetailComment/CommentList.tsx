@@ -30,7 +30,7 @@ export const CommentList = ({ comments, loginUser }: CommentListProps) => {
       return (
         <Comment
           key={idx}
-          _id={comment._id}
+          _id={comment.author._id}
           image={comment.author.image as string}
           author={comment.author.fullName}
           createdAt={comment.createdAt}

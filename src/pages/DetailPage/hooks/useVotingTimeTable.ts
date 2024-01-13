@@ -50,7 +50,7 @@ export const useVotingTimeTable = ({
 
     for (let i = 0; i < entries.length; i++) {
       for (let j = 0; j < Object.keys(entries[0][1]).length; j++) {
-        if (prevMyVotes.current[i][j]) {
+        if (prevMyVotes.current[j][i]) {
           const date = entries[i][0];
           const timeVote = entries[i][1];
 

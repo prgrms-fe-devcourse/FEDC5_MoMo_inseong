@@ -1,18 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { StCardsWrapper } from './profilePageStyles';
-import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
 import { Card } from '@common/Card/Card';
 import { Spinner } from '@common/Spinner/Spinner';
 
-export const MyCards = () => {
+export const UserCards = ({ userId }: { userId: string }) => {
   const navigate = useNavigate();
 
-  const userInfo = useSelector((state) => state.userInfo.user?._id);
   const { response, error, isLoading } = useAxios<IPost[]>(() =>
-    getApi(`/posts/author/${userInfo}`),
+    getApi(`/posts/author/${userId}`),
   );
 
   return (

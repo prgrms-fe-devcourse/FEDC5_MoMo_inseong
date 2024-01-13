@@ -66,6 +66,7 @@ export const TimeTable = ({ post }: TimeTableType) => {
 
     // 내 아이디 있을 경우 중복 제거
     const modifiedParticipants = new Set([...parsedTitle.participants, userId]);
+    console.log([...modifiedParticipants]);
 
     const modifiedTitle: IPostTitleCustom = {
       ...parsedTitle,

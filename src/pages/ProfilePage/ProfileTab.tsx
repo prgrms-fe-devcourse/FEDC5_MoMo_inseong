@@ -2,14 +2,16 @@ import styled from '@emotion/styled';
 import { Tab } from '@common/Tab/Tab';
 
 interface ProfileTabProps {
-  pageNumber: number;
-  handleCreatePostClick: () => void;
-  handleAttendedPostClick: () => void;
-  handleInterestedPostClick: () => void;
+  tabNumber: number;
+  handleCreatePostClick?: () => void;
+  handleAttendedPostClick?: () => void;
+  handleInterestedPostClick?: () => void;
+  handleUserCards?: () => void;
+  handleUserJoinCards?: () => void;
 }
 
-export const ProfileTab = ({
-  pageNumber,
+export const MyProfileTab = ({
+  tabNumber,
   handleCreatePostClick,
   handleAttendedPostClick,
   handleInterestedPostClick,
@@ -21,7 +23,7 @@ export const ProfileTab = ({
           <Tab
             label="내가 만든 모임"
             width={320}
-            isActive={pageNumber === 1}
+            isActive={tabNumber === 1}
             isJustify={true}
             handleTabClick={handleCreatePostClick}
           />
@@ -30,7 +32,7 @@ export const ProfileTab = ({
           <Tab
             label="참여한 모임"
             width={320}
-            isActive={pageNumber === 2}
+            isActive={tabNumber === 2}
             isJustify={true}
             handleTabClick={handleAttendedPostClick}
           />
@@ -39,9 +41,40 @@ export const ProfileTab = ({
           <Tab
             label="관심 모임"
             width={320}
-            isActive={pageNumber === 3}
+            isActive={tabNumber === 3}
             isJustify={true}
             handleTabClick={handleInterestedPostClick}
+          />
+        </StTabWrapper>
+      </StTabContainer>
+    </>
+  );
+};
+
+export const UserProfileTab = ({
+  tabNumber,
+  handleUserCards,
+  handleUserJoinCards,
+}: ProfileTabProps) => {
+  return (
+    <>
+      <StTabContainer>
+        <StTabWrapper>
+          <Tab
+            label="유저가 만든 모임"
+            width={320}
+            isActive={tabNumber === 4}
+            isJustify={true}
+            handleTabClick={handleUserCards}
+          />
+        </StTabWrapper>
+        <StTabWrapper>
+          <Tab
+            label="유저가 참여한 모임"
+            width={320}
+            isActive={tabNumber === 5}
+            isJustify={true}
+            handleTabClick={handleUserJoinCards}
           />
         </StTabWrapper>
       </StTabContainer>

@@ -8,7 +8,7 @@ export interface IUser {
   banned: boolean; // 사용되지 않음
   isOnline: boolean;
   posts: IPost[] | string[]; //
-  likes: ILike[] | string[]; //
+  likes: ILike[]; //
   comments: string[] | [];
   followers: string[] | [];
   following: string[] | [];
@@ -73,6 +73,7 @@ export interface IMessage {
   seen: boolean;
   createdAt: string;
   updatedAt: string;
+  __v?: number;
 }
 
 // export interface PostTitleCustomProps {
@@ -88,7 +89,7 @@ export interface IMessage {
 // Post 모델
 
 export interface IPost {
-  likes?: ILike[] | string[];
+  likes?: ILike[];
   comments: IComment[] | string[];
   _id: string;
   image?: string;
@@ -110,9 +111,9 @@ export interface IPostTitleCustom {
   mentions: IMentionedUser[]; // [{id: '23', fullName: 'MinSuKim'}]
   meetDate: string[]; // 변경 // 투표 시작,끝 날짜 ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ'])
   peopleLimit: number;
-  participants: string[];
 
   vote: IVote; // [{id: 'dfnkdflad', votedDate: ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ']}] <== 날짜 아니라 타임테이블 배열 인덱스
+  participants: string[]; // 이 모임에 참여(투표)한 사람들 id 배열
 
   // cardId: string; // 포스트 _id
   author: string; // 검색결과의 IPost에서 유저id가 author에옴.. 그래서 여기에서 저장해주는게 낫습니다.

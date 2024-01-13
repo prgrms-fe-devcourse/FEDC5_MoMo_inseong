@@ -41,6 +41,7 @@ export const VoteCellContainer = forwardRef<
                 onMouseEnter={() => setHoverIndex(() => [i, j])}
                 onMouseLeave={() => setHoverIndex(() => [-1, -1])}>
                 {hoverIndex[0] === i && hoverIndex[1] === j && (
+                  // users.length > 0 &&
                   <VotedUserList userList={users} />
                 )}
               </StVotedCell>
@@ -79,9 +80,9 @@ const StMyCell = styled.div<IStCell>`
     cursor: pointer;
 
     /* 간격도 Cell에 포함되어야 함 */
-    padding: 12px
-      ${({ columnCount }) =>
-        columnCount >= 4 ? 26 : Math.round(128 / columnCount)}px;
+    padding: 12px 24px;
+    /* ${({ columnCount }) =>
+      columnCount >= 4 ? 26 : Math.round(128 / columnCount)}px; */
 
     &:hover {
       background-color: ${({ theme }) => theme.colors.beige};
@@ -139,9 +140,9 @@ const StVotedCell = styled.div<IStCell>`
     cursor: pointer;
 
     /* 간격도 Cell에 포함되어야 함 */
-    padding: 12px
-      ${({ columnCount }) =>
-        columnCount >= 4 ? 26 : Math.round(128 / columnCount)}px;
+    padding: 12px 24px;
+    /* ${({ columnCount }) =>
+      columnCount >= 4 ? 26 : Math.round(128 / columnCount)}px; */
 
     &:hover {
       filter: brightness(120%);

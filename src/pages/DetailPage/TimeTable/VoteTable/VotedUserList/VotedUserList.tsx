@@ -7,30 +7,50 @@ interface VotedUserListProps {
 
 export const VotedUserList = ({ userList }: VotedUserListProps) => {
   return (
-    <StContainer>
-      <StTitle>참여자</StTitle>
-      <StContentBox>
-        {userList.map(({ id, fullName }) => (
-          <StUser key={id}>{fullName}</StUser>
-        ))}
-      </StContentBox>
-    </StContainer>
+    <StWrapper>
+      <StContainer>
+        <StTitle>참여자</StTitle>
+        <StContentBox>
+          {userList.map(({ id, fullName }) => (
+            <StUser key={id}>{fullName}</StUser>
+          ))}
+        </StContentBox>
+      </StContainer>
+    </StWrapper>
   );
 };
 
-const StContainer = styled.div`
+const StWrapper = styled.div`
   position: absolute;
   top: 0;
-  left: 100%;
-  display: flex;
+  left: calc(100% + 10px);
   z-index: 199;
+
+  transform: translateY(-20%);
+  pointer-events: none;
+
+  ::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: -8px;
+    z-index: 200;
+    transform: rotate3d(1, 0, 1, 60deg);
+    border-width: 8px;
+    border-style: solid;
+    border-color: ${({ theme }) => theme.colors.primaryBlue.default};
+  }
+`;
+
+const StContainer = styled.div`
+  position: relative;
+  width: 100px;
+  display: flex;
   flex-direction: column;
   border-radius: 8px;
-  width: 100px;
-  overflow: hidden;
-
+  box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.5);
   background-color: white;
-  pointer-events: none;
+  overflow: hidden;
 `;
 
 const StTitle = styled.header`

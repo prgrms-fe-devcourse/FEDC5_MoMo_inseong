@@ -15,6 +15,11 @@ export const DetailComment = ({ response, loginUser }: DetailCommentProps) => {
       <CommentInput
         loginUser={loginUser}
         postId={response._id}
+        postAuthorId={
+          typeof response.author === 'string'
+            ? response.author
+            : response.author._id
+        }
       />
       <CommentList
         loginUser={loginUser}

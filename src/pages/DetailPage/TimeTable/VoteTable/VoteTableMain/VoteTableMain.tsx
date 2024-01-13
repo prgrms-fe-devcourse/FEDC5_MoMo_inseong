@@ -10,19 +10,19 @@ export const VoteTableMain = ({ children }: PropsWithChildren) => {
 };
 
 const StTable = styled.div`
-  position: relative;
-  padding-top: 36px;
-  overflow-y: hidden;
+  /* position: relative; */
+  /* padding-top: 36px; */
+  /* overflow-y: hidden; */
 `;
 
 const StOuterWrapper = styled.div`
-  position: relative;
+  /* position: relative; */
 
-  ::before,
+  /* ::before,
   ::after {
     content: '';
     position: absolute;
-    /* FIXME: 전역으로 관리 필요 */
+    FIXME: 전역으로 관리 필요
     left: 36px;
     right: 6px;
     height: 8px;
@@ -37,5 +37,5 @@ const StOuterWrapper = styled.div`
   ::after {
     bottom: 8px;
     background: linear-gradient(to top, white, transparent);
-  }
+  } */
 `;

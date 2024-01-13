@@ -15,33 +15,40 @@ export const VoteScrollWrapper = forwardRef<
   return (
     <StScrollWrapper ref={ref}>
       <StHeader>
-        <StRowHeader>
-          {meetDate.map((format, i) => {
-            const fullDate = new Date(format);
-            const day = fullDate.getDay();
-            const month = fullDate.getMonth() + 1;
-            const date = fullDate.getDate();
+        <StHeaderFlexBox>
+          <StHeaderCurtain>
+            <p>hi</p>
+          </StHeaderCurtain>
+          <StRowHeader>
+            {meetDate.map((format, i) => {
+              const fullDate = new Date(format);
+              const day = fullDate.getDay();
+              const month = fullDate.getMonth() + 1;
+              const date = fullDate.getDate();
 
-            return (
-              <div
-                key={i}
-                style={{
-                  flexShrink: '0',
-                  fontWeight: 700,
-                }}>
-                <div>{`${month}/${date}`}</div>
-                <div>{days[day]}</div>
-              </div>
-            );
-          })}
-        </StRowHeader>
+              return (
+                <div
+                  key={i}
+                  style={{
+                    flexShrink: '0',
+                    fontWeight: 700,
+                  }}>
+                  <div>{`${month}/${date}`}</div>
+                  <div>{days[day]}</div>
+                </div>
+              );
+            })}
+          </StRowHeader>
+        </StHeaderFlexBox>
       </StHeader>
       <StBody>
-        <StColumnHeader>
-          {times.map((time, i) => i % 2 === 0 && <span key={i}>{time}</span>)}
-          <div style={{ paddingTop: '1px' }}></div>
-        </StColumnHeader>
-        {children}
+        <StBodyFlexBox>
+          <StColumnHeader>
+            {times.map((time, i) => i % 2 === 0 && <span key={i}>{time}</span>)}
+            <div style={{ paddingTop: '1px' }}></div>
+          </StColumnHeader>
+          {children}
+        </StBodyFlexBox>
       </StBody>
     </StScrollWrapper>
   );
@@ -49,34 +56,46 @@ export const VoteScrollWrapper = forwardRef<
 
 const StHeader = styled.div`
   /* position: relative; */
-  padding-left: 36px;
+  position: sticky;
+`;
+
+const StHeaderFlexBox = styled.div`
+  display: flex;
+  gap: 8px;
+  flex-direction: row;
+`;
+
+const StHeaderCurtain = styled.div`
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 201;
+  width: 42px;
+  height: 42px;
+
+  background-color: red;
 `;
 
 const StRowHeader = styled.div`
-  position: sticky;
-  top: 0;
-  /* FIXME: 전역으로 관리 필요 */
-  left: 0;
-  right: 0;
-  height: 42px;
-  padding-left: 36px;
-
   font-family: ${({ theme }) => theme.fonts};
   font-size: 16px;
   font-weight: 700px;
   text-align: center;
 
-  display: flex;
+  display: inline-flex;
   gap: 8px;
 `;
 
 const StBody = styled.div`
-  position: relative;
+  /* position: relative; */
+  /* padding-top: 8px;
+  padding-left: 36px; */
+`;
+
+const StBodyFlexBox = styled.div`
   display: flex;
   gap: 8px;
   flex-direction: row;
-  padding-top: 8px;
-  padding-left: 36px;
 `;
 
 const StColumnHeader = styled.div`
@@ -84,7 +103,9 @@ const StColumnHeader = styled.div`
   top: 0;
   left: 0;
   bottom: 0;
+  z-index: 200;
   width: 42px;
+  background-color: white;
 
   font-family: ${({ theme }) => theme.fonts};
   font-size: 16px;
@@ -99,16 +120,17 @@ const StColumnHeader = styled.div`
 
 const StScrollWrapper = styled.div`
   position: relative;
-  max-width: 400px;
-  max-height: 464px;
-  padding-right: 6px;
-  padding-top: 8px;
+  /* max-width: 400px;
+  max-height: 464px; */
+  width: 400px;
+  height: 464px;
+  /* padding-right: 6px;
+  padding-top: 8px; */
 
-  overflow-y: auto;
-  overflow-x: auto;
-  scroll-behavior: smooth;
+  overflow: auto;
+  /* scroll-behavior: smooth; */
 
-  ${({ theme }) => theme.scrollBar.default}
+  /* ${({ theme }) => theme.scrollBar.default}
 
   ::-webkit-scrollbar {
     width: 6px;
@@ -127,5 +149,5 @@ const StScrollWrapper = styled.div`
 
   &:hover::-webkit-scrollbar-thumb {
     background-color: #228bb4;
-  }
+  } */
 `;

@@ -3,6 +3,7 @@ import { MouseEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ILike, IPost, IUser } from '@/api/_types/apiModels';
 import { deleteApiJWT, postApiJWT } from '@/api/apis';
+import { CreateMeetingModal } from '@/pages/MainPage/Modal/CreateMeetingModal';
 import { Icon } from '@common/Icon/Icon';
 
 interface PostIconProps {
@@ -13,9 +14,8 @@ interface PostIconProps {
 export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
   const [isHeart, setIsHeart] = useState('');
   const [isPostOwner, setIsPostOwner] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-  // console.log('loginUser data : ', loginUser._id);
-  // console.log('response data : ', apiResponse._id);
 
   const handleHeartClick = async (e: MouseEvent<HTMLElement>) => {
     e.stopPropagation();
@@ -56,6 +56,11 @@ export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
     navigate('/');
   };
 
+  const handleEditClick = (e: MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    setIsModalOpen(true);
+  };
+
   useEffect(() => {
     const LoginUserId = loginUser && loginUser._id;
     const PostLike = apiResponse.likes as ILike[];
@@ -84,6 +89,7 @@ export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
             <Icon
               name="edit"
               size={24}
+              onIconClick={(e: MouseEvent<HTMLElement>) => handleEditClick(e)}
             />
             <Icon
               name="trash-2"
@@ -95,6 +101,12 @@ export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
           </StAdminIconsWrapper>
         )}
       </StIconContainer>
+      <CreateMeetingModal
+        post={apiResponse}
+        visible={isModalOpen}
+        onClose={() => setIsModalOpen(false)}>
+        <button onClick={() => setIsModalOpen(false)}>Close</button>
+      </CreateMeetingModal>
     </>
   );
 };

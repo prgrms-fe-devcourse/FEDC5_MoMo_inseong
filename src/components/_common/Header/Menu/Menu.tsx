@@ -1,64 +1,45 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
-import { Notification, NotificationExtractType } from './Notification';
-import { notificationMockup } from './NotificatonMockup';
-import { PopupProfile, PopupProfileProps } from './PopupProfile';
+import { useState } from 'react';
+import { Notification } from './Notification';
+import { PopupProfile } from './PopupProfile';
+import { useNotification } from './hooks/useNotification';
 import { useSelector } from '@/_redux/hooks';
+import { IUser } from '@/api/_types/apiModels';
 import { Icon } from '@common/Icon/Icon';
 import { Profile } from '@common/Profile/Profile';
+import { Spinner } from '@common/Spinner/Spinner';
 import { Tooltip } from '@common/Tooltip/Tooltip';
 
-// type ModeType = 'light' | 'dark';
-
-// interface IDarkMode {
-//   mode: ModeType;
-// }
-
-// interface MenuProps {
-//   initialMode: ModeType;
-// }
-
 export const Menu = () => {
-  const userInfo = useSelector((state) => state.userInfo.user);
-
-  const [notifications, setNotification] = useState<NotificationExtractType[]>(
-    [],
+  const { fullName, image } = useSelector(
+    (state) => state.userInfo.user as IUser,
   );
-  const [popupProfile, setPopupProfile] = useState<PopupProfileProps>(
-    {} as PopupProfileProps,
-  );
-  // const [mode, setMode] = useState(initialMode); // 초기 테마 상태
 
-  // 테마 토글 함수
-  // const handleToggleMode = () => setMode(mode === 'light' ? 'dark' : 'light');
+  const { notifications, isLoading, error } = useNotification();
 
-  //FIXME: 비동기 함수는 따로 추상화 필요
-  useEffect(() => {
-    setNotification(notificationMockup as NotificationExtractType[]);
-
-    setPopupProfile({
-      userId: userInfo?._id,
-      image: userInfo?.image || '',
-      fullName: userInfo?.fullName,
-    } as PopupProfileProps);
-  }, []);
+  const [isRedDot, setIsRedDot] = useState(false);
 
   return (
     <StContainer>
-      {/* TODO : 다크모드 */}
-      {/* <StTooltipWrapper>
-        <ToggleButton
-          mode={mode}
-          onClick={handleToggleMode}>
-          <IconContainer mode={mode} />
-        </ToggleButton>
-      </StTooltipWrapper> */}
       <StTooltipWrapper>
+        {/* FIXME: 툴팁에서 알람창으로 SetVisibility를 cloneElement로 넘겨줌 */}
         <Tooltip
-          content={<Notification data={notifications} />}
+          content={
+            isLoading ? (
+              <Spinner />
+            ) : error ? (
+              <div>알림을 가져오지 못했습니다.</div>
+            ) : (
+              <Notification
+                data={notifications}
+                setIsRedDot={setIsRedDot}
+              />
+            )
+          }
           width={300}
           height={300}
           offset={-100}>
+          {isRedDot && <StRedDot />}
           <Icon
             name="bell"
             showBackground={false}
@@ -69,14 +50,13 @@ export const Menu = () => {
       </StTooltipWrapper>
       <StTooltipWrapper>
         <Tooltip
-          content={<PopupProfile {...popupProfile} />}
+          content={<PopupProfile />}
           height={'fit-content'}
           offset={-90}>
           <Profile
-            image={popupProfile.image || ''}
-            fullName={popupProfile.fullName}
+            image={image || ''}
+            fullName={fullName}
             status="Profile"
-            // _id={popupProfile.userId}
             fontSize={14}
             imageSize={32}
           />
@@ -101,29 +81,12 @@ const StTooltipWrapper = styled.li`
   height: 100%;
 `;
 
-//FIXME: 다크모드 토글 버튼
-// const ToggleButton = styled.div<IDarkMode>`
-//   position: relative;
-//   width: 50px;
-//   height: 25px;
-//   border-radius: 25px;
-//   background-color: ${({ mode }) => (mode === 'light' ? '#FFD580' : '#333')};
-//   transition: background-color 0.3s ease;
-//   cursor: pointer;
-// `;
+const StRedDot = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 2px;
+  border-radius: 100%;
 
-// //FIXME: 다크모드 아이콘
-// const IconContainer = styled.div<IDarkMode>`
-//   position: absolute;
-//   width: 20px;
-//   height: 20px;
-//   top: -10%;
-//   left: ${({ mode }) => (mode === 'light' ? '25px' : '0px')};
-//   transition: left 0.3s ease;
-
-//   &::before {
-//     content: ${({ mode }) => (mode === 'light' ? '"🌞"' : '"🌜"')};
-//     position: absolute;
-//     font-size: 20px;
-//   }
-// `;
+  background-color: red;
+`;

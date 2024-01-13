@@ -1,22 +1,87 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { validateFullName } from '../SignupPage/validation';
+import { useSelector } from '@/_redux/hooks';
+import { postApiJWT, putApiJWT } from '@/api/apis';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
+import { theme } from '@/style/theme';
 import { Button } from '@common/Button/Button';
 import { Icon } from '@common/Icon/Icon';
 import { InputCompound } from '@common/Input/InputCompound';
 import InputUpload from '@common/Input/InputUpload';
 import { Profile } from '@common/Profile/Profile';
 
-interface EditProfileProps {
-  image?: string;
-}
-export const EditProfilePage = ({ image: initialImage }: EditProfileProps) => {
-  const [image, setImage] = useState<string | null>(initialImage || null);
-  const handleImageChange = (uploadedFile: File) => {
-    setImage(URL.createObjectURL(uploadedFile));
-  };
+export const EditProfilePage = () => {
+  const [fullName, setFullName] = useState('');
+  const [username, setUsername] = useState('');
+  const [displayImage, setDisplayImage] = useState<string | null>(null);
+  const [uploadImage, setUploadImage] = useState<File | null>(null);
+
+  const [fullNameError, setFullNameError] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+
+  const fullNameRef = useRef<HTMLInputElement>(null);
+  const usernameRef = useRef<HTMLInputElement>(null);
+
+  const userInfo = useSelector((state) => state.userInfo.user);
+
+  useEffect(() => {
+    setFullName(userInfo?.fullName || '');
+    setUsername(userInfo?.username || '');
+    if (userInfo?.image) {
+      setDisplayImage(userInfo.image);
+    }
+  }, [userInfo]);
+
   const navigate = useNavigate();
+
+  const handleImageChange = (uploadedFile: File) => {
+    setUploadImage(uploadedFile);
+    setDisplayImage(URL.createObjectURL(uploadedFile));
+  };
+
+  const handleUpdateProfile = async () => {
+    const errorChecks = [
+      { ref: fullNameRef, error: fullNameError },
+      { ref: usernameRef, error: usernameError },
+    ];
+
+    for (const { ref, error } of errorChecks) {
+      if (error !== '') {
+        ref.current?.focus();
+        return false;
+      }
+    }
+
+    try {
+      const formData = new FormData();
+      if (uploadImage) {
+        formData.append('image', uploadImage);
+        await postApiJWT('/users/upload-photo', formData);
+      }
+
+      const nameResponse = await putApiJWT('/settings/update-user', {
+        fullName,
+        username,
+      });
+
+      if (nameResponse.status === 200) {
+        navigate('/');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fullNameCheckHandler = (value: string) => {
+    setFullNameError(validateFullName(value));
+  };
+
+  const usernameCheckHandler = (value: string) => {
+    setUsernameError(validateFullName(value));
+  };
+
   return (
     <StSideMarginWrapper>
       <StProfileActionsContainer>
@@ -28,11 +93,9 @@ export const EditProfilePage = ({ image: initialImage }: EditProfileProps) => {
         <StImageContainer>
           <Profile
             status="ProfileImage"
-            image={image === null ? 'https://picsum.photos/200' : image}
-            fullName="test"
-            _id="test"
+            image={displayImage || ''}
+            fullName=""
             imageSize={110}
-            style={{ backgroundImage: `url(${image})` }}
           />
           <InputUpload onChange={handleImageChange}>
             <StEditIcon
@@ -41,18 +104,44 @@ export const EditProfilePage = ({ image: initialImage }: EditProfileProps) => {
             />
           </InputUpload>
         </StImageContainer>
-        <Button label="완료" />
+
+        <Button
+          label="완료"
+          handleButtonClick={() => void handleUpdateProfile()}
+        />
       </StProfileActionsContainer>
       <StProfileForm>
         <StInputText>이름*</StInputText>
-        <InputCompound>
-          <InputCompound.Text placeholder="이름" />
-        </InputCompound>
+        <StInputForm>
+          <InputCompound>
+            <InputCompound.Text
+              placeholder="이름"
+              onChange={(e) => {
+                setFullName(e.target.value);
+                fullNameCheckHandler(e.target.value);
+              }}
+              value={fullName}
+              ref={fullNameRef}
+            />
+          </InputCompound>
+          {fullNameError}
+        </StInputForm>
 
         <StInputText>닉네임*</StInputText>
-        <InputCompound>
-          <InputCompound.Text placeholder="닉네임" />
-        </InputCompound>
+        <StInputForm>
+          <InputCompound>
+            <InputCompound.Text
+              placeholder="닉네임"
+              onChange={(e) => {
+                setUsername(e.target.value);
+                usernameCheckHandler(e.target.value);
+              }}
+              value={username}
+              ref={usernameRef}
+            />
+          </InputCompound>
+          {usernameError}
+        </StInputForm>
       </StProfileForm>
     </StSideMarginWrapper>
   );
@@ -76,6 +165,9 @@ const StProfileActionsContainer = styled.div`
 
 const StImageContainer = styled.div`
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const StEditIcon = styled(Icon)`
@@ -84,4 +176,11 @@ const StEditIcon = styled(Icon)`
   right: 0;
   transform: translate(50%, 50%);
   cursor: pointer;
+  right: 10px;
+`;
+
+const StInputForm = styled.div`
+  height: 85px;
+  font-size: 14px;
+  color: ${theme.colors.red};
 `;

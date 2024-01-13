@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from '@/_redux/hooks';
 import { ILike, IPost, IPostTitleCustom } from '@/api/_types/apiModels';
 import { deleteApiJWT, postApiJWT } from '@/api/apis';
+import { createNotification } from '@/api/createNotification';
 import { useHover } from '@/hooks/useHover';
 import { theme } from '@/style/theme';
 import { parseTitle } from '@/utils/parseTitle';
@@ -23,20 +24,28 @@ const statusValue = {
 };
 
 export const Card = ({ cardData, handleCardClick }: ICardData) => {
-  const userId = useSelector((state) => state.auth.userId);
   const parsedTitle: IPostTitleCustom = parseTitle(cardData.title);
   const navigate = useNavigate();
-
-  const { likes, _id: cardId, image } = cardData;
+  const userInfo = useSelector((state) => state.userInfo.user);
+  const { likes, _id: cardId, image, author: postAuthor } = cardData;
   const { postTitle, status, tags, meetDate, author } = parsedTitle;
 
   let isLiked = '';
+
   likes?.forEach((each) => {
-    if (typeof each !== 'string' && each.user === userId) {
-      isLiked = each._id;
+    if (typeof each === 'string') {
+      if (
+        userInfo &&
+        userInfo?.likes.some((eachLike) => eachLike._id === each)
+      ) {
+        isLiked = each;
+      }
+    } else {
+      if (each.user === userInfo?._id) {
+        isLiked = each._id;
+      }
     }
   });
-
   const { hoverRef, isHovered } = useHover();
 
   const [isLike, setIsLike] = useState(isLiked);
@@ -46,7 +55,7 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
 
   const handleIconClick = async (event: MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    if (!userId) {
+    if (!userInfo) {
       if (confirm('로그인하세요')) {
         navigate('/login');
       }
@@ -55,18 +64,23 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
     if (!isLike) {
       await postApiJWT<ILike>('/likes/create', {
         postId: cardId,
-      }) //cardId
+      })
         .then((res) => {
-          console.log(res);
           setIsLike(res.data._id);
+          createNotification({
+            notificationType: 'LIKE',
+            notificationTypeId: res.data._id,
+            userId:
+              typeof postAuthor === 'string' ? postAuthor : postAuthor._id,
+            postId: cardId,
+          });
         })
         .catch((err) => console.log(err));
     } else {
       await deleteApiJWT<ILike>('/likes/delete', {
         id: isLike,
       })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           setIsLike('');
         })
         .catch((err) => console.log(err));
@@ -96,14 +110,14 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
               status="Profile"
               fontSize={12}
               imageSize={14}
-              maxWidth={55}
+              maxWidth={50}
             />
           </StCardProfileWrapper>
         )}
 
         <StCardTitle style={colorStyle}>{postTitle}</StCardTitle>
         <StCardDate style={colorStyle}>
-          {meetDate.length === 1 ? (
+          {meetDate.length === 1 && (
             <>
               <Icon
                 name="calendar"
@@ -115,8 +129,6 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
               />
               {meetDate[0].slice(0, 16)}
             </>
-          ) : (
-            ''
           )}
         </StCardDate>
         <StCardBottom>
