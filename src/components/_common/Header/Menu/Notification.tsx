@@ -92,7 +92,7 @@ export const Notification = memo(
                   key={_id}
                   title={subTitleOf(type)}
                   isBlur={isBlur || isSeen}
-                  onClick={type !== 'LIKE' ? handleVisibility : () => {}}>
+                  onClick={handleVisibility}>
                   {type === 'COMMENT' ? (
                     <Link to={`/details/${details.postId}`}>
                       <StSummary>
