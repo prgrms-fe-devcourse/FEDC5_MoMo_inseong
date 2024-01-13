@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { CSSProperties, useState } from 'react';
+import { CSSProperties, MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { theme } from '@/style/theme';
 
@@ -33,7 +33,8 @@ export const Profile = ({
 }: ProfileProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
-  const handleUserClick = () => {
+  const handleUserClick = (e: MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
     if (!_id) return;
     navigate(`/profile${params}/${_id}`);
   };
