@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getUserInfo } from '../../_redux/slices/userSlice';
 import { DetailComment } from './DetailComment/DetailComment';
 import { DetailMeetDescription } from './DetailMeetDescription';
