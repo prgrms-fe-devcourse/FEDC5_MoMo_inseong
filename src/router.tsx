@@ -49,11 +49,11 @@ export const router = createBrowserRouter([
             element: <ProfilePage />,
           },
           {
-            path: '/EditProfile', // 프로필 변경 페이지
+            path: '/editProfile', // 프로필 변경 페이지
             element: <EditProfilePage />,
           },
           {
-            path: '/EditPassword', // 비밀번호 변경 페이지
+            path: '/editPassword', // 비밀번호 변경 페이지
             element: <EditPasswordPage />,
           },
         ],

@@ -1,42 +1,50 @@
 import styled from '@emotion/styled';
-import { forwardRef } from 'react';
-import { IVote } from '../../TimeTable';
+import { forwardRef, useState } from 'react';
+import { VotedUserList } from '../VotedUserList/VotedUserList';
+import { ITimeVote } from '@/api/_types/apiModels';
 
 interface VoteCellContainerProps {
-  meetDate: string[];
-  vote: IVote;
   isMyTable: boolean;
+  voteEntries: [string, ITimeVote][];
 }
 
 export const VoteCellContainer = forwardRef<
   HTMLDivElement,
   VoteCellContainerProps
->(({ meetDate, vote, isMyTable }, ref) => {
+>(({ voteEntries, isMyTable }, ref) => {
+  const [hoverIndex, setHoverIndex] = useState([-1, -1]);
+
   return (
     <StCellContainer ref={ref}>
-      {meetDate.map((date, i) => (
+      {voteEntries.map(([date, times], i) => (
         <StColumnCells
           key={date}
           data-date={date}>
-          {Object.entries(vote[date]).map(([time, users], j) =>
+          {Object.entries(times).map(([time, users], j) =>
             isMyTable ? (
               <StMyCell
-                key={date + time}
+                key={self.crypto.randomUUID()}
                 data-time={time}
                 data-users={users.map(({ fullName }) => fullName).join(' ')}
                 data-col={j}
                 data-row={i}
-                columnCount={meetDate.length}
+                columnCount={voteEntries.length}
               />
             ) : (
               <StVotedCell
-                key={date + time}
+                key={self.crypto.randomUUID()}
                 data-time={time}
                 data-users={users.map(({ fullName }) => fullName).join(' ')}
                 data-col={j}
                 data-row={i}
-                columnCount={meetDate.length}
-              />
+                columnCount={voteEntries.length}
+                onMouseEnter={() => setHoverIndex(() => [i, j])}
+                onMouseLeave={() => setHoverIndex(() => [-1, -1])}>
+                {hoverIndex[0] === i && hoverIndex[1] === j && (
+                  // users.length > 0 &&
+                  <VotedUserList userList={users} />
+                )}
+              </StVotedCell>
             ),
           )}
         </StColumnCells>
@@ -72,9 +80,9 @@ const StMyCell = styled.div<IStCell>`
     cursor: pointer;
 
     /* 간격도 Cell에 포함되어야 함 */
-    padding: 6px
-      ${({ columnCount }) =>
-        columnCount >= 4 ? 16 : Math.round(76 / columnCount)}px;
+    padding: 12px 24px;
+    /* ${({ columnCount }) =>
+      columnCount >= 4 ? 26 : Math.round(128 / columnCount)}px; */
 
     &:hover {
       background-color: ${({ theme }) => theme.colors.beige};
@@ -132,9 +140,9 @@ const StVotedCell = styled.div<IStCell>`
     cursor: pointer;
 
     /* 간격도 Cell에 포함되어야 함 */
-    padding: 6px
-      ${({ columnCount }) =>
-        columnCount >= 4 ? 16 : Math.round(76 / columnCount)}px;
+    padding: 12px 24px;
+    /* ${({ columnCount }) =>
+      columnCount >= 4 ? 26 : Math.round(128 / columnCount)}px; */
 
     &:hover {
       filter: brightness(120%);

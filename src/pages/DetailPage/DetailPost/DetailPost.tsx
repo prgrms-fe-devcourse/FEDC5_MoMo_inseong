@@ -22,7 +22,7 @@ export const DetailPost = ({
     <StPostContainer>
       {/* Post or TimeTable*/}
       {pageNumber === 1 && <PostContents response={response} />}
-      {pageNumber === 2 && <DetailTimeTablePage />}
+      {pageNumber === 2 && <DetailTimeTablePage post={response} />}
 
       {/* Badge */}
       {responseTitle.tags.length > 0 && (

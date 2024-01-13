@@ -6,7 +6,7 @@ import { createPostSlice } from './slices/postSlices/createPostSlice';
 import { deletePostSlice } from './slices/postSlices/deletePostSlice';
 import { getAuthorPostSlice } from './slices/postSlices/getAuthorPostSlice';
 import { getChannelPostsSlice } from './slices/postSlices/getChannelPostSlice';
-import { getPostDetailSlice } from './slices/postSlices/getPostSlice';
+import { postSlice } from './slices/postSlices/getPostSlice';
 import { putPostSlice } from './slices/postSlices/putPostSlice';
 import todaySlice from './slices/todaySlice';
 import userInfoSlice from './slices/userSlice';
@@ -30,7 +30,7 @@ const rootReducer = combineReducers({
   deletePost: deletePostSlice,
   getAuthorPost: getAuthorPostSlice,
   getChannelPost: getChannelPostsSlice,
-  getPostDetail: getPostDetailSlice,
+  getPostDetail: postSlice,
   putPost: putPostSlice,
   today: todaySlice,
   allUsers: allUsersSlice,

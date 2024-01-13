@@ -1,4 +1,4 @@
-import { VoteCellContainer } from './VoteCellContainer/CellContainer';
+import { VoteCellContainer } from './VoteCellContainer/VoteCellContainer';
 import { VoteScrollWrapper } from './VoteScrollWrapper/VoteScrollWrapper';
 import { VoteTableMain } from './VoteTableMain/VoteTableMain';
 
