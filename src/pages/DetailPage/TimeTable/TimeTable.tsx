@@ -66,7 +66,6 @@ export const TimeTable = ({ post }: TimeTableType) => {
 
     // 내 아이디 있을 경우 중복 제거
     const modifiedParticipants = new Set([...parsedTitle.participants, userId]);
-    console.log([...modifiedParticipants]);
 
     const modifiedTitle: IPostTitleCustom = {
       ...parsedTitle,
@@ -79,7 +78,13 @@ export const TimeTable = ({ post }: TimeTableType) => {
 
   const putPostWithModifiedVote = () => {
     const resultVote = modifyVoteOfPost();
-    const formData = createFormData(resultVote);
+    const formData = createFormData({
+      postId: post._id,
+      title: JSON.stringify(resultVote),
+      image: post.image ?? 'null',
+      channelId:
+        typeof post.channel === 'string' ? post.channel : post.channel._id,
+    });
 
     void putApiJWT<IPost, FormData>('/posts/update', formData);
 
