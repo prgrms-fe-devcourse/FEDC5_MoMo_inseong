@@ -4,7 +4,7 @@ import { useVotingTimeTable } from '../hooks/useVotingTimeTable';
 import { VoteTable } from './VoteTable/VoteTable';
 import { useDispatch, useSelector } from '@/_redux/hooks';
 import { modifyVoteState } from '@/_redux/slices/postSlices/getPostSlice';
-import { IPost, IUser } from '@/api/_types/apiModels';
+import { IPost, IPostTitleCustom, IUser } from '@/api/_types/apiModels';
 import { putApiJWT } from '@/api/apis';
 import { createFormData } from '@/utils/createFormData';
 import { parseTitle } from '@/utils/parseTitle';
@@ -61,8 +61,17 @@ export const TimeTable = ({ post }: TimeTableType) => {
   });
 
   const modifyVoteOfPost = () => {
+    const parsedTitle = parseTitle(post.title);
     const modifiedMyVote = modifyMyVote(userId, fullName);
-    const modifiedTitle = { ...parseTitle(post.title), vote: modifiedMyVote };
+
+    // 내 아이디 있을 경우 중복 제거
+    const modifiedParticipants = new Set([...parsedTitle.participants, userId]);
+
+    const modifiedTitle: IPostTitleCustom = {
+      ...parsedTitle,
+      vote: modifiedMyVote,
+      participants: [...modifiedParticipants],
+    };
 
     return modifiedTitle;
   };

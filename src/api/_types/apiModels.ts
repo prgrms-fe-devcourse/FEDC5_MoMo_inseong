@@ -110,6 +110,7 @@ export interface IPostTitleCustom {
   mentions: IMentionedUser[]; // [{id: '23', fullName: 'MinSuKim'}]
   meetDate: string[]; // 변경 // 투표 시작,끝 날짜 ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ'])
   peopleLimit: number;
+  participants: string[];
 
   vote: IVote; // [{id: 'dfnkdflad', votedDate: ['2022-12-23 11:20:20TZ','2022-12-23 11:20:20TZ']}] <== 날짜 아니라 타임테이블 배열 인덱스
 
