@@ -95,23 +95,41 @@ export const Notification = memo(
                   onClick={type !== 'LIKE' ? handleVisibility : () => {}}>
                   {type === 'COMMENT' ? (
                     <Link to={`/details/${details.postId}`}>
-                      <StSummary>{`${details.postTitle} 모임에 새로운 댓글이 있습니다.`}</StSummary>
-                      <StContent>{`${fullName} / ${details.comment}`}</StContent>
+                      <StSummary>
+                        <StBold>{details.postTitle}</StBold> 모임에 새로운
+                        댓글이 있습니다.
+                      </StSummary>
+                      <StContent>
+                        <StBold>{fullName}</StBold> {`| ${details.comment}`}
+                      </StContent>
                     </Link>
                   ) : type === 'LIKE' ? (
-                    <StSummary>{`${fullName}님이 ${details.postTitle} 모임을 북마크 등록했습니다.`}</StSummary>
+                    <StSummary>
+                      <StBold>{fullName}</StBold>님이{' '}
+                      <StBold>{details.postTitle}</StBold> 모임을 북마크
+                      등록했습니다.
+                    </StSummary>
                   ) : type === 'FOLLOW' ? (
                     details.isCancel ? null : (
-                      <StSummary>{`${fullName}님이 팔로우 하였습니다.`}</StSummary>
+                      <StSummary>
+                        <StBold>{fullName}</StBold>님이 팔로우 하였습니다.
+                      </StSummary>
                     )
                   ) : type === 'MESSAGE' ? (
                     <>
-                      <StSummary>{`${fullName}님으로부터 메세지가 도착했습니다.`}</StSummary>
+                      <StSummary>
+                        <StBold>{fullName}</StBold>님으로부터 메세지가
+                        도착했습니다.
+                      </StSummary>
                       <StContent>{`${details.message}`}</StContent>
                     </>
                   ) : type === 'MENTION' ? (
                     <Link to={`/details/${details.postId}`}>
-                      <StSummary>{`${fullName}님이 ${details.postTitle} 모임에 멘션하였습니다.`}</StSummary>
+                      <StSummary>
+                        <StBold>{fullName}</StBold>님이{' '}
+                        <StBold>{details.postTitle}</StBold> 모임에
+                        멘션하였습니다.
+                      </StSummary>
                     </Link>
                   ) : null}
                   <StDate>{new Date(when).toLocaleDateString()}</StDate>
@@ -247,3 +265,7 @@ const subTitleOf = (type: ContentType['type']) => {
       return '';
   }
 };
+
+const StBold = styled.span`
+  font-weight: 700;
+`;

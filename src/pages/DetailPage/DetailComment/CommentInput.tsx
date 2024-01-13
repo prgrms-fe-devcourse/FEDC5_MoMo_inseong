@@ -13,15 +13,20 @@ import { Profile } from '@common/Profile/Profile';
 interface CommentInputProps {
   loginUser: IUser | null;
   postId: string;
+  postAuthorId: string;
 }
 
-export const CommentInput = ({ loginUser, postId }: CommentInputProps) => {
+export const CommentInput = ({
+  loginUser,
+  postId,
+  postAuthorId,
+}: CommentInputProps) => {
   const navigate = useNavigate();
   const [text, setText] = useState('');
   const dispatch = useDispatch();
 
   const handlePostComment = () => {
-    const data = { comment: text, postId: postId };
+    const data = { comment: text, postId, postAuthorId };
     void dispatch(postComment(data));
   };
 

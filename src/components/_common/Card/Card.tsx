@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from '@/_redux/hooks';
 import { ILike, IPost, IPostTitleCustom } from '@/api/_types/apiModels';
 import { deleteApiJWT, postApiJWT } from '@/api/apis';
+import { createNotification } from '@/api/createNotification';
 import { useHover } from '@/hooks/useHover';
 import { theme } from '@/style/theme';
 import { parseTitle } from '@/utils/parseTitle';
@@ -26,8 +27,7 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
   const parsedTitle: IPostTitleCustom = parseTitle(cardData.title);
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.userInfo.user);
-
-  const { likes, _id: cardId, image } = cardData;
+  const { likes, _id: cardId, image, author: postAuthor } = cardData;
   const { postTitle, status, tags, meetDate, author } = parsedTitle;
 
   let isLiked = '';
@@ -67,6 +67,13 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
       })
         .then((res) => {
           setIsLike(res.data._id);
+          createNotification({
+            notificationType: 'LIKE',
+            notificationTypeId: res.data._id,
+            userId:
+              typeof postAuthor === 'string' ? postAuthor : postAuthor._id,
+            postId: cardId,
+          });
         })
         .catch((err) => console.log(err));
     } else {

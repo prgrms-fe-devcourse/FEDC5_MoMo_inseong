@@ -1,11 +1,13 @@
 import { getPostInitialState as initialState } from './initialState';
 import { IComment, IPost } from '@/api/_types/apiModels';
 import { deleteApiJWT, getApi, postApiJWT } from '@/api/apis';
+import { createNotification } from '@/api/createNotification';
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 interface IpostCommentParams {
   comment: string;
   postId: string;
+  postAuthorId: string;
 }
 
 // 특정 포스트 상세보기
@@ -19,9 +21,16 @@ export const getPostDetail = createAsyncThunk(
 
 export const postComment = createAsyncThunk(
   'postComment',
-  async ({ comment, postId }: IpostCommentParams) => {
+  async ({ comment, postId, postAuthorId }: IpostCommentParams) => {
     const response = await postApiJWT<IComment>('/comments/create', {
       comment,
+      postId,
+    });
+    // 댓글 알림 생성
+    void createNotification({
+      notificationType: 'COMMENT',
+      notificationTypeId: response.data._id,
+      userId: postAuthorId,
       postId,
     });
     return response.data;
