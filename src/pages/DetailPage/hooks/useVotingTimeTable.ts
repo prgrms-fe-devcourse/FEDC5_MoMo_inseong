@@ -50,15 +50,23 @@ export const useVotingTimeTable = ({
 
     for (let i = 0; i < entries.length; i++) {
       for (let j = 0; j < Object.keys(entries[0][1]).length; j++) {
-        if (prevMyVotes.current[j][i]) {
-          const date = entries[i][0];
-          const timeVote = entries[i][1];
+        const date = entries[i][0];
+        const timeVote = entries[i][1];
 
-          const time = Object.keys(timeVote)[j];
-          const users = Object.values(timeVote)[j];
+        const time = Object.keys(timeVote)[j];
+        const users = Object.values(timeVote)[j];
 
-          const reflected = [...users, { id, fullName }];
-          modifiedVote[date][time] = reflected;
+        const didVote =
+          users.filter(({ id: userId }) => userId === id).length > 0;
+
+        if (prevMyVotes.current[j][i] && !didVote) {
+          modifiedVote[date][time] = [...users, { id, fullName }];
+        } else if (!prevMyVotes.current[j][i] && didVote) {
+          modifiedVote[date][time] = users.filter(
+            ({ id: userId }) => userId !== id,
+          );
+        } else {
+          continue;
         }
       }
     }
@@ -184,7 +192,9 @@ export const useVotingTimeTable = ({
 
           // 투표 인원수가 많을수록 채도 상승
           const voteCount = users.filter(({ id }) => userId !== id).length;
-          totalVoteNode?.classList.add(`voted-${voteCount}`);
+          totalVoteNode?.classList.add(
+            `voted-${voteCount > 4 ? 4 : voteCount}`,
+          );
           totalVoteNode?.classList.toggle(`voted-mine`, voteArray[i][j]);
         }
       });

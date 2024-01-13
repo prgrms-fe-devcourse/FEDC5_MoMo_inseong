@@ -23,7 +23,7 @@ export const VoteCellContainer = forwardRef<
           {Object.entries(times).map(([time, users], j) =>
             isMyTable ? (
               <StMyCell
-                key={date + time}
+                key={self.crypto.randomUUID()}
                 data-time={time}
                 data-users={users.map(({ fullName }) => fullName).join(' ')}
                 data-col={j}
@@ -32,7 +32,7 @@ export const VoteCellContainer = forwardRef<
               />
             ) : (
               <StVotedCell
-                key={date + time}
+                key={self.crypto.randomUUID()}
                 data-time={time}
                 data-users={users.map(({ fullName }) => fullName).join(' ')}
                 data-col={j}

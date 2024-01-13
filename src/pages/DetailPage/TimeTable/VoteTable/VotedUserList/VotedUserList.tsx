@@ -11,8 +11,8 @@ export const VotedUserList = ({ userList }: VotedUserListProps) => {
       <StContainer>
         <StTitle>참여자</StTitle>
         <StContentBox>
-          {userList.map(({ id, fullName }) => (
-            <StUser key={id}>{fullName}</StUser>
+          {userList.map(({ fullName }) => (
+            <StUser key={self.crypto.randomUUID()}>{fullName}</StUser>
           ))}
         </StContentBox>
       </StContainer>
