@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
-import { Dispatch, SetStateAction, memo, useState } from 'react';
+import { Dispatch, SetStateAction, memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNotification } from './hooks/useNotification';
 import { putApiJWT } from '@/api/apis';
 
 // 팔로우 알림, 댓글 알림, 좋아요 알림(북마크), 메세지 알림, 멘션 알림(커스텀)
@@ -60,24 +61,34 @@ export interface NotificationBaseProps {
 export type NotificationExtractType = NotificationBaseProps & ContentType;
 
 interface NotificationProps {
-  data: NotificationExtractType[];
   setIsRedDot: Dispatch<SetStateAction<boolean>>;
   setIsVisible?: (arg: boolean) => void;
 }
 
 export const Notification = memo(
-  ({ data, setIsVisible, setIsRedDot }: NotificationProps) => {
+  ({ setIsVisible, setIsRedDot }: NotificationProps) => {
     const [isBlur, setIsBlur] = useState(false);
+
+    const notifications = useNotification();
+
     // 전체 알람 확인
     const handleSeenAlert = () => {
       void putApiJWT(`/notifications/seen`);
       setIsBlur(true);
       setIsRedDot(false);
     };
+
     // 툴팁 클릭시 닫힘
     const handleVisibility = () => {
       setIsVisible && setIsVisible(false);
     };
+
+    useEffect(() => {
+      if (notifications.length > 0) {
+        setIsRedDot(true);
+      }
+    }, [notifications]);
+
     return (
       <StContainer>
         <StHeaderContainer>
@@ -86,57 +97,64 @@ export const Notification = memo(
         </StHeaderContainer>
         <StContentScrollWrapper>
           <StContents>
-            {data.length > 0 &&
-              data.map(({ type, _id, fullName, when, details, isSeen }) => (
-                <StContentBox
-                  key={_id}
-                  title={subTitleOf(type)}
-                  isBlur={isBlur || isSeen}
-                  onClick={handleVisibility}>
-                  {type === 'COMMENT' ? (
-                    <Link to={`/details/${details.postId}`}>
-                      <StSummary>
-                        <StBold>{details.postTitle}</StBold> 모임에 새로운
-                        댓글이 있습니다.
-                      </StSummary>
-                      <StContent>
-                        <StBold>{fullName}</StBold> {`| ${details.comment}`}
-                      </StContent>
-                    </Link>
-                  ) : type === 'LIKE' ? (
-                    <Link to={`/details/${details.postId}`}>
-                      <StSummary>
-                        <StBold>{fullName}</StBold>님이{' '}
-                        <StBold>{details.postTitle}</StBold> 모임을 북마크
-                        등록했습니다.
-                      </StSummary>
-                    </Link>
-                  ) : type === 'FOLLOW' ? (
-                    details.isCancel ? null : (
-                      <StSummary>
-                        <StBold>{fullName}</StBold>님이 팔로우 하였습니다.
-                      </StSummary>
-                    )
-                  ) : type === 'MESSAGE' ? (
-                    <>
-                      <StSummary>
-                        <StBold>{fullName}</StBold>님으로부터 메세지가
-                        도착했습니다.
-                      </StSummary>
-                      <StContent>{`${details.message}`}</StContent>
-                    </>
-                  ) : type === 'MENTION' ? (
-                    <Link to={`/details/${details.postId}`}>
-                      <StSummary>
-                        <StBold>{fullName}</StBold>님이{' '}
-                        <StBold>{details.postTitle}</StBold> 모임에
-                        멘션하였습니다.
-                      </StSummary>
-                    </Link>
-                  ) : null}
-                  <StDate>{new Date(when).toLocaleDateString()}</StDate>
-                </StContentBox>
-              ))}
+            {notifications.length > 0 ? (
+              notifications.map(
+                ({ type, _id, fullName, when, details, isSeen }) => (
+                  <StContentBox
+                    key={_id}
+                    title={subTitleOf(type)}
+                    isBlur={isBlur || isSeen}
+                    onClick={handleVisibility}>
+                    {type === 'COMMENT' ? (
+                      <Link to={`/details/${details.postId}`}>
+                        <StSummary>
+                          <StBold>{details.postTitle}</StBold> 모임에 새로운
+                          댓글이 있습니다.
+                        </StSummary>
+                        <StContent>
+                          <StBold>{fullName}</StBold> {`| ${details.comment}`}
+                        </StContent>
+                      </Link>
+                    ) : type === 'LIKE' ? (
+                      <Link to={`/details/${details.postId}`}>
+                        <StSummary>
+                          <StBold>{fullName}</StBold>님이{' '}
+                          <StBold>{details.postTitle}</StBold> 모임을 북마크
+                          등록했습니다.
+                        </StSummary>
+                      </Link>
+                    ) : type === 'FOLLOW' ? (
+                      details.isCancel ? null : (
+                        <StSummary>
+                          <StBold>{fullName}</StBold>님이 팔로우 하였습니다.
+                        </StSummary>
+                      )
+                    ) : type === 'MESSAGE' ? (
+                      <>
+                        <StSummary>
+                          <StBold>{fullName}</StBold>님으로부터 메세지가
+                          도착했습니다.
+                        </StSummary>
+                        <StContent>{`${details.message}`}</StContent>
+                      </>
+                    ) : type === 'MENTION' ? (
+                      <Link to={`/details/${details.postId}`}>
+                        <StSummary>
+                          <StBold>{fullName}</StBold>님이{' '}
+                          <StBold>{details.postTitle}</StBold> 모임에
+                          멘션하였습니다.
+                        </StSummary>
+                      </Link>
+                    ) : null}
+                    <StDate>{new Date(when).toLocaleDateString()}</StDate>
+                  </StContentBox>
+                ),
+              )
+            ) : (
+              <StEmptyNotification>
+                <span>알림이 없습니다.</span>
+              </StEmptyNotification>
+            )}
           </StContents>
         </StContentScrollWrapper>
       </StContainer>
@@ -245,6 +263,24 @@ const StDate = styled.p`
   text-align: end;
 `;
 
+const StBold = styled.span`
+  font-weight: 700;
+`;
+
+const StEmptyNotification = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70px;
+
+  span {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: ${({ theme }) => theme.colors.grey.default};
+  }
+`;
+
 /* util */
 const subTitleOf = (type: ContentType['type']) => {
   switch (type) {
@@ -267,7 +303,3 @@ const subTitleOf = (type: ContentType['type']) => {
       return '';
   }
 };
-
-const StBold = styled.span`
-  font-weight: 700;
-`;
