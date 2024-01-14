@@ -8,6 +8,7 @@ import {
   validatePassword,
 } from './validation';
 import { postApi } from '@/api/apis';
+import logo from '@/assets/logo.png';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
 import { getItem } from '@/utils/storage';
@@ -32,8 +33,13 @@ export const SignUpPage = () => {
   const confirmRef = useRef<HTMLInputElement>(null);
   const fullNameRef = useRef<HTMLInputElement>(null);
 
-  const handleSignUp = async (e: FormEvent | KeyboardEvent) => {
+  const handleSignUp = (e: FormEvent | KeyboardEvent) => {
     e.preventDefault();
+
+    emailCheckHandler(email);
+    passwordCheckHandler(password);
+    confirmCheckHandler(confirm);
+    fullNameCheckHandler(fullName);
 
     const errorChecks = [
       { ref: emailRef, error: emailError },
@@ -49,8 +55,7 @@ export const SignUpPage = () => {
       }
     }
 
-
-    await postApi('/signup', { email, password, fullName })
+    postApi('/signup', { email, password, fullName })
       .then(() => {
         // TODO: 아이디 중복 처리
         alert('회원 가입 완료 되었습니다.');
@@ -71,10 +76,6 @@ export const SignUpPage = () => {
 
   const handleOnKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      emailCheckHandler(email);
-      passwordCheckHandler(password);
-      confirmCheckHandler(confirm);
-      fullNameCheckHandler(fullName);
       void handleSignUp(e);
     }
   };
@@ -101,7 +102,15 @@ export const SignUpPage = () => {
   return (
     <StSideMarginWrapper>
       <StSignUpContainer>
-        <StDescriptionContainer>LOGO TEXT</StDescriptionContainer>
+        <StDescriptionContainer>
+          <StDescriptionLogo>
+            <img src={logo} />
+          </StDescriptionLogo>
+          <StDescriptionText>
+            <span style={{ fontSize: '32px' }}>모</span>두의{' '}
+            <span style={{ fontSize: '32px' }}>모</span>임
+          </StDescriptionText>
+        </StDescriptionContainer>
         <StVerticalLine />
         <StSignUpFormContainer>
           <StFormTitle>회원가입</StFormTitle>
@@ -167,7 +176,12 @@ export const SignUpPage = () => {
             </InputCompound>
             {fullNameError}
           </StInputText>
-          <Button label="가입" />
+          <div onClick={handleSignUp}>
+            <Button
+              label="가입"
+              type="submit"
+            />
+          </div>
         </StSignUpFormContainer>
       </StSignUpContainer>
     </StSideMarginWrapper>
@@ -186,6 +200,7 @@ const StDescriptionContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 `;
 
 const StVerticalLine = styled.div`
@@ -200,7 +215,6 @@ const StSignUpFormContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background-color: 'blue';
 `;
 
 const StFormTitle = styled.h1`
@@ -214,4 +228,13 @@ const StInputText = styled.div`
   max-width: 300px;
   font-size: 14px;
   color: ${theme.colors.red};
+`;
+
+const StDescriptionLogo = styled.div``;
+
+const StDescriptionText = styled.div`
+  padding-top: 20px;
+  font-weight: 500;
+  font-size: 20px;
+  font-family: 'seolleimcool-SemiBold';
 `;

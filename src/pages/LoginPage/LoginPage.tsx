@@ -5,6 +5,7 @@ import { useDispatch } from '@/_redux/hooks';
 import { getUserInfo } from '@/_redux/slices/userSlice';
 import { IUser } from '@/api/_types/apiModels';
 import { postApi } from '@/api/apis';
+import logo from '@/assets/logo.png';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
 import { getItem, setItem } from '@/utils/storage';
@@ -54,7 +55,15 @@ export const LoginPage = () => {
   return (
     <StSideMarginWrapper>
       <StLoginContainer>
-        <StDescriptionContainer>LOGO TEXT</StDescriptionContainer>
+        <StDescriptionContainer>
+          <StDescriptionLogo>
+            <img src={logo} />
+          </StDescriptionLogo>
+          <StDescriptionText>
+            <span style={{ fontSize: '32px' }}>모</span>두의{' '}
+            <span style={{ fontSize: '32px' }}>모</span>임
+          </StDescriptionText>
+        </StDescriptionContainer>
         <StVerticalLine />
         <StLoginFormContainer>
           <StFormTitle>로그인</StFormTitle>
@@ -109,6 +118,7 @@ const StDescriptionContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 `;
 
 const StVerticalLine = styled.div`
@@ -142,4 +152,13 @@ const StInputText = styled.div`
   max-width: 300px;
   font-size: 14px;
   color: ${theme.colors.red};
+`;
+
+const StDescriptionLogo = styled.div``;
+
+const StDescriptionText = styled.div`
+  padding-top: 20px;
+  font-weight: 500;
+  font-size: 20px;
+  font-family: 'seolleimcool-SemiBold';
 `;
