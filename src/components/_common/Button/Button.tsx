@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { theme } from '@/style/theme';
+import { FormEvent } from 'react';
 
 interface ButtonProps {
   color?: 'BLUE' | 'NAVY';
@@ -9,7 +10,7 @@ interface ButtonProps {
   label: string;
   disabled?: boolean;
   type?: 'submit' | 'button';
-  handleButtonClick?: () => void;
+  handleButtonClick?: (() => void) | ((e: FormEvent) => void);
 }
 export const Button = ({
   color = 'BLUE',

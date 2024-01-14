@@ -30,6 +30,7 @@ export type TimeTableType = {
 
 export const TimeTable = ({ post }: TimeTableType) => {
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.userInfo);
 
   const { isLoading, isError, error } = useSelector(
     (state) => state.getPostDetail,
@@ -145,12 +146,14 @@ export const TimeTable = ({ post }: TimeTableType) => {
             handleButtonClick={handleCancelClick}
           />
         )}
-        <Button
-          label={isVoting ? '완료하기' : '투표하기'}
-          width={100}
-          height={30}
-          handleButtonClick={handleConfirmClick}
-        />
+        {user && (
+          <Button
+            label={isVoting ? '완료하기' : '투표하기'}
+            width={100}
+            height={30}
+            handleButtonClick={handleConfirmClick}
+          />
+        )}
       </StButtonContainer>
     </StWrapper>
   );
