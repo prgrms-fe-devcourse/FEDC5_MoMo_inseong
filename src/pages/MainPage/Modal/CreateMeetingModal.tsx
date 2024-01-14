@@ -444,7 +444,7 @@ export const CreateMeetingModal = ({
           <Button
             label={label}
             type="submit"
-            handleButtonClick={void handleOnSubmit}
+            handleButtonClick={handleOnSubmit}
           />
         </StForm>
       </StModalContainer>
