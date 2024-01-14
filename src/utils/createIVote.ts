@@ -5,7 +5,6 @@ export const createIVote = (meetDates: string[]) => {
 
   for (const meetDate of meetDates) {
     const date = meetDate.split('T')[0];
-    console.log(date);
 
     result[date] = {} as ITimeVote;
 

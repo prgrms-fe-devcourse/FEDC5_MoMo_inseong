@@ -10,6 +10,7 @@ interface BadgeProps {
 
 export const Badge = ({ kind, data }: BadgeProps) => {
   const navigate = useNavigate();
+
   return (
     <StBadgeContainer>
       {kind === 'tag' &&
