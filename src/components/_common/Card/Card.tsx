@@ -120,7 +120,7 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
         <StCardBottom>
           <StCardBottomTagsWrap>
             <Tag
-              name={tags[0]}
+              name={tags[0] ? `#${tags[0]}` : ''}
               height={20}
               fontSize={12}
               padding={8}

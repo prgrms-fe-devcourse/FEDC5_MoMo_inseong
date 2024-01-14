@@ -207,8 +207,6 @@ const getPostDetailSlice = createSlice({
       (state, action: PayloadAction<IComment>) => {
         state.isLoading = false;
 
-        // console.log(action.payload._id);
-
         if (state.post && state.post.comments) {
           const comments = state.post.comments.filter(
             (comment) => (comment as IComment)._id !== action.payload._id,
