@@ -17,6 +17,7 @@ interface IconProps {
 
 interface IStIconWrapper {
   size: number;
+  isScaled?: boolean;
 }
 
 export const Icon = ({
@@ -30,6 +31,15 @@ export const Icon = ({
   ...props
 }: IconProps) => {
   const [iconName, setIconName] = useState(name);
+  const [isMouseHover, setIsMouseHover] = useState(false);
+  const [isScaled, setIsScaled] = useState(false);
+
+  const handleHeartMouseUp = () => {
+    setIsScaled(true);
+    setTimeout(() => {
+      setIsScaled(false);
+    }, 200);
+  };
 
   useEffect(() => {
     setIconName(name);
@@ -43,7 +53,7 @@ export const Icon = ({
   };
   const iconStyle = {
     'stroke-width': isFill ? 0 : strokeWidth,
-    stroke,
+    stroke: isMouseHover ? 'grey' : stroke,
     width: size,
     height: size,
     fill: isFill ? '#FF3040' : 'transparent',
@@ -56,7 +66,11 @@ export const Icon = ({
   return (
     <StIconWrapper
       onClick={onIconClick}
+      onMouseOver={() => setIsMouseHover(true)}
+      onMouseLeave={() => setIsMouseHover(false)}
+      onMouseUp={() => iconName === 'heart' && handleHeartMouseUp()}
       size={size}
+      isScaled={isScaled}
       {...props}
       style={{ ...props.style, ...shapeStyle }}>
       <img
@@ -73,4 +87,6 @@ const StIconWrapper = styled.span<IStIconWrapper>`
   align-items: center;
   padding: ${({ size }) => (size / 3) * 2}px;
   cursor: pointer;
+  transition: transform 200ms ease;
+  transform: ${({ isScaled }) => (isScaled ? 'scale(1.3)' : 'scale(1)')};
 `;
