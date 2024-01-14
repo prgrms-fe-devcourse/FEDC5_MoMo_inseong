@@ -1,6 +1,7 @@
 // 이날모일래 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import { StSpinnerWrapper } from '../mainPageStyled.ts';
 import { ScheduledCards } from './ScheduledCards';
 import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
@@ -81,11 +82,6 @@ export const ScheduledMain = () => {
   );
 };
 
-const StSpinnerWrapper = styled.div`
-  display: flex;
-  margin-top: 50px;
-  justify-content: center;
-`;
 const StButtonsWrapper = styled.div`
   display: flex;
   justify-content: center;

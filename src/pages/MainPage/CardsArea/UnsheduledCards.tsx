@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreateMeetingModal } from '../Modal/CreateMeetingModal';
 import { unscheduledChannelId } from '../channelId';
+import { StSpinnerWrapper } from '../mainPageStyled.ts';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
+import { theme } from '@/style/theme';
 import { Card } from '@common/Card/Card';
 import { Icon } from '@common/Icon/Icon';
 import { Spinner } from '@common/Spinner/Spinner';
@@ -21,32 +23,37 @@ export const UnsheduledCards = () => {
 
   return (
     <>
-      <StCardsWrapper>
-        {isLoading ? (
-          <Spinner />
-        ) : (
-          !error &&
-          response &&
-          response.map((post, idx) => {
-            return (
-              <Card
-                key={idx}
-                cardData={post}
-                handleCardClick={(cardId) => navigate(`/details/${cardId}`)}
-              />
-            );
-          })
-        )}
-        <StAddWrapper>
-          <Icon
-            name="plus"
-            size={20}
-            onIconClick={() => {
-              setIsModalOpen(true);
-            }}
+      {isLoading ? (
+        <StSpinnerWrapper>
+          <Spinner
+            size={50}
+            color={theme.colors.primaryBlue.default}
           />
-        </StAddWrapper>
-      </StCardsWrapper>
+        </StSpinnerWrapper>
+      ) : (
+        <StCardsWrapper>
+          {!error &&
+            response &&
+            response.map((post, idx) => {
+              return (
+                <Card
+                  key={idx}
+                  cardData={post}
+                  handleCardClick={(cardId) => navigate(`/details/${cardId}`)}
+                />
+              );
+            })}
+          <StAddWrapper>
+            <Icon
+              name="plus"
+              size={20}
+              onIconClick={() => {
+                setIsModalOpen(true);
+              }}
+            />
+          </StAddWrapper>
+        </StCardsWrapper>
+      )}
       <CreateMeetingModal
         visible={isModalOpen}
         onClose={() => setIsModalOpen(false)}>
