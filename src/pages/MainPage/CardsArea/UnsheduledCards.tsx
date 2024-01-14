@@ -8,7 +8,6 @@ import { StSpinnerWrapper } from '../mainPageStyled.ts';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
-import { theme } from '@/style/theme';
 import { Card } from '@common/Card/Card';
 import { Icon } from '@common/Icon/Icon';
 import { Spinner } from '@common/Spinner/Spinner';
@@ -25,10 +24,7 @@ export const UnsheduledCards = () => {
     <>
       {isLoading ? (
         <StSpinnerWrapper>
-          <Spinner
-            size={50}
-            color={theme.colors.primaryBlue.default}
-          />
+          <Spinner size={50} />
         </StSpinnerWrapper>
       ) : (
         <StCardsWrapper>

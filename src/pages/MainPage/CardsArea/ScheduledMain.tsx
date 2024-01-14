@@ -6,7 +6,6 @@ import { ScheduledCards } from './ScheduledCards';
 import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
-import { theme } from '@/style/theme';
 import { dateFormat } from '@/utils/dateFormat';
 import { Button } from '@common/Button/Button';
 import { Spinner } from '@common/Spinner/Spinner';
@@ -40,10 +39,7 @@ export const ScheduledMain = () => {
     <>
       {cardsOfThisweek.length !== 7 ? (
         <StSpinnerWrapper>
-          <Spinner
-            size={50}
-            color={theme.colors.primaryBlue.default}
-          />
+          <Spinner size={50} />
         </StSpinnerWrapper>
       ) : (
         <>
