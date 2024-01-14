@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { DARK_GREY, LIGHT_GREY, SECONDARY_NAVY } from '@/style/colorConstants';
+import { theme } from '@/style/theme';
 
 export interface TabProps {
   label: string;
@@ -37,8 +37,9 @@ const StTabContainer = styled.div<{
   height: 32px;
   font-size: 14px;
   border-bottom: 1px solid
-    ${({ isActive }) => (isActive ? SECONDARY_NAVY : LIGHT_GREY)};
-  color: ${({ isActive }) => (isActive ? 'black' : DARK_GREY)};
+    ${({ isActive }) =>
+      isActive ? theme.colors.secondaryNavy.default : theme.colors.grey.light};
+  color: ${({ isActive }) => (isActive ? 'black' : theme.colors.grey.dark)};
   display: flex;
   justify-content: ${({ isJustify }) => isJustify && 'center'};
   align-items: center;

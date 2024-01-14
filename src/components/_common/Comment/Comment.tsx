@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { FormatDate } from '@/pages/DetailPage/FormatDate';
-import { GREY, LIGHT_GREY } from '@/style/colorConstants';
 import { theme } from '@/style/theme';
 import { Button } from '@common/Button/Button';
 import { Icon } from '@common/Icon/Icon';
@@ -128,7 +127,7 @@ const StCommentedUser = styled.div`
 `;
 
 const StCreatedAt = styled.span`
-  color: ${GREY};
+  color: ${({ theme }) => theme.colors.grey.default};
   font-size: 12px;
   margin-left: 8px;
 `;
@@ -145,7 +144,7 @@ const StCommentMessage = styled.div`
   width: calc(100% - 42px);
   padding: 16px;
   border-radius: 8px;
-  background-color: ${LIGHT_GREY};
+  background-color: ${({ theme }) => theme.colors.grey.light};
 
   & pre {
     white-space: pre-wrap;

@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { CSSProperties, KeyboardEvent, useState } from 'react';
 import InputUpload from './InputUpload';
-import { LIGHT_GREY, PRIMARY_BLUE } from '@/style/colorConstants';
 import { theme } from '@/style/theme';
 
 interface InputProps {
@@ -135,14 +134,14 @@ const StInputContainer = styled.div<IInputStyle>`
   flex-direction: column;
   align-items: stretch;
   position: relative;
-  border: 1px solid ${LIGHT_GREY};
+  border: 1px solid ${theme.colors.grey.light};
   border-radius: 8px;
   padding: 15px 24px;
   width: ${({ width, hasTags }) =>
     hasTags ? '100%' : typeof width === 'number' ? `${width}px` : width};
 
   &:focus-within {
-    border-color: ${PRIMARY_BLUE};
+    border-color: ${theme.colors.primaryBlue.default};
   }
 `;
 
@@ -234,6 +233,6 @@ const StyledUpload = styled.div`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border: 1px solid ${LIGHT_GREY};
+  border: 1px solid ${theme.colors.grey.light};
   border-radius: 8px;
 `;

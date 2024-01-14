@@ -1,11 +1,5 @@
 import styled from '@emotion/styled';
-import {
-  BRIGHT_GREY,
-  PRIMARY_BLUE,
-  PRIMARY_BLUE_HOVER,
-  SECONDARY_NAVY,
-  SECONDARY_NAVY_HOVER,
-} from '@/style/colorConstants';
+import { theme } from '@/style/theme';
 
 interface ButtonProps {
   color?: 'BLUE' | 'NAVY';
@@ -48,8 +42,8 @@ export const Button = ({
 };
 
 const colorBlueNavy = {
-  BLUE: PRIMARY_BLUE,
-  NAVY: SECONDARY_NAVY,
+  BLUE: theme.colors.primaryBlue.default,
+  NAVY: theme.colors.secondaryNavy.default,
 };
 
 const StButtonContainer = styled.button<{
@@ -66,10 +60,10 @@ const StButtonContainer = styled.button<{
     color === 'BLUE'
       ? isOutline
         ? 'white'
-        : `${PRIMARY_BLUE}`
+        : `${theme.colors.primaryBlue.default}`
       : isOutline
         ? 'white'
-        : `${SECONDARY_NAVY}`};
+        : `${theme.colors.secondaryNavy.default}`};
   &[disabled] {
     &:hover {
       cursor: default;
@@ -77,18 +71,18 @@ const StButtonContainer = styled.button<{
         color === 'BLUE'
           ? isOutline
             ? 'white'
-            : `${PRIMARY_BLUE}`
+            : `${theme.colors.primaryBlue.default}`
           : isOutline
             ? 'white'
-            : `${SECONDARY_NAVY}`};
+            : `${theme.colors.secondaryNavy.default}`};
     }
   }
   &:hover {
     background-color: ${({ color, isOutline }) =>
       isOutline
-        ? `${BRIGHT_GREY}`
+        ? theme.colors.grey.bright
         : color === 'BLUE'
-          ? `${PRIMARY_BLUE_HOVER}`
-          : `${SECONDARY_NAVY_HOVER}`};
+          ? theme.colors.primaryBlue.default
+          : theme.colors.secondaryNavy.hover};
   }
 `;
