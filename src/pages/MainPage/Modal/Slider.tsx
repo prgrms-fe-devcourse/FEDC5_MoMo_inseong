@@ -20,7 +20,15 @@ export const Slider = ({
 }: SliderProps) => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [value, setValue] = useState<number>(defaultValue ? defaultValue : min);
+  const [value, setValue] = useState<number>(
+    defaultValue != null ? defaultValue : min,
+  );
+
+  useEffect(() => {
+    if (defaultValue != null) {
+      setValue(defaultValue);
+    }
+  }, [defaultValue]);
 
   const handleMouseDown = useCallback(() => {
     setIsDragging(true);
@@ -59,7 +67,7 @@ export const Slider = ({
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [value, min, max, isDragging, sliderRef, handleMouseUp, onChange, step]);
+  }, [min, max, isDragging, sliderRef, handleMouseUp, onChange, step]);
 
   const percentage = ((value - min) / (max - min)) * 100;
 

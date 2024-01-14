@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { scheduledChannelId, unscheduledChannelId } from '../channelId';
 import { Calendar } from './Calendar';
 import { Slider } from './Slider';
@@ -45,8 +46,12 @@ export const CreateMeetingModal = ({
   // const { channels } = useSelector((state) => state.channels);
   const { isLoading, user } = useSelector((state) => state.userInfo);
   const { allUsers } = useSelector((state) => state.allUsers);
-  // const navigate = useNavigate();
+  const { isLoading: isPostLoading, post: createdPost } = useSelector(
+    (state) => state.getPostDetail,
+  );
+  const navigate = useNavigate();
 
+  const [isCreated, setIsCreated] = useState(false);
   const [postTitle, setPostTitle] = useState('');
   const [contents, setContents] = useState('');
   const [isUndetermined, setIsUndetermined] = useState(false);
@@ -62,43 +67,20 @@ export const CreateMeetingModal = ({
   const [count, setCount] = useState(1);
   const [mentions, setMentions] = useState<IallUser[]>([]);
   const [tags, setTags] = useState<string[]>([]);
+  const [label, setLabel] = useState('');
 
   const [selectedMentionIndex, setSelectedMentionIndex] = useState<number>(-1);
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (filteredUsers.length === 0) return;
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      setSelectedMentionIndex((prevIndex) =>
-        prevIndex < filteredUsers.length - 1 ? prevIndex + 1 : prevIndex,
-      );
-    } else if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      setSelectedMentionIndex((prevIndex) =>
-        prevIndex > 0 ? prevIndex - 1 : prevIndex,
-      );
-    } else if (event.key === 'Enter') {
-      event.preventDefault();
-      if (selectedMentionIndex !== -1) {
-        handleUserSelect(filteredUsers[selectedMentionIndex]);
-        setSelectedMentionIndex(-1);
-      }
-    }
-  };
-
-  const handleSliderChange = (value: number) => {
-    setCount(value);
-  };
+  const today = new Date().toISOString().split('T')[0];
 
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   const handleOnSubmit = (event: ReactFormEvent) => {
     event.preventDefault();
     if (user == null) return alert('로그인이 필요한 서비스입니다.');
-
     // 수정
     if (post) {
       const props = JSON.parse(post.title) as IPostTitleCustom;
+
       const updateTitleCustom: IPostTitleCustom = {
         postTitle,
         contents,
@@ -106,7 +88,7 @@ export const CreateMeetingModal = ({
         tags: tags,
         mentions: mentions,
         meetDate: props.meetDate,
-        peopleLimit: props.peopleLimit,
+        peopleLimit: count,
         vote: props.vote,
         author: props.author,
         participants: props.participants,
@@ -116,8 +98,7 @@ export const CreateMeetingModal = ({
         postId: post._id,
         title: JSON.stringify(updateTitleCustom),
         image: uploadImage == null ? null : uploadImage,
-        channelId:
-          endDate === startDate ? scheduledChannelId : unscheduledChannelId,
+        channelId: isUndetermined ? unscheduledChannelId : scheduledChannelId,
         imageToDeletePublicId:
           displayImage === null && post.image !== null
             ? post.imagePublicId
@@ -125,6 +106,7 @@ export const CreateMeetingModal = ({
       };
 
       void dispatch(putPost(data));
+      if (onClose) onClose();
 
       // 등록
     } else {
@@ -149,8 +131,10 @@ export const CreateMeetingModal = ({
         channelId:
           endDate === startDate ? scheduledChannelId : unscheduledChannelId,
       };
-
       void dispatch(createPost(data));
+      if (onClose) onClose();
+
+      setIsCreated(true);
     }
   };
 
@@ -169,6 +153,33 @@ export const CreateMeetingModal = ({
 
     setMentionInput('');
   };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (filteredUsers.length === 0) return;
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      setSelectedMentionIndex((prevIndex) =>
+        prevIndex < filteredUsers.length - 1 ? prevIndex + 1 : prevIndex,
+      );
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      setSelectedMentionIndex((prevIndex) =>
+        prevIndex > 0 ? prevIndex - 1 : prevIndex,
+      );
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      if (selectedMentionIndex !== -1) {
+        handleUserSelect(filteredUsers[selectedMentionIndex]);
+        setSelectedMentionIndex(-1);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (isCreated && !isPostLoading) {
+      navigate(`/details/${createdPost?._id}`);
+    }
+  }, [isCreated, isPostLoading]);
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -232,7 +243,6 @@ export const CreateMeetingModal = ({
         ].map((date) => date.toString());
         const startDateFormatted = startDateISO.split('T')[0];
         const endDateFormatted = endDateISO.split('T')[0];
-
         setPostTitle(postTitle);
         setContents(contents);
         setDisplayImage(post.image as string);
@@ -242,13 +252,14 @@ export const CreateMeetingModal = ({
         setIsUndetermined(status === 'Opened' ? true : false);
         setMentions(mentions);
         setTags(tags);
+        setLabel('수정하기');
       } else {
         // post 값이 없을 때 초기값 설정
         setPostTitle('');
         setContents('');
         setIsUndetermined(false);
-        setStartDate('');
-        setEndDate('');
+        setStartDate(today);
+        setEndDate(today);
         setMentionInput('');
         setFilteredUsers([]);
         setDisplayImage(null);
@@ -257,6 +268,7 @@ export const CreateMeetingModal = ({
         setCount(1);
         setMentions([]);
         setTags([]);
+        setLabel('만들기');
       }
     }
   }, [visible, post]);
@@ -301,7 +313,7 @@ export const CreateMeetingModal = ({
             <StRangeControl>
               <Slider
                 defaultValue={count}
-                onChange={handleSliderChange}
+                onChange={(value) => setCount(value)}
               />
             </StRangeControl>
           </StRangeContainer>
@@ -309,19 +321,30 @@ export const CreateMeetingModal = ({
             <Calendar
               title="시작"
               value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              onChange={(e) => {
+                setStartDate(e.target.value);
+                if (isUndetermined) {
+                  setEndDate(e.target.value);
+                }
+              }}
             />
             <StDivider />
             <Calendar
               title="끝"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
+              readOnly={isUndetermined ? true : false}
             />
             <StCheckboxContainer>
               <StCheckbox
                 type="checkbox"
                 checked={isUndetermined}
-                onChange={() => setIsUndetermined(!isUndetermined)}
+                onChange={() => {
+                  if (!isUndetermined) {
+                    setEndDate(startDate);
+                  }
+                  setIsUndetermined(!isUndetermined);
+                }}
               />
               <StCheckboxLabel>미정</StCheckboxLabel>
             </StCheckboxContainer>
@@ -419,7 +442,7 @@ export const CreateMeetingModal = ({
           </InputContainer>
 
           <Button
-            label="만들기"
+            label={label}
             type="submit"
             onClick={handleOnSubmit}
           />

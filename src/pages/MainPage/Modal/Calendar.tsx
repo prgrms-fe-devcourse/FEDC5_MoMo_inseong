@@ -2,11 +2,17 @@ import styled from '@emotion/styled';
 
 interface CalendarProps {
   title: string;
-  value: string;
+  value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  readOnly?: boolean;
 }
 
-export const Calendar = ({ title, value, onChange }: CalendarProps) => {
+export const Calendar = ({
+  title,
+  value,
+  onChange,
+  readOnly = false,
+}: CalendarProps) => {
   const today = new Date().toISOString().split('T')[0];
 
   const nextYear = new Date(
@@ -24,6 +30,7 @@ export const Calendar = ({ title, value, onChange }: CalendarProps) => {
         max={nextYear}
         value={value}
         onChange={onChange}
+        readOnly={readOnly}
       />
     </StCalendarForm>
   );

@@ -1,12 +1,14 @@
 import { getPostInitialState as initialState } from './initialState';
 import {
   IComment,
+  IMessage,
   IPost,
   IPostTitleCustom,
   IVote,
 } from '@/api/_types/apiModels';
-import { deleteApiJWT, getApi, postApiJWT } from '@/api/apis';
+import { deleteApiJWT, getApi, postApiJWT, putApiJWT } from '@/api/apis';
 import { createNotification } from '@/api/createNotification';
+import { createFormData } from '@/utils/createFormData';
 import { parseTitle } from '@/utils/parseTitle';
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
@@ -15,6 +17,58 @@ interface IpostCommentParams {
   postId: string;
   postAuthorId: string;
 }
+
+interface IputPostBody {
+  title: string | IPostTitleCustom;
+  postId: string;
+  image: File | null;
+  imageToDeletePublicId?: string;
+  channelId: string;
+}
+
+interface IcreatePostBody {
+  title: string | IPostTitleCustom;
+  image: File | 'null';
+  channelId: string;
+}
+
+// 포스트 생성
+export const createPost = createAsyncThunk(
+  'createPost',
+  async (body: IcreatePostBody) => {
+    if (body == null) throw new Error('잘못된 입력값입니다.');
+
+    const response = await postApiJWT<IPost>(
+      '/posts/create',
+      createFormData(body),
+    );
+
+    const { mentions } =
+      typeof body.title === 'string' ? parseTitle(body.title) : body.title;
+
+    const notificateAllMentions = () => {
+      const allMentions = mentions.map((mention) =>
+        postApiJWT<IMessage>('/messages/create', {
+          message: '@MENTION',
+          receiver: mention._id,
+        }).then((res) => {
+          void createNotification({
+            notificationType: 'MESSAGE',
+            notificationTypeId: res.data._id,
+            userId: mention._id,
+            postId: response.data._id,
+          });
+        }),
+      );
+
+      void Promise.all(allMentions);
+    };
+
+    notificateAllMentions();
+
+    return response.data;
+  },
+);
 
 // 특정 포스트 상세보기
 export const getPostDetail = createAsyncThunk(
@@ -39,6 +93,18 @@ export const postComment = createAsyncThunk(
       userId: postAuthorId,
       postId,
     });
+    return response.data;
+  },
+);
+
+// 포스트 수정
+export const putPost = createAsyncThunk(
+  'putPost',
+  async (body: IputPostBody) => {
+    const response = await putApiJWT<IPost, FormData>(
+      `/posts/update`,
+      createFormData(body),
+    );
     return response.data;
   },
 );
@@ -70,6 +136,20 @@ const getPostDetailSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // ### createPost ###
+    builder.addCase(createPost.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(
+      createPost.fulfilled,
+      (state, action: PayloadAction<IPost>) => {
+        state.isLoading = false;
+        state.post = action.payload;
+      },
+    );
+    builder.addCase(createPost.rejected, (state) => {
+      state.isLoading = false;
+    });
     // ### getPostDetail ###
     builder.addCase(getPostDetail.pending, (state) => {
       state.isLoading = true;
@@ -102,6 +182,20 @@ const getPostDetailSlice = createSlice({
       },
     );
     builder.addCase(postComment.rejected, (state) => {
+      state.isLoading = false;
+    });
+    // ### putPost ###
+    builder.addCase(putPost.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(
+      putPost.fulfilled,
+      (state, action: PayloadAction<IPost>) => {
+        state.isLoading = false;
+        state.post = action.payload;
+      },
+    );
+    builder.addCase(putPost.rejected, (state) => {
       state.isLoading = false;
     });
     // ### deleteComment ###
