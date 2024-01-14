@@ -16,7 +16,7 @@ export const Header = () => {
         <StContainer>
           <StLogo onClick={() => navigate('/')}>
             <img
-              style={{ height: '55px' }}
+              style={{ height: '30px' }}
               src={logo}
             />
             <div
