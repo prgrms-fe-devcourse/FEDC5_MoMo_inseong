@@ -98,9 +98,11 @@ export const SearchBox = () => {
 };
 
 const StSearchResults = styled.div`
-  height: 300px;
+  min-height: 100px;
+  max-height: 300px;
   margin-top: 10px;
   overflow-y: auto;
+  ${({ theme }) => theme.scrollBar.default}
 `;
 const StSearchResultWrapper = styled.div`
   overflow: hidden;

@@ -117,12 +117,9 @@ const StOnlineUserUl = styled.ul`
   flex-direction: column;
   gap: 10px;
   color: ${({ theme }) => theme.colors.secondaryNavy.default};
-  height: 150px;
+  height: 250px;
   overflow-y: scroll;
-  -ms-overflow-style: none;
-  ::-webkit-scrollbar {
-    display: none;
-  }
+  ${({ theme }) => theme.scrollBar.default}
 `;
 export const StSearchIconWrapper = styled.div`
   position: absolute;
