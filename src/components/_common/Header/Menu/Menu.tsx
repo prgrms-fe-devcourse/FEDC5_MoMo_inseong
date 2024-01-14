@@ -2,21 +2,16 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import { Notification } from './Notification';
 import { PopupProfile } from './PopupProfile';
-import { useNotification } from './hooks/useNotification';
 import { useSelector } from '@/_redux/hooks';
 import { IUser } from '@/api/_types/apiModels';
 import { Icon } from '@common/Icon/Icon';
 import { Profile } from '@common/Profile/Profile';
-import { Spinner } from '@common/Spinner/Spinner';
 import { Tooltip } from '@common/Tooltip/Tooltip';
 
 export const Menu = () => {
   const { fullName, image } = useSelector(
     (state) => state.userInfo.user as IUser,
   );
-
-  const { notifications, isLoading, error } = useNotification();
-
   const [isRedDot, setIsRedDot] = useState(false);
 
   return (
@@ -24,20 +19,10 @@ export const Menu = () => {
       <StTooltipWrapper>
         {/* FIXME: 툴팁에서 알람창으로 SetVisibility를 cloneElement로 넘겨줌 */}
         <Tooltip
-          content={
-            isLoading ? (
-              <Spinner />
-            ) : error ? (
-              <div>알림을 가져오지 못했습니다.</div>
-            ) : (
-              <Notification
-                data={notifications}
-                setIsRedDot={setIsRedDot}
-              />
-            )
-          }
+          content={<Notification setIsRedDot={setIsRedDot} />}
           width={300}
-          height={300}
+          height={'fit-contents'}
+          maxHeight={300}
           offset={-100}>
           {isRedDot && <StRedDot />}
           <Icon
