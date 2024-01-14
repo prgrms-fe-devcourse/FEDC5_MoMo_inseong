@@ -35,6 +35,11 @@ export const SignUpPage = () => {
   const handleSignUp = async (e: FormEvent | KeyboardEvent) => {
     e.preventDefault();
 
+    emailCheckHandler(email);
+    passwordCheckHandler(password);
+    confirmCheckHandler(confirm);
+    fullNameCheckHandler(fullName);
+
     const errorChecks = [
       { ref: emailRef, error: emailError },
       { ref: passwordRef, error: passwordError },
@@ -48,7 +53,6 @@ export const SignUpPage = () => {
         return false;
       }
     }
-
 
     await postApi('/signup', { email, password, fullName })
       .then(() => {
@@ -71,10 +75,6 @@ export const SignUpPage = () => {
 
   const handleOnKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      emailCheckHandler(email);
-      passwordCheckHandler(password);
-      confirmCheckHandler(confirm);
-      fullNameCheckHandler(fullName);
       void handleSignUp(e);
     }
   };
@@ -167,7 +167,11 @@ export const SignUpPage = () => {
             </InputCompound>
             {fullNameError}
           </StInputText>
-          <Button label="가입" />
+          <Button
+            label="가입"
+            type="submit"
+            handleButtonClick={() => handleSignUp}
+          />
         </StSignUpFormContainer>
       </StSignUpContainer>
     </StSideMarginWrapper>
