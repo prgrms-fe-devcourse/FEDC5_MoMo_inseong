@@ -16,14 +16,11 @@ export const VoteScrollWrapper = forwardRef<
     <StScrollWrapper ref={ref}>
       <StHeader>
         <StHeaderFlexBox>
-          <StHeaderCurtain>
-            <p>hi</p>
-          </StHeaderCurtain>
+          <StHeaderCurtain>{` `}</StHeaderCurtain>
           <StRowHeader>
             {meetDate.map((format, i) => {
               const fullDate = new Date(format);
               const day = fullDate.getDay();
-              const month = fullDate.getMonth() + 1;
               const date = fullDate.getDate();
 
               return (
@@ -33,8 +30,7 @@ export const VoteScrollWrapper = forwardRef<
                     flexShrink: '0',
                     fontWeight: 700,
                   }}>
-                  <div>{`${month}/${date}`}</div>
-                  <div>{days[day]}</div>
+                  <div>{`${date}(${days[day]})`}</div>
                 </div>
               );
             })}
@@ -56,7 +52,8 @@ export const VoteScrollWrapper = forwardRef<
 
 const StHeader = styled.div`
   /* position: relative; */
-  position: sticky;
+  /* position: sticky; */
+  /* padding-left: 42px; */
 `;
 
 const StHeaderFlexBox = styled.div`
@@ -72,18 +69,25 @@ const StHeaderCurtain = styled.div`
   z-index: 201;
   width: 42px;
   height: 42px;
-
-  background-color: red;
+  background-color: white;
+  flex-shrink: 0;
+  font-family: ${({ theme }) => theme.fonts};
+  font-size: 16px;
+  font-weight: 700px;
+  text-align: center;
+  /* height: 42px; */
 `;
 
 const StRowHeader = styled.div`
+  /* position: sticky;
+  top: 0; */
   font-family: ${({ theme }) => theme.fonts};
   font-size: 16px;
   font-weight: 700px;
   text-align: center;
 
   display: inline-flex;
-  gap: 8px;
+  gap: 6px;
 `;
 
 const StBody = styled.div`
@@ -100,9 +104,9 @@ const StBodyFlexBox = styled.div`
 
 const StColumnHeader = styled.div`
   position: sticky;
-  top: 0;
+  /* top: 0; */
   left: 0;
-  bottom: 0;
+  /* bottom: 0; */
   z-index: 200;
   width: 42px;
   background-color: white;
@@ -120,21 +124,21 @@ const StColumnHeader = styled.div`
 
 const StScrollWrapper = styled.div`
   position: relative;
-  /* max-width: 400px;
-  max-height: 464px; */
-  width: 400px;
-  height: 464px;
+  max-width: 300px;
+  max-height: 464px;
+  /* width: 400px;
+  height: 464px; */
   /* padding-right: 6px;
   padding-top: 8px; */
-
   overflow: auto;
+
   /* scroll-behavior: smooth; */
 
-  /* ${({ theme }) => theme.scrollBar.default}
+  ${({ theme }) => theme.scrollBar.default}
 
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
@@ -149,5 +153,5 @@ const StScrollWrapper = styled.div`
 
   &:hover::-webkit-scrollbar-thumb {
     background-color: #228bb4;
-  } */
+  }
 `;

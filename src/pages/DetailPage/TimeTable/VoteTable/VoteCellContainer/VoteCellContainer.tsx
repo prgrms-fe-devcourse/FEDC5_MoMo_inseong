@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { forwardRef, useState } from 'react';
 import { VotedUserList } from '../VotedUserList/VotedUserList';
+import { useSelector } from '@/_redux/hooks';
 import { ITimeVote } from '@/api/_types/apiModels';
 
 interface VoteCellContainerProps {
@@ -12,6 +13,7 @@ export const VoteCellContainer = forwardRef<
   HTMLDivElement,
   VoteCellContainerProps
 >(({ voteEntries, isMyTable }, ref) => {
+  const { user } = useSelector((state) => state.userInfo);
   const [hoverIndex, setHoverIndex] = useState([-1, -1]);
 
   return (
@@ -33,6 +35,11 @@ export const VoteCellContainer = forwardRef<
             ) : (
               <StVotedCell
                 key={self.crypto.randomUUID()}
+                className={
+                  users.filter(({ id }) => user?._id === id).length > 0
+                    ? 'voted-mine'
+                    : ''
+                }
                 data-time={time}
                 data-users={users.map(({ fullName }) => fullName).join(' ')}
                 data-col={j}
@@ -40,10 +47,9 @@ export const VoteCellContainer = forwardRef<
                 columnCount={voteEntries.length}
                 onMouseEnter={() => setHoverIndex(() => [i, j])}
                 onMouseLeave={() => setHoverIndex(() => [-1, -1])}>
-                {hoverIndex[0] === i && hoverIndex[1] === j && (
-                  // users.length > 0 &&
-                  <VotedUserList userList={users} />
-                )}
+                {hoverIndex[0] === i &&
+                  hoverIndex[1] === j &&
+                  users.length > 0 && <VotedUserList userList={users} />}
               </StVotedCell>
             ),
           )}
@@ -186,7 +192,8 @@ const StVotedCell = styled.div<IStCell>`
 
   &.voted-mine {
     &::before {
-      box-shadow: 0 0 2px 1px olive;
+      filter: brightness(108%);
+      box-shadow: 0 0 2px 1px ${({ theme }) => theme.colors.primaryBlue.default};
     }
   }
 

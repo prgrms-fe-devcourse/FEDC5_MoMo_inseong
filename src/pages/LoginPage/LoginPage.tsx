@@ -20,11 +20,11 @@ export const LoginPage = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useDispatch();
-  const handleLogin = async (
+  const handleLogin = (
     e: FormEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>,
   ) => {
     e.preventDefault();
-    await postApi<{
+    postApi<{
       user: IUser;
       token: string;
     }>('/login', { email, password })
@@ -82,11 +82,12 @@ export const LoginPage = () => {
               />
             </InputCompound>
           </StInputText>
-          <Button
-            label={'확인'}
-            type="submit"
-            handleButtonClick={() => handleLogin}
-          />
+          <div onClick={handleLogin}>
+            <Button
+              label={'확인'}
+              type="submit"
+            />
+          </div>
           <StSignupLink onClick={() => navigate('/signUp')}>
             회원가입
           </StSignupLink>
