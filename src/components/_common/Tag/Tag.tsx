@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { SECONDARY_NAVY } from '@/style/colorConstants';
 import { theme } from '@/style/theme';
 
 interface TagProps {
@@ -21,7 +20,7 @@ export const Tag = ({
   fontSize = 12,
   padding = 16,
   marginRight = 8,
-  color = SECONDARY_NAVY,
+  color = theme.colors.secondaryNavy.default,
   hasMouseCursor = false,
   backgroundColor = theme.colors.grey.light,
 }: TagProps) => {

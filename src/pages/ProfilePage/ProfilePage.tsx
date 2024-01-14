@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { MyCards } from './MyCards';
@@ -8,7 +8,8 @@ import { MyLikesCards } from './MyLikesCards';
 import { MyProfileTab, UserProfileTab } from './ProfileTab';
 import { UserCards } from './UserCards';
 import { UserJoinCards } from './UserJoinCards';
-import { useSelector } from '@/_redux/hooks';
+import { useDispatch, useSelector } from '@/_redux/hooks';
+import { getUserInfo } from '@/_redux/slices/userSlice';
 import { IUser } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
@@ -19,65 +20,79 @@ import { Profile } from '@common/Profile/Profile';
 export const ProfilePage = () => {
   const { id } = useParams();
   const userInfo = useSelector((state) => state.userInfo.user);
+  const dispatch = useDispatch();
   const [tabNumber, setTabNumber] = useState(id === userInfo?._id ? 1 : 4);
   const navigate = useNavigate();
+  useEffect(() => {
+    void dispatch(getUserInfo());
+  }, [tabNumber]);
   const { response, error } = useAxios<IUser>(() => getApi(`/users/${id}`));
-
   return (
     <StSideMarginWrapper>
-      <StProfileActionsContainer>
-        {!error && response && (
-          <Profile
-            image={response.image || ''}
-            fullName={response.username ? response.username : response.fullName}
-            _id={response._id}
-            fontSize={16}
-          />
-        )}
-        {userInfo?._id === id && (
-          <StButtonsContainer>
-            <Button
-              label="프로필 수정"
-              handleButtonClick={() => navigate('/EditProfile')}
+      <StProfileWrapper>
+        <StProfileActionsContainer>
+          {!error && response && (
+            <Profile
+              image={response.image || ''}
+              fullName={
+                response.username ? response.username : response.fullName
+              }
+              _id={response._id}
+              fontSize={16}
             />
-            <Button
-              label="비밀번호 변경"
-              handleButtonClick={() => navigate('/EditPassword')}
+          )}
+          {userInfo?._id === id && (
+            <StButtonsContainer>
+              <Button
+                label="프로필 수정"
+                handleButtonClick={() => navigate('/EditProfile')}
+              />
+              <Button
+                label="비밀번호 변경"
+                handleButtonClick={() => navigate('/EditPassword')}
+              />
+            </StButtonsContainer>
+          )}
+        </StProfileActionsContainer>
+        <StProfileContainer>
+          {id === userInfo?._id ? (
+            <MyProfileTab
+              tabNumber={tabNumber}
+              handleCreatePostClick={() => setTabNumber(1)}
+              handleAttendedPostClick={() => setTabNumber(2)}
+              handleInterestedPostClick={() => setTabNumber(3)}
             />
-          </StButtonsContainer>
-        )}
-      </StProfileActionsContainer>
-      <StProfileContainer>
-        {id === userInfo?._id ? (
-          <MyProfileTab
-            tabNumber={tabNumber}
-            handleCreatePostClick={() => setTabNumber(1)}
-            handleAttendedPostClick={() => setTabNumber(2)}
-            handleInterestedPostClick={() => setTabNumber(3)}
-          />
+          ) : (
+            <UserProfileTab
+              tabNumber={tabNumber}
+              handleUserCards={() => setTabNumber(4)}
+              handleUserJoinCards={() => setTabNumber(5)}
+            />
+          )}
+        </StProfileContainer>
+        {tabNumber === 1 ? (
+          <MyCards />
+        ) : tabNumber === 2 ? (
+          <MyJoinCards />
+        ) : tabNumber === 3 ? (
+          <MyLikesCards />
+        ) : tabNumber === 4 ? (
+          <UserCards userId={id || ''} />
         ) : (
-          <UserProfileTab
-            tabNumber={tabNumber}
-            handleUserCards={() => setTabNumber(4)}
-            handleUserJoinCards={() => setTabNumber(5)}
-          />
+          <UserJoinCards userId={id || ''} />
         )}
-      </StProfileContainer>
-      {tabNumber === 1 ? (
-        <MyCards />
-      ) : tabNumber === 2 ? (
-        <MyJoinCards />
-      ) : tabNumber === 3 ? (
-        <MyLikesCards />
-      ) : tabNumber === 4 ? (
-        <UserCards userId={id || ''} />
-      ) : (
-        <UserJoinCards userId={id || ''} />
-      )}
+      </StProfileWrapper>
     </StSideMarginWrapper>
   );
 };
 
+const StProfileWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  padding: 20px 0px;
+  box-sizing: border-box;
+`;
 const StProfileContainer = styled.div`
   padding: 32px;
 `;

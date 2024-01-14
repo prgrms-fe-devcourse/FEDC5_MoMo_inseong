@@ -1,11 +1,11 @@
 // 이날모일래 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import { StSpinnerWrapper } from '../mainPageStyled.ts';
 import { ScheduledCards } from './ScheduledCards';
 import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
-import { theme } from '@/style/theme';
 import { dateFormat } from '@/utils/dateFormat';
 import { Button } from '@common/Button/Button';
 import { Spinner } from '@common/Spinner/Spinner';
@@ -38,10 +38,9 @@ export const ScheduledMain = () => {
   return (
     <>
       {cardsOfThisweek.length !== 7 ? (
-        <Spinner
-          size={50}
-          color={theme.colors.primaryBlue.default}
-        />
+        <StSpinnerWrapper>
+          <Spinner size={50} />
+        </StSpinnerWrapper>
       ) : (
         <>
           <ScheduledCards

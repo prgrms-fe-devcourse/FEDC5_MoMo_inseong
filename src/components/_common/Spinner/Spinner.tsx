@@ -8,7 +8,7 @@ interface SpinnerProps {
 
 export const Spinner = ({
   size = 24,
-  color = theme.colors.grey.dark,
+  color = theme.colors.primaryBlue.default,
   ...props
 }: SpinnerProps) => {
   const sizeStyle = {

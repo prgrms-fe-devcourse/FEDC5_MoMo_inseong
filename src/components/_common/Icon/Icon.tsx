@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { CSSProperties, useEffect, useState } from 'react';
-import { LIGHT_GREY } from '@/style/colorConstants';
+import { theme } from '@/style/theme';
 import { Buffer } from 'buffer';
 import { icons } from 'feather-icons';
 
@@ -49,7 +49,7 @@ export const Icon = ({
     width: size,
     height: size,
     borderRadius: '50%',
-    backgroundColor: showBackground ? LIGHT_GREY : 'transparent',
+    backgroundColor: showBackground ? theme.colors.grey.light : 'transparent',
   };
   const iconStyle = {
     'stroke-width': isFill ? 0 : strokeWidth,

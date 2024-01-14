@@ -32,7 +32,7 @@ export const CommentInput = ({
 
   const handleButtonClick = () => {
     if (!loginUser) {
-      const isUserNeedLogin = confirm('로그인이 필요합니다.');
+      const isUserNeedLogin = confirm('로그인이 필요한 서비스입니다.');
       isUserNeedLogin && navigate('/login');
       return;
     }

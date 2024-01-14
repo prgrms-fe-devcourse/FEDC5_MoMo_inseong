@@ -23,6 +23,7 @@ export const Header = () => {
               style={{
                 fontFamily: 'seolleimcool-SemiBold',
                 minWidth: '100px',
+                marginLeft: '10px',
               }}>
               모두의 모임
             </div>
