@@ -85,7 +85,7 @@ export const LoginPage = () => {
           <Button
             label={'확인'}
             type="submit"
-            onClick={handleLogin}
+            handleButtonClick={() => handleLogin}
           />
           <StSignupLink onClick={() => navigate('/signUp')}>
             회원가입
