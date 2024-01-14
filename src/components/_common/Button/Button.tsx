@@ -14,6 +14,7 @@ interface ButtonProps {
   height?: number;
   label: string;
   disabled?: boolean;
+  type?: 'submit' | 'button';
   handleButtonClick?: () => void;
 }
 export const Button = ({
@@ -24,6 +25,7 @@ export const Button = ({
   label,
   disabled = false,
   handleButtonClick,
+  type,
   ...props
 }: ButtonProps) => {
   const buttonStyle = {
@@ -33,6 +35,7 @@ export const Button = ({
 
   return (
     <StButtonContainer
+      type={type}
       style={buttonStyle}
       isOutline={isOutline}
       color={color}
