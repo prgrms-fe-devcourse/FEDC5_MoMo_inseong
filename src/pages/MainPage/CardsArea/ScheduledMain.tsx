@@ -38,10 +38,12 @@ export const ScheduledMain = () => {
   return (
     <>
       {cardsOfThisweek.length !== 7 ? (
-        <Spinner
-          size={50}
-          color={theme.colors.primaryBlue.default}
-        />
+        <StSpinnerWrapper>
+          <Spinner
+            size={50}
+            color={theme.colors.primaryBlue.default}
+          />
+        </StSpinnerWrapper>
       ) : (
         <>
           <ScheduledCards
@@ -79,6 +81,11 @@ export const ScheduledMain = () => {
   );
 };
 
+const StSpinnerWrapper = styled.div`
+  display: flex;
+  margin-top: 50px;
+  justify-content: center;
+`;
 const StButtonsWrapper = styled.div`
   display: flex;
   justify-content: center;

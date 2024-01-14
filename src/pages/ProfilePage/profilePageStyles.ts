@@ -5,7 +5,7 @@ export const StCardsWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(2, minmax(0, max-content));
   justify-content: center;
-  gap: 64px;
+  gap: 30px 50px;
   width: 100%;
   box-sizing: border-box;
 `;
