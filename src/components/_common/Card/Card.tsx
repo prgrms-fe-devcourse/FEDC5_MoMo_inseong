@@ -45,7 +45,7 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
   const handleIconClick = async (event: MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     if (!userInfo) {
-      if (confirm('로그인하세요')) {
+      if (confirm('로그인이 필요한 서비스입니다.')) {
         navigate('/login');
       }
       return;
