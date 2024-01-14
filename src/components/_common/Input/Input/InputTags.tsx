@@ -13,7 +13,7 @@ interface InputProps {
 export const InputTags = ({
   tags = [],
   setTags = () => {},
-  onTagRemove, 
+  onTagRemove,
   ...props
 }: InputProps) => {
   const handleTagRemove = (indexToRemove: number) => {
@@ -28,7 +28,7 @@ export const InputTags = ({
         <StTag key={`tag-${index}`}>
           <Tag
             key={index}
-            name={tag}
+            name={`#${tag}`}
             marginRight={4}
           />
           <Icon

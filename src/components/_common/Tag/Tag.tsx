@@ -19,7 +19,7 @@ export const Tag = ({
   name,
   height = 32,
   fontSize = 12,
-  padding = 16,
+  padding = 12,
   marginRight = 8,
   color = SECONDARY_NAVY,
   hasMouseCursor = false,
@@ -37,7 +37,7 @@ export const Tag = ({
 
   return (
     <StTagContainer>
-      <StTag {...tagStyle}>{name}</StTag>
+      {name && <StTag {...tagStyle}>{name}</StTag>}
     </StTagContainer>
   );
 };
