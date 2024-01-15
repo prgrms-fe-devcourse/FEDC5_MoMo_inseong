@@ -20,11 +20,9 @@ export const DetailPost = ({
 
   return (
     <StPostContainer>
-      {/* Post or TimeTable*/}
       {pageNumber === 1 && <PostContents response={response} />}
       {pageNumber === 2 && <DetailTimeTablePage post={response} />}
 
-      {/* Badge */}
       {responseTitle.tags.length > 0 && (
         <Badge
           kind="tag"
@@ -38,7 +36,6 @@ export const DetailPost = ({
         />
       )}
 
-      {/* Icon */}
       <PostIcon
         loginUser={loginUser}
         apiResponse={response}

@@ -3,8 +3,7 @@ import { StCardsWrapper } from './profilePageStyles';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
-import { Card } from '@common/Card/Card';
-import { Spinner } from '@common/Spinner/Spinner';
+import { Card, Spinner } from '@common/index';
 
 export const UserCards = ({ userId }: { userId: string }) => {
   const navigate = useNavigate();

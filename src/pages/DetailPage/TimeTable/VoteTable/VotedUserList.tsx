@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { IVotedUser } from '../../TimeTable';
+import { IVotedUser } from '../TimeTable';
 
 interface VotedUserListProps {
   userList: IVotedUser[];

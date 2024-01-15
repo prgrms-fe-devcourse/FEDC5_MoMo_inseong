@@ -4,9 +4,7 @@ import { Notification } from './Notification';
 import { PopupProfile } from './PopupProfile';
 import { useSelector } from '@/_redux/hooks';
 import { IUser } from '@/api/_types/apiModels';
-import { Icon } from '@common/Icon/Icon';
-import { Profile } from '@common/Profile/Profile';
-import { Tooltip } from '@common/Tooltip/Tooltip';
+import { Icon, Profile, Tooltip } from '@common/index';
 
 export const Menu = () => {
   const { fullName, image } = useSelector(
@@ -17,7 +15,6 @@ export const Menu = () => {
   return (
     <StContainer>
       <StTooltipWrapper>
-        {/* FIXME: 툴팁에서 알람창으로 SetVisibility를 cloneElement로 넘겨줌 */}
         <Tooltip
           content={<Notification setIsRedDot={setIsRedDot} />}
           width={300}
@@ -51,7 +48,6 @@ export const Menu = () => {
   );
 };
 
-/* style */
 const StContainer = styled.menu`
   display: flex;
   justify-content: space-evenly;

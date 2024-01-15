@@ -76,18 +76,7 @@ export interface IMessage {
   __v?: number;
 }
 
-// export interface PostTitleCustomProps {
-//   title: string;
-//   status: 'Opened' | 'Scheduled' | 'Closed'; // 모집 중 | 모임 예정 | 모임 종료
-//   tags: string[];
-//   meetDate?: string;
-//   cardId: string; // 포스트 _id
-//   author: string; // Post author는 User 지만, 컴포넌트에 전달할땐 User.fullName을 줘야함!
-//   isLiked: boolean; // 포스트 좋아요는 포스트 likes 중에서 user로 필터링해서 찾아야합니다
-// }
-
 // Post 모델
-
 export interface IPost {
   likes?: ILike[];
   comments: IComment[] | string[];

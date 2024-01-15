@@ -1,17 +1,10 @@
 import { IComment, IPost } from '@/api/_types/apiModels';
 import { AxiosError } from 'axios';
 
-// interface ICustomPost extends Omit<IPost, 'title'> {
-//   title: IPostTitleCustom;
-// }
-
 interface IinitialState {
   isLoading: boolean;
   isError: boolean;
   error: AxiosError | Error | null;
-  // createdPost?: IPost | null;
-  // channalPosts?: IPost[];
-  // authorPosts?: IPost[];
 }
 
 interface IpostState {

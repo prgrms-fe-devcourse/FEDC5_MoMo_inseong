@@ -12,7 +12,6 @@ interface IputPostBody {
   channelId: string;
 }
 
-// 포스트 수정
 export const putPost = createAsyncThunk(
   'putPost',
   async (body: IputPostBody) => {

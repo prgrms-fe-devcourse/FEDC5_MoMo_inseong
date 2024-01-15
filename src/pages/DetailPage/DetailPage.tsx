@@ -10,19 +10,12 @@ import { useDispatch, useSelector } from '@/_redux/hooks';
 import { getPostDetail } from '@/_redux/slices/postSlices/getPostSlice';
 import { RootStateType } from '@/_redux/store';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
-import { Spinner } from '@common/Spinner/Spinner';
+import { Spinner } from '@common/index';
 
 export const DetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [pageNumber, setPageNumber] = useState(1);
-  const handlePostClick = () => {
-    setPageNumber(1);
-  };
-  const handleTimeTableClick = () => {
-    setPageNumber(2);
-  };
-
   const dispatch = useDispatch();
   const isLogin = useSelector((state: RootStateType) => state.userInfo);
   const {
@@ -57,22 +50,18 @@ export const DetailPage = () => {
     response && (
       <StSideMarginWrapper>
         <StDetailContainer>
-          {/* 타이틀, 생성 시간 */}
           <DetailMeetDescription response={response} />
-          {/* 탭 */}
           <DetailTab
             pageNumber={pageNumber}
-            handlePostClick={handlePostClick}
-            handleTimeTableClick={handleTimeTableClick}
+            handlePostClick={() => setPageNumber(1)}
+            handleTimeTableClick={() => setPageNumber(2)}
           />
-          {/* 본문 내용 */}
           <DetailPost
             pageNumber={pageNumber}
             response={response}
             loginUser={isLogin.user ?? null}
           />
           <hr />
-          {/* 댓글 */}
           <DetailComment
             response={response}
             loginUser={isLogin.user ?? null}

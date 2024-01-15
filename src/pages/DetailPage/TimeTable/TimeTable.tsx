@@ -8,8 +8,7 @@ import { IPost, IPostTitleCustom, IUser } from '@/api/_types/apiModels';
 import { putApiJWT } from '@/api/apis';
 import { createFormData } from '@/utils/createFormData';
 import { parseTitle } from '@/utils/parseTitle';
-import { Button } from '@common/Button/Button';
-import { Spinner } from '@common/Spinner/Spinner';
+import { Button, Spinner } from '@common/index';
 
 export interface IVotedUser {
   id: string;
@@ -65,7 +64,6 @@ export const TimeTable = ({ post }: TimeTableType) => {
     const parsedTitle = parseTitle(post.title);
     const modifiedMyVote = modifyMyVote(userId, fullName);
 
-    // 내 아이디 있을 경우 중복 제거
     const modifiedParticipants = new Set([...parsedTitle.participants, userId]);
 
     const modifiedTitle: IPostTitleCustom = {
@@ -159,7 +157,6 @@ export const TimeTable = ({ post }: TimeTableType) => {
   );
 };
 
-/* style */
 const StWrapper = styled.div`
   display: flex;
   flex-direction: column;

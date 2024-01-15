@@ -1,4 +1,3 @@
-// 이날모일래 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { StSpinnerWrapper } from '../mainPageStyled.ts';
@@ -6,13 +5,11 @@ import { ScheduledCards } from './ScheduledCards';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import { dateFormat } from '@/utils/dateFormat';
-import { Button } from '@common/Button/Button';
-import { Spinner } from '@common/Spinner/Spinner';
+import { Button, Spinner } from '@common/index.ts';
 
 export const ScheduledMain = () => {
-  const [page, setPage] = useState(0); // 오늘주0, 이후 +7, -7 씩
+  const [page, setPage] = useState(0);
 
-  // const today = new Date(useSelector((state) => state.today.today));
   const today = new Date();
   const thisWeek = new Array(7)
     .fill(0)

@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { MyCards } from './MyCards';
 import { MyJoinCards } from './MyJoinCards';
 import { MyLikesCards } from './MyLikesCards';
@@ -14,8 +13,7 @@ import { IUser } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
-import { Button } from '@common/Button/Button';
-import { Profile } from '@common/Profile/Profile';
+import { Button, Profile } from '@common/index';
 
 export const ProfilePage = () => {
   const { id } = useParams();

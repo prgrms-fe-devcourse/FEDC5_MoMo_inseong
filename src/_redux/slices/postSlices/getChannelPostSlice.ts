@@ -9,7 +9,6 @@ interface IgetChannelPostsParams {
   limit?: number;
 }
 
-// 채널 포스트 목록
 export const getChannelPosts = createAsyncThunk(
   'getChannelPosts',
   async ({ channelId, offset = 0, limit = 10 }: IgetChannelPostsParams) => {

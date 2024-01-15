@@ -1,4 +1,3 @@
-// 언제모일까 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -9,9 +8,7 @@ import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
-import { Card } from '@common/Card/Card';
-import { Icon } from '@common/Icon/Icon';
-import { Spinner } from '@common/Spinner/Spinner';
+import { Card, Icon, Spinner } from '@common/index.ts';
 
 export const UnsheduledCards = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -5,10 +5,8 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { useDispatch } from '@/_redux/hooks';
 import { postComment } from '@/_redux/slices/postSlices/getPostSlice';
 import { IUser } from '@/api/_types/apiModels';
-// import { postApiJWT } from '@/api/apis';
 import { theme } from '@/style/theme';
-import { Button } from '@common/Button/Button';
-import { Profile } from '@common/Profile/Profile';
+import { Button, Profile } from '@common/index';
 
 interface CommentInputProps {
   loginUser: IUser | null;

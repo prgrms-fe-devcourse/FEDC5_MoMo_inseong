@@ -4,15 +4,13 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 export const getApi = async <T>(url: string) => {
   const res: AxiosResponse<T> = await customAxios().get(url);
-  return res; //{data: Array(1), status: 200, statusText: '', headers: AxiosHeaders, config: {…},}
+  return res;
 };
 
 export const postApi = async <T>(url: string, data: object) => {
   const res: AxiosResponse<T> = await customAxios().post(url, data);
   return res;
 };
-
-// with JWT ----------------
 
 export const getApiJWT = async <T>(url: string) => {
   const res: AxiosResponse<T> = await customAxiosJWT().get(url);
@@ -22,7 +20,6 @@ export const postApiJWT = async <T>(url: string, data?: object) => {
   const res: AxiosResponse<T> = await customAxiosJWT().post(url, data);
   return res;
 };
-// <D>
 export const putApiJWT = async <T, D>(url: string, data?: D) => {
   const res: AxiosResponse<T> = await customAxiosJWT().put(url, data);
   return res;
@@ -32,10 +29,9 @@ export const deleteApiJWT = async <T>(url: string, data: object) => {
   return res;
 };
 
-// ----------
 export const useGetApi = <T>(url: string) => {
   const [response, setResponse] = useState<AxiosResponse<T>>();
-  const [error, setError] = useState<AxiosError>(); //
+  const [error, setError] = useState<AxiosError>();
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchApi = async (url: string) => {

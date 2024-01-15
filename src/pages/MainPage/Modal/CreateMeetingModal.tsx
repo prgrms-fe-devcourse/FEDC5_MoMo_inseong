@@ -11,19 +11,15 @@ import { useNavigate } from 'react-router-dom';
 import { scheduledChannelId, unscheduledChannelId } from '../channelId';
 import { Calendar } from './Calendar';
 import { Slider } from './Slider';
-// import useClickAway from './UseClickAway';
 import { useDispatch, useSelector } from '@/_redux/hooks';
-import { createPost } from '@/_redux/slices/postSlices/createPostSlice';
+import { createPost } from '@/_redux/slices/postSlices/getPostSlice';
 import { putPost } from '@/_redux/slices/postSlices/putPostSlice';
 import { getUserInfo } from '@/_redux/slices/userSlice';
 import type { IPost, IPostTitleCustom } from '@/api/_types/apiModels';
 import { theme } from '@/style/theme';
 import { createIVote } from '@/utils/createIVote';
 import { getDatesBetween } from '@/utils/getDatesBetween';
-import { Button } from '@common/Button/Button';
-import { InputContainer } from '@common/Input/Input/InputContainer';
-import { InputCompound } from '@common/Input/InputCompound';
-import { Spinner } from '@common/Spinner/Spinner';
+import { Button, Icon, InputCompound, Spinner } from '@common/index';
 
 interface CreateMeetingModalProps extends HTMLAttributes<HTMLDivElement> {
   visible?: boolean;
@@ -44,8 +40,6 @@ export const CreateMeetingModal = ({
   ...props
 }: CreateMeetingModalProps): ReactElement => {
   const dispatch = useDispatch();
-  //FIXME: 에러핸들링 필요
-  // const { channels } = useSelector((state) => state.channels);
   const { isLoading, user } = useSelector((state) => state.userInfo);
   const { allUsers } = useSelector((state) => state.allUsers);
   const { isLoading: isPostLoading, post: createdPost } = useSelector(
@@ -95,14 +89,12 @@ export const CreateMeetingModal = ({
 
     const meetDates = getDatesBetween(new Date(startDate), new Date(endDate));
 
-    // 수정
     if (post) {
       const props = JSON.parse(post.title) as IPostTitleCustom;
 
       const updateTitleCustom: IPostTitleCustom = {
         postTitle,
         contents,
-        // status: props.status,
         status: 'Opened',
         tags: tags,
         mentions: mentions,
@@ -127,8 +119,6 @@ export const CreateMeetingModal = ({
 
       void dispatch(putPost(data));
       if (onClose) onClose();
-
-      // 등록
     } else {
       const postTitleCustom: IPostTitleCustom = {
         postTitle,
@@ -265,7 +255,6 @@ export const CreateMeetingModal = ({
         setLabel('수정하기');
       } else {
         const date = dateToPass?.split(' ')[0];
-        // post 값이 없을 때 초기값 설정
         setPostTitle('');
         setContents('');
         setStartDate(date || today);
@@ -286,25 +275,22 @@ export const CreateMeetingModal = ({
 
   return (
     <StBackgroundDim style={{ display: visible ? 'block' : 'none' }}>
-      <StClose>
-        {/* <Icon
-          name="x"
-          showBackground={true}
-        /> */}
-      </StClose>
       <StModalContainer
         ref={modalRef}
         {...props}>
-        <StTitle>모임</StTitle>
+        <StClose>
+          <Icon name="x" />
+        </StClose>
+        <StTitle>모임 {label}</StTitle>
         <StForm onSubmit={handleOnSubmit}>
-          <InputContainer style={{ width: '350px' }}>
+          <InputCompound style={{ width: '350px' }}>
             <InputCompound.Text
               placeholder="제목"
               value={postTitle}
               onChange={(e) => setPostTitle(e.target.value)}
             />
-          </InputContainer>
-          <InputContainer style={{ width: '350px' }}>
+          </InputCompound>
+          <InputCompound style={{ width: '350px' }}>
             <InputCompound.TextArea
               placeholder="설명"
               value={contents}
@@ -315,7 +301,7 @@ export const CreateMeetingModal = ({
               setDisplayImage={setDisplayImage}
               setUploadImage={setUploadImage}
             />
-          </InputContainer>
+          </InputCompound>
           <StRangeContainer>
             <StRangeTitle>인원</StRangeTitle>
             <StRangeControl>
@@ -351,7 +337,7 @@ export const CreateMeetingModal = ({
             />
           </StCalendarContainer>
           <StInputContainerWithDropdown>
-            <InputContainer style={{ width: '350px' }}>
+            <InputCompound style={{ width: '350px' }}>
               <InputCompound.Text
                 placeholder="멘션"
                 value={mentionInput}
@@ -406,7 +392,7 @@ export const CreateMeetingModal = ({
                   }
                 }}
               />
-            </InputContainer>
+            </InputCompound>
 
             {mentionInput && filteredUsers.length > 0 && (
               <StFilteredUserList>
@@ -424,7 +410,7 @@ export const CreateMeetingModal = ({
             )}
           </StInputContainerWithDropdown>
 
-          <InputContainer style={{ width: '350px' }}>
+          <InputCompound style={{ width: '350px' }}>
             <InputCompound.Text
               placeholder="태그"
               onKeyUp={(e) => {
@@ -440,7 +426,7 @@ export const CreateMeetingModal = ({
               tags={tags}
               setTags={(arg) => setTags(arg)}
             />
-          </InputContainer>
+          </InputCompound>
 
           <Button
             label={label}
@@ -457,7 +443,7 @@ const StBackgroundDim = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
@@ -494,17 +480,17 @@ const StModalContainer = styled.div`
 
 const StClose = styled.div`
   position: fixed;
-  top: 9%;
-  left: 64%;
+  top: 10px;
+  right: 10px;
   cursor: pointer;
   z-index: 1001;
 `;
 
 const StTitle = styled.h1`
-  font-size: 36px;
+  font-size: 28px;
   font-weight: bold;
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 35px;
+  margin-bottom: 35px;
 `;
 
 const StForm = styled.div`

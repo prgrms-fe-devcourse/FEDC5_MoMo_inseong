@@ -17,7 +17,6 @@ export const InputImage = ({
   setUploadImage,
   ...props
 }: InputProps) => {
-  // TODO: 추후 데이터 관련하여 다시 확인.. << 수정 완료(by 동건) >>
   const handleImageChange = (uploadedFile: File) => {
     setDisplayImage(URL.createObjectURL(uploadedFile));
     setUploadImage(uploadedFile);
@@ -37,7 +36,6 @@ export const InputImage = ({
       {!image ? (
         <StImageContainer style={{ ...props.style }}>
           <StyledUpload>
-            {/* FIXME: name 하드코딩으로 일단 해놓겠습니다 _ _ */}
             <InputUpload
               name="image"
               onChange={handleImageChange}>

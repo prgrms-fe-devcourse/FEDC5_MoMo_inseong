@@ -7,7 +7,7 @@ const useAxios = <T>(
   deps?: string,
 ) => {
   const [response, setResponse] = useState<T>({} as T);
-  const [error, setError] = useState<Error | AxiosError | null>(null); //
+  const [error, setError] = useState<Error | AxiosError | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async () => {

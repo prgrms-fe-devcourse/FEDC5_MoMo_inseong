@@ -50,11 +50,7 @@ export const VoteScrollWrapper = forwardRef<
   );
 });
 
-const StHeader = styled.div`
-  /* position: relative; */
-  /* position: sticky; */
-  /* padding-left: 42px; */
-`;
+const StHeader = styled.div``;
 
 const StHeaderFlexBox = styled.div`
   display: flex;
@@ -75,12 +71,9 @@ const StHeaderCurtain = styled.div`
   font-size: 16px;
   font-weight: 700px;
   text-align: center;
-  /* height: 42px; */
 `;
 
 const StRowHeader = styled.div`
-  /* position: sticky;
-  top: 0; */
   font-family: ${({ theme }) => theme.fonts};
   font-size: 16px;
   font-weight: 700px;
@@ -90,11 +83,7 @@ const StRowHeader = styled.div`
   gap: 6px;
 `;
 
-const StBody = styled.div`
-  /* position: relative; */
-  /* padding-top: 8px;
-  padding-left: 36px; */
-`;
+const StBody = styled.div``;
 
 const StBodyFlexBox = styled.div`
   display: flex;
@@ -104,9 +93,7 @@ const StBodyFlexBox = styled.div`
 
 const StColumnHeader = styled.div`
   position: sticky;
-  /* top: 0; */
   left: 0;
-  /* bottom: 0; */
   z-index: 200;
   width: 42px;
   background-color: white;
@@ -126,13 +113,7 @@ const StScrollWrapper = styled.div`
   position: relative;
   max-width: 300px;
   max-height: 464px;
-  /* width: 400px;
-  height: 464px; */
-  /* padding-right: 6px;
-  padding-top: 8px; */
   overflow: auto;
-
-  /* scroll-behavior: smooth; */
 
   ${({ theme }) => theme.scrollBar.default}
 

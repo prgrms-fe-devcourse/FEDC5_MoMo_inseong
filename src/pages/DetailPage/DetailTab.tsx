@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Tab } from '@common/Tab/Tab';
+import { Tab } from '@common/index';
 
 interface DetailTabProps {
   pageNumber: number;

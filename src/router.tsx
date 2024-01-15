@@ -9,9 +9,8 @@ import { EditPasswordPage } from './pages/ProfilePage/EditPasswordPage';
 import { EditProfilePage } from './pages/ProfilePage/EditProfilePage';
 import { ProfilePage } from './pages/ProfilePage/ProfilePage';
 import { SignUpPage } from './pages/SignupPage/SignupPage';
-import { Header } from '@common/Header/Header';
+import { Header } from '@common/index';
 
-/* loader */
 const preventLoginLoader = () => {
   const {
     userInfo: { user },
@@ -37,23 +36,23 @@ export const router = createBrowserRouter([
         ),
         children: [
           {
-            index: true, // 메인 페이지
+            index: true,
             element: <MainPage />,
           },
           {
-            path: '/details/:id', // 상세 페이지
+            path: '/details/:id',
             element: <DetailPage />,
           },
           {
-            path: '/profile/:id', // 프로필 페이지
+            path: '/profile/:id',
             element: <ProfilePage />,
           },
           {
-            path: '/editProfile', // 프로필 변경 페이지
+            path: '/editProfile',
             element: <EditProfilePage />,
           },
           {
-            path: '/editPassword', // 비밀번호 변경 페이지
+            path: '/editPassword',
             element: <EditPasswordPage />,
           },
         ],

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ILike, IPost, IUser } from '@/api/_types/apiModels';
 import { deleteApiJWT, postApiJWT } from '@/api/apis';
 import { CreateMeetingModal } from '@/pages/MainPage/Modal/CreateMeetingModal';
-import { Icon } from '@common/Icon/Icon';
+import { Icon } from '@common/index';
 
 interface PostIconProps {
   apiResponse: IPost;
@@ -24,17 +24,13 @@ export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
       isUserNeedLogin && navigate('/login');
       return;
     }
-    // 좋아요 안한 상태 => 좋아요
     if (!isHeart) {
       await postApiJWT<ILike>('/likes/create', { postId: apiResponse._id })
         .then((res) => {
           setIsHeart(res.data._id);
         })
         .catch((err) => console.log(err));
-    }
-
-    // 좋아요 했던 상태 => 좋아요 취소
-    else if (isHeart) {
+    } else if (isHeart) {
       await deleteApiJWT<ILike>('/likes/delete', {
         id: isHeart,
       })
@@ -50,7 +46,7 @@ export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
     const isPostDelete = confirm('정말 삭제하시겠습니까?');
     if (!isPostDelete) return;
 
-    await deleteApiJWT<IPost>('/posts/delete', { id: apiResponse._id }); // postId
+    await deleteApiJWT<IPost>('/posts/delete', { id: apiResponse._id });
 
     alert('삭제되었습니다.');
     navigate('/');
@@ -83,7 +79,6 @@ export const PostIcon = ({ loginUser, apiResponse }: PostIconProps) => {
             }
           />
         </StIconsWrapper>
-        {/* isLogin === post 작성자 id */}
         {isPostOwner && (
           <StAdminIconsWrapper>
             <Icon

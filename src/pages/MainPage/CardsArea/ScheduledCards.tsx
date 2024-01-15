@@ -1,13 +1,10 @@
-// 이날모일래 탭 선택시 아래 화면 컴포넌트
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreateMeetingModal } from '../Modal/CreateMeetingModal';
-import todaySlice from '@/_redux/slices/todaySlice';
 import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
-import { Card } from '@common/Card/Card';
-import { Icon } from '@common/Icon/Icon';
+import { Card, Icon } from '@common/index';
 
 interface ScheduledCardsProps {
   cards: IPost[][];
@@ -50,13 +47,13 @@ export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
                 );
               })}
               {date.slice(0, 10) >= today.slice(0, 10) && (
-              <StAddWrapper onClick={handleModalOpen}>
-                <Icon
-                  name="plus"
-                  size={20}
-                  onIconClick={() => setDateToPass(date)}
-                />
-              </StAddWrapper>
+                <StAddWrapper onClick={handleModalOpen}>
+                  <Icon
+                    name="plus"
+                    size={20}
+                    onIconClick={() => setDateToPass(date)}
+                  />
+                </StAddWrapper>
               )}
             </StCardsWrapper>
           </div>

@@ -12,8 +12,7 @@ import logo from '@/assets/logo.png';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
 import { getItem } from '@/utils/storage';
-import { Button } from '@common/Button/Button';
-import { InputCompound } from '@common/Input/InputCompound';
+import { Button, InputCompound } from '@common/index';
 
 export const SignUpPage = () => {
   const navigate = useNavigate();

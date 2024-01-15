@@ -4,8 +4,7 @@ import { StCardsWrapper } from './profilePageStyles';
 import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
-import { Card } from '@common/Card/Card';
-import { Spinner } from '@common/Spinner/Spinner';
+import { Card, Spinner } from '@common/index';
 
 export const MyJoinCards = () => {
   const navigate = useNavigate();

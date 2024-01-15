@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { CSSProperties } from 'react';
-import { Icon } from '@common/Icon/Icon';
-import { Tag } from '@common/Tag/Tag';
+import { Icon, Tag } from '@common/index';
 
 interface InputProps {
   tags: string[];

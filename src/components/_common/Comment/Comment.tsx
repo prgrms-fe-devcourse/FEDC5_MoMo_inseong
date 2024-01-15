@@ -3,9 +3,7 @@ import { useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { FormatDate } from '@/pages/DetailPage/FormatDate';
 import { theme } from '@/style/theme';
-import { Button } from '@common/Button/Button';
-import { Icon } from '@common/Icon/Icon';
-import { Profile } from '@common/Profile/Profile';
+import { Button, Icon, Profile } from '@common/index';
 
 interface CommentProps {
   _id: string;
@@ -55,10 +53,8 @@ export const Comment = ({
           <StCreatedAt>{`(${FormatDate(createdAt)})`}</StCreatedAt>
         </StCommentedUser>
 
-        {/* 댓글 작성자인지 체크 */}
         {isMine && (
           <StCommentedManage>
-            {/* 현재 댓글 수정 기능은 비활성화 되어 있습니다. */}
             {false && mode !== 'edit' && (
               <Icon
                 onIconClick={handleEditChange}
@@ -75,7 +71,6 @@ export const Comment = ({
         )}
       </StCommentWrapper>
 
-      {/* 'readonly' || 'edit' */}
       {mode === 'readonly' && (
         <StCommentMessage>
           <pre>{text}</pre>
@@ -148,6 +143,7 @@ const StCommentMessage = styled.div`
 
   & pre {
     white-space: pre-wrap;
+    word-break: break-all;
   }
 `;
 

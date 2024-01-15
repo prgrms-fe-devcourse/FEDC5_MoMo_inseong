@@ -6,11 +6,8 @@ import { useSelector } from '@/_redux/hooks';
 import { postApiJWT, putApiJWT } from '@/api/apis';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
-import { Button } from '@common/Button/Button';
-import { Icon } from '@common/Icon/Icon';
-import { InputCompound } from '@common/Input/InputCompound';
 import InputUpload from '@common/Input/InputUpload';
-import { Profile } from '@common/Profile/Profile';
+import { Button, Icon, InputCompound, Profile } from '@common/index';
 
 export const EditProfilePage = () => {
   const [fullName, setFullName] = useState('');

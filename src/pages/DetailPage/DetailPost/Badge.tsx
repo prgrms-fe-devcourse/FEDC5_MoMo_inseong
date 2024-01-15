@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { IMentionedUser } from '@/api/_types/apiModels';
-import { Tag } from '@common/Tag/Tag';
+import { Tag } from '@common/index';
 
 interface BadgeProps {
   kind: 'tag' | 'mention';

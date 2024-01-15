@@ -32,7 +32,6 @@ interface IcreatePostBody {
   channelId: string;
 }
 
-// 포스트 생성
 export const createPost = createAsyncThunk(
   'createPost',
   async (body: IcreatePostBody) => {
@@ -70,7 +69,6 @@ export const createPost = createAsyncThunk(
   },
 );
 
-// 특정 포스트 상세보기
 export const getPostDetail = createAsyncThunk(
   'getPostDetail',
   async (postId: string) => {
@@ -86,7 +84,6 @@ export const postComment = createAsyncThunk(
       comment,
       postId,
     });
-    // 댓글 알림 생성
     void createNotification({
       notificationType: 'COMMENT',
       notificationTypeId: response.data._id,
@@ -97,7 +94,6 @@ export const postComment = createAsyncThunk(
   },
 );
 
-// 포스트 수정
 export const putPost = createAsyncThunk(
   'putPost',
   async (body: IputPostBody) => {
@@ -136,7 +132,6 @@ const getPostDetailSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // ### createPost ###
     builder.addCase(createPost.pending, (state) => {
       state.isLoading = true;
     });
@@ -150,7 +145,6 @@ const getPostDetailSlice = createSlice({
     builder.addCase(createPost.rejected, (state) => {
       state.isLoading = false;
     });
-    // ### getPostDetail ###
     builder.addCase(getPostDetail.pending, (state) => {
       state.isLoading = true;
     });
@@ -164,7 +158,6 @@ const getPostDetailSlice = createSlice({
     builder.addCase(getPostDetail.rejected, (state) => {
       state.isLoading = false;
     });
-    // ### postComment ###
     builder.addCase(postComment.pending, (state) => {
       state.isLoading = true;
     });
@@ -184,7 +177,6 @@ const getPostDetailSlice = createSlice({
     builder.addCase(postComment.rejected, (state) => {
       state.isLoading = false;
     });
-    // ### putPost ###
     builder.addCase(putPost.pending, (state) => {
       state.isLoading = true;
     });
@@ -198,7 +190,6 @@ const getPostDetailSlice = createSlice({
     builder.addCase(putPost.rejected, (state) => {
       state.isLoading = false;
     });
-    // ### deleteComment ###
     builder.addCase(deleteComment.pending, (state) => {
       state.isLoading = true;
     });

@@ -4,9 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '@/_redux/hooks';
 import { initUserInfo } from '@/_redux/slices/userSlice';
 import { postApiJWT } from '@/api/apis';
-import { Icon } from '@common/Icon/Icon';
-import { Profile } from '@common/Profile/Profile';
-import { Spinner } from '@common/Spinner/Spinner';
+import { Icon, Profile, Spinner } from '@common/index';
 
 export interface PopupProfileProps {
   setIsVisible?: (arg: boolean) => void;
@@ -55,15 +53,6 @@ export const PopupProfile = memo(({ setIsVisible }: PopupProfileProps) => {
           />
         </StRouter>
       )}
-      {/* <StRouter onClick={handleVisibility}>
-          <StIconBox content={'"설정"'}>
-            <Icon
-              name="settings"
-              strokeWidth={2}
-              showBackground={false}
-            />
-          </StIconBox>
-        </StRouter> */}
       <StRouter onClick={handleOnLogout}>
         <StIconBox content={'"로그아웃"'}>
           <Icon
@@ -77,7 +66,6 @@ export const PopupProfile = memo(({ setIsVisible }: PopupProfileProps) => {
   );
 });
 
-/* style */
 const StContainer = styled.article`
   display: flex;
   flex-direction: column;

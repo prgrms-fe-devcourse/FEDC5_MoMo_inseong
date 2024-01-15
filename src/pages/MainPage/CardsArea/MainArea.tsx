@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ScheduledMain } from './ScheduledMain';
 import { UnsheduledCards } from './UnsheduledCards';
 import { getItem, setItem } from '@/utils/storage';
-import { Tab } from '@common/Tab/Tab';
+import { Tab } from '@common/index';
 
 export const MainArea = () => {
   const [, setSelectedTab] = useState(getItem('mainTab', 0));

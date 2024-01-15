@@ -11,10 +11,7 @@ import { getApiJWT, postApi, putApiJWT } from '@/api/apis';
 import useAxios from '@/api/useAxios';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
-import { Button } from '@common/Button/Button';
-import { Icon } from '@common/Icon/Icon';
-import { InputCompound } from '@common/Input/InputCompound';
-import { Profile } from '@common/Profile/Profile';
+import { Button, Icon, InputCompound, Profile } from '@common/index';
 
 export const EditPasswordPage = () => {
   const navigate = useNavigate();
@@ -29,7 +26,6 @@ export const EditPasswordPage = () => {
   const [confirmError, setConfirmError] = useState('');
 
   const passwordRef = useRef<HTMLInputElement>(null);
-  // const newPasswordRef = useRef<HTMLInputElement>(null);
   const confirmRef = useRef<HTMLInputElement>(null);
 
   const { response } = useAxios<IUser>(() => getApiJWT<IUser>('/auth-user'));

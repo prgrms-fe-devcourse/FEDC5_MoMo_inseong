@@ -85,7 +85,6 @@ const fetchNotifications = async (token: string) => {
           postId: post as string,
         };
       } else if ('message' in notification) {
-        //FIXME: MESSAGE를 쓰지 않으므로 MENTION으로 대체
         props.type = 'MENTION';
         props.details = {
           postTitle:

@@ -4,7 +4,7 @@ import { Menu } from './Menu/Menu';
 import './header.css';
 import { useSelector } from '@/_redux/hooks';
 import logo from '@/assets/logo.png';
-import { Button } from '@common/Button/Button';
+import { Button } from '@common/index';
 
 export const Header = () => {
   const navigate = useNavigate();

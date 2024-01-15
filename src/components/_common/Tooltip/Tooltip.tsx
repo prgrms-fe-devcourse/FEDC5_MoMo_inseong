@@ -14,7 +14,7 @@ import {
   useState,
 } from 'react';
 
-type PositionType = 'top' | 'bottom' | 'left' | 'right'; // 툴팁 위치
+type PositionType = 'top' | 'bottom' | 'left' | 'right';
 
 interface IGetPosition {
   position?: PositionType;
@@ -34,8 +34,8 @@ interface ISetIsVisible {
 }
 
 interface TooltipProps extends IStWrapper, IGetPosition {
-  children: ReactNode; // 툴팁을 표시할 요소
-  content: string | ReactNode | ReactElement; // 툴팁 내용
+  children: ReactNode;
+  content: string | ReactNode | ReactElement;
 }
 
 export const Tooltip = memo(
@@ -105,7 +105,6 @@ export const Tooltip = memo(
   },
 );
 
-/* style */
 const StWrapper = styled.div`
   position: relative;
   display: inline-block;
@@ -146,7 +145,6 @@ const StContentBox = styled.div<IStWrapper>`
   cursor: default;
 `;
 
-/* utils */
 const getPositionStyles = ({
   position = 'bottom',
   gap = 8,

@@ -7,9 +7,7 @@ import { deleteApiJWT, postApiJWT } from '@/api/apis';
 import { createNotification } from '@/api/createNotification';
 import { theme } from '@/style/theme';
 import { parseTitle } from '@/utils/parseTitle';
-import { Icon } from '@common/Icon/Icon';
-import { Profile } from '@common/Profile/Profile';
-import { Tag } from '@common/Tag/Tag';
+import { Icon, Profile, Tag } from '@common/index';
 
 interface ICardData {
   cardData: IPost;

@@ -24,10 +24,8 @@ const useForm = ({
   const handleSubmit = async (e: FormEvent) => {
     setIsLoading(true);
     e.preventDefault();
-    // setValues('');
     const newErrors = validate ? validate(values) : {};
     if (Object.keys(newErrors).length === 0) {
-      //에러없는경우
       await onSubmit();
     }
     setErrors(newErrors);

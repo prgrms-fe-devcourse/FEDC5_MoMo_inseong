@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { StCardsWrapper } from './profilePageStyles';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
-import { Card } from '@common/Card/Card';
-import { Spinner } from '@common/Spinner/Spinner';
+import { Card, Spinner } from '@common/index';
 
 export const UserJoinCards = ({ userId }: { userId: string }) => {
   const navigate = useNavigate();

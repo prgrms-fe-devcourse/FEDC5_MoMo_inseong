@@ -52,7 +52,8 @@ export const DetailMeetDescription = ({
 };
 
 const StMeetDescription = styled.div`
-  height: 100px;
+  height: 64px;
+  margin-bottom: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;

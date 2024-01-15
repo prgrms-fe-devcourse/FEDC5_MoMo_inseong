@@ -7,10 +7,7 @@ import { getApi } from '@/api/apis';
 import useForm from '@/hooks/useForm';
 import { theme } from '@/style/theme';
 import { parseTitle } from '@/utils/parseTitle';
-import { Icon } from '@common/Icon/Icon';
-import { InputCompound } from '@common/Input/InputCompound';
-import { Profile } from '@common/Profile/Profile';
-import { Spinner } from '@common/Spinner/Spinner';
+import { Icon, InputCompound, Profile, Spinner } from '@common/index';
 
 export const SearchBox = () => {
   const [searcedResults, setSearchedResults] = useState<IUser[] | IPost[]>([]);

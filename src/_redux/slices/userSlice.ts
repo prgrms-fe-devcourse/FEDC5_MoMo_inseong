@@ -13,12 +13,6 @@ const initialState: IUserData = {
   user: null,
 };
 
-/** `<<< thunk 사용 예시 >>>`
- * @example import { useDispatch } from '@/_redux/hooks'
- * import { getIsLogin } from '@/_redux/slices/loginSlice'
- * const dispatch = useDispatch();
- * dispatch(getIsLogin);
- */
 export const getUserInfo = createAsyncThunk('authUser', async () => {
   const response = await getApiJWT<IUser>('/auth-user');
   return response.data;
@@ -49,11 +43,6 @@ const userInfoSlice = createSlice({
   },
 });
 
-/**`<< selector 콜백 예시 >>`
- * @description useSelector 안에서 (state) => state.reducer 문장을 중복으로 너무 많이 사용해야할 때 선언하면 좋습니다.
- *
- * @example const 변수 = useSelector(shouldRedirect);
- */
 export const shouldRedirect = (state: RootStateType) => state.userInfo;
 
 export const getUser = (state: RootStateType) => state.userInfo.user;

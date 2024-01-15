@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { forwardRef, useState } from 'react';
-import { VotedUserList } from '../VotedUserList/VotedUserList';
+import { VotedUserList } from './VotedUserList';
 import { useSelector } from '@/_redux/hooks';
 import { ITimeVote } from '@/api/_types/apiModels';
 
@@ -85,10 +85,7 @@ const StMyCell = styled.div<IStCell>`
     border-radius: 4px;
     cursor: pointer;
 
-    /* 간격도 Cell에 포함되어야 함 */
     padding: 12px 24px;
-    /* ${({ columnCount }) =>
-      columnCount >= 4 ? 26 : Math.round(128 / columnCount)}px; */
 
     &:hover {
       background-color: ${({ theme }) => theme.colors.beige};
@@ -145,10 +142,7 @@ const StVotedCell = styled.div<IStCell>`
     border-radius: 4px;
     cursor: pointer;
 
-    /* 간격도 Cell에 포함되어야 함 */
     padding: 12px 24px;
-    /* ${({ columnCount }) =>
-      columnCount >= 4 ? 26 : Math.round(128 / columnCount)}px; */
 
     &:hover {
       filter: brightness(120%);

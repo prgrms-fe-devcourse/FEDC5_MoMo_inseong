@@ -22,7 +22,7 @@ interface IStIconWrapper {
 
 export const Icon = ({
   name,
-  stroke = 'black', // 테두리 색상
+  stroke = 'black',
   size = 16,
   strokeWidth = 2,
   showBackground = false,

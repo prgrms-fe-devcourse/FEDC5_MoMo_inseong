@@ -14,7 +14,6 @@ export const useNotification = () => {
     [],
   );
 
-  // 웹워커 등록
   useEffect(() => {
     getNotifications.postMessage(getItem('JWT', ''));
 
@@ -23,7 +22,6 @@ export const useNotification = () => {
     };
   }, []);
 
-  // 알림 수신 (값이 똑같을 경우 리플로우 방지)
   useEffect(() => {
     getNotifications.onmessage = (e: MessageEvent<NotificationExtractType[]>) =>
       setNotifications((prevState) =>

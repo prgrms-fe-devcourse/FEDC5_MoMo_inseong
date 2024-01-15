@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { theme } from '@/style/theme';
 import { FormEvent } from 'react';
+import { theme } from '@/style/theme';
 
 interface ButtonProps {
   color?: 'BLUE' | 'NAVY';
@@ -14,7 +14,7 @@ interface ButtonProps {
 }
 export const Button = ({
   color = 'BLUE',
-  isOutline = false, //true시 테두리만 있는 버튼
+  isOutline = false,
   width = 200,
   height = 48,
   label,

@@ -4,14 +4,6 @@ import { Link } from 'react-router-dom';
 import { useNotification } from './hooks/useNotification';
 import { putApiJWT } from '@/api/apis';
 
-// 팔로우 알림, 댓글 알림, 좋아요 알림(북마크), 메세지 알림, 멘션 알림(커스텀)
-
-// <팔로우> 1. 누가, 언제, 팔로우를 했다. 2. 누가, 언제, 언팔을 했다.
-// <댓글> 1. 누가, 언제, 어떤 포스트에, 댓글을 달았다. 2. 누가, 언제, 어떤 포스트에, 댓글을 지웠다 (이거 필요?)
-// <좋아요(북마크)> 1. 누가, 언제, 어떤 포스트에, 북마크 등록했다. 2. 누가, 언제, 어떤 포스트에, 북마크 등록 취소했다.
-// <메세지> 1. 누가, 언제, 어떤 메세지를 보냈다.
-// <멘션> 1. 누가, 언제, 어떤 포스트에, 너를 멘션했다.
-
 interface IFollow {
   type: 'FOLLOW';
   details: {
@@ -71,14 +63,12 @@ export const Notification = memo(
 
     const notifications = useNotification();
 
-    // 전체 알람 확인
     const handleSeenAlert = () => {
       void putApiJWT(`/notifications/seen`);
       setIsBlur(true);
       setIsRedDot(false);
     };
 
-    // 툴팁 클릭시 닫힘
     const handleVisibility = () => {
       setIsVisible && setIsVisible(false);
     };
@@ -162,7 +152,6 @@ export const Notification = memo(
   },
 );
 
-/* style */
 const StContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -281,7 +270,6 @@ const StEmptyNotification = styled.div`
   }
 `;
 
-/* util */
 const subTitleOf = (type: ContentType['type']) => {
   switch (type) {
     case 'COMMENT': {

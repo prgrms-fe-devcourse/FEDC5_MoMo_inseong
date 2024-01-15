@@ -33,12 +33,13 @@ export const StPostContainer = styled.div`
 
 const StPostContents = styled.pre`
   font-size: 16px;
-  margin: 32px 0;
+  margin: 16px 0;
   white-space: pre-wrap;
+  word-break: break-all;
 `;
 
 const StPostImgWrapper = styled.div`
-  width: 100%;
+  width: 80%;
   display: flex;
   justify-content: center;
 

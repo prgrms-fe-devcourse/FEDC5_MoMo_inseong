@@ -1,6 +1,6 @@
-import { VoteCellContainer } from './VoteCellContainer/VoteCellContainer';
-import { VoteScrollWrapper } from './VoteScrollWrapper/VoteScrollWrapper';
-import { VoteTableMain } from './VoteTableMain/VoteTableMain';
+import { VoteCellContainer } from './VoteCellContainer';
+import { VoteScrollWrapper } from './VoteScrollWrapper';
+import { VoteTableMain } from './VoteTableMain';
 
 export const VoteTable = Object.assign(VoteTableMain, {
   ScrollWrapper: VoteScrollWrapper,

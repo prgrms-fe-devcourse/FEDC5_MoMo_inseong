@@ -3,7 +3,7 @@ import { isIComment } from '../IsIComment';
 import { useDispatch } from '@/_redux/hooks';
 import { deleteComment } from '@/_redux/slices/postSlices/getPostSlice';
 import { IComment, IUser } from '@/api/_types/apiModels';
-import { Comment } from '@common/Comment/Comment';
+import { Comment } from '@common/index';
 
 interface CommentListProps {
   comments: IComment[] | string[];

@@ -6,9 +6,7 @@ import { IUser } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useForm from '@/hooks/useForm';
 import { theme } from '@/style/theme';
-import { Icon } from '@common/Icon/Icon';
-import { InputCompound } from '@common/Input/InputCompound';
-import { Profile } from '@common/Profile/Profile';
+import { Icon, InputCompound, Profile } from '@common/index';
 import { isEqual } from 'lodash';
 
 export const OnlineUsers = () => {
@@ -97,7 +95,6 @@ export const StSideBlockWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.grey.bright};
   padding: 10px 16px;
   position: sticky;
-  // top: 80px;
 `;
 
 const StOnlineUserUl = styled.ul`

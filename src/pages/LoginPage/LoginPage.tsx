@@ -9,8 +9,7 @@ import logo from '@/assets/logo.png';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { theme } from '@/style/theme';
 import { getItem, setItem } from '@/utils/storage';
-import { Button } from '@common/Button/Button';
-import { InputCompound } from '@common/Input/InputCompound';
+import { Button, InputCompound } from '@common/index';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
