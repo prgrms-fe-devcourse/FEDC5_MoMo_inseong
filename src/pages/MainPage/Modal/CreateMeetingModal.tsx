@@ -29,6 +29,7 @@ interface CreateMeetingModalProps extends HTMLAttributes<HTMLDivElement> {
   visible?: boolean;
   onClose?: () => void;
   post?: IPost;
+  dateToPass?: string;
 }
 
 interface IallUser {
@@ -39,6 +40,7 @@ export const CreateMeetingModal = ({
   post,
   visible = false,
   onClose,
+  dateToPass,
   ...props
 }: CreateMeetingModalProps): ReactElement => {
   const dispatch = useDispatch();
@@ -77,11 +79,11 @@ export const CreateMeetingModal = ({
     event.preventDefault();
     if (user == null) return alert('로그인이 필요한 서비스입니다.');
 
-    if (postTitle.length === 0) {
+    if (postTitle.trim().length === 0) {
       alert('제목을 입력해야 합니다.');
       return false;
     }
-    if (contents.length === 0) {
+    if (contents.trim().length === 0) {
       alert('설명을 입력해야 합니다.');
       return false;
     }
@@ -104,9 +106,9 @@ export const CreateMeetingModal = ({
         status: 'Opened',
         tags: tags,
         mentions: mentions,
-        meetDate: props.meetDate,
+        meetDate: meetDates,
         peopleLimit: count,
-        vote: props.vote,
+        vote: createIVote(meetDates, props.vote),
         author: props.author,
         participants: props.participants,
       };
@@ -262,11 +264,12 @@ export const CreateMeetingModal = ({
         setTags(tags);
         setLabel('수정하기');
       } else {
+        const date = dateToPass?.split(' ')[0];
         // post 값이 없을 때 초기값 설정
         setPostTitle('');
         setContents('');
-        setStartDate(today);
-        setEndDate(today);
+        setStartDate(date || today);
+        setEndDate(date || today);
         setMentionInput('');
         setFilteredUsers([]);
         setDisplayImage(null);
@@ -277,7 +280,7 @@ export const CreateMeetingModal = ({
         setLabel('만들기');
       }
     }
-  }, [visible, post]);
+  }, [dateToPass, visible, post]);
 
   if (isLoading) return <Spinner />;
 
@@ -327,14 +330,24 @@ export const CreateMeetingModal = ({
               title="투표 시작"
               value={startDate}
               onChange={(e) => {
-                setStartDate(e.target.value);
+                const value = e.target.value;
+                setStartDate(value);
+                if (new Date(value) > new Date(endDate)) {
+                  setEndDate(value);
+                }
               }}
             />
             <StDivider />
             <Calendar
               title="투표 끝"
               value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setEndDate(value);
+                if (new Date(startDate) > new Date(value)) {
+                  setStartDate(value);
+                }
+              }}
             />
           </StCalendarContainer>
           <StInputContainerWithDropdown>

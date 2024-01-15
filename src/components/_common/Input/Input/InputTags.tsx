@@ -47,6 +47,8 @@ const StTagsContainer = styled.div<{ hasTags: boolean }>`
   display: flex;
   flex-wrap: wrap;
   padding-top: ${({ hasTags }) => (hasTags ? '10px' : '0')};
+  max-height: 80px;
+  overflow-y: auto;
 `;
 
 const StTag = styled.div`
