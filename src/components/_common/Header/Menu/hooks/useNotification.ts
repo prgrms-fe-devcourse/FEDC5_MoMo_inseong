@@ -1,12 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { NotificationExtractType } from '../Notification';
-import GetNotificationsWorker from '../utils/getNotificationsInterval?worker';
+// import GetNotificationsWorker from '../utils/getNotificationsInterval?worker';
 import { getItem } from '@/utils/storage';
 import { isEqual } from 'lodash';
 
 export const useNotification = () => {
   const getNotifications: Worker = useMemo(
-    () => new GetNotificationsWorker(),
+    // () => new GetNotificationsWorker(),
+    () =>
+      new Worker(
+        new URL('../utils/getNotificationsInterval.ts', import.meta.url),
+        {
+          type: 'module',
+        },
+      ),
     [],
   );
 
