@@ -54,7 +54,6 @@ export const CreateMeetingModal = ({
   const [isCreated, setIsCreated] = useState(false);
   const [postTitle, setPostTitle] = useState('');
   const [contents, setContents] = useState('');
-  const [isUndetermined, setIsUndetermined] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [mentionInput, setMentionInput] = useState('');
@@ -77,6 +76,23 @@ export const CreateMeetingModal = ({
   const handleOnSubmit = (event: ReactFormEvent) => {
     event.preventDefault();
     if (user == null) return alert('로그인이 필요한 서비스입니다.');
+
+    if (postTitle.length === 0) {
+      alert('제목을 입력해야 합니다.');
+      return false;
+    }
+    if (contents.length === 0) {
+      alert('설명을 입력해야 합니다.');
+      return false;
+    }
+
+    if (new Date(startDate) > new Date(endDate)) {
+      alert('투표 시작일은 투표 종료일보다 미래여야 합니다.');
+      return false;
+    }
+
+    const meetDates = getDatesBetween(new Date(startDate), new Date(endDate));
+
     // 수정
     if (post) {
       const props = JSON.parse(post.title) as IPostTitleCustom;
@@ -84,7 +100,8 @@ export const CreateMeetingModal = ({
       const updateTitleCustom: IPostTitleCustom = {
         postTitle,
         contents,
-        status: isUndetermined ? 'Opened' : 'Scheduled',
+        // status: props.status,
+        status: 'Opened',
         tags: tags,
         mentions: mentions,
         meetDate: props.meetDate,
@@ -98,7 +115,8 @@ export const CreateMeetingModal = ({
         postId: post._id,
         title: JSON.stringify(updateTitleCustom),
         image: uploadImage == null ? null : uploadImage,
-        channelId: isUndetermined ? unscheduledChannelId : scheduledChannelId,
+        channelId:
+          endDate === startDate ? scheduledChannelId : unscheduledChannelId,
         imageToDeletePublicId:
           displayImage === null && post.image !== null
             ? post.imagePublicId
@@ -110,12 +128,10 @@ export const CreateMeetingModal = ({
 
       // 등록
     } else {
-      const meetDates = getDatesBetween(new Date(startDate), new Date(endDate));
-
       const postTitleCustom: IPostTitleCustom = {
         postTitle,
         contents,
-        status: isUndetermined ? 'Opened' : 'Scheduled',
+        status: 'Opened',
         tags,
         mentions: mentions,
         meetDate: meetDates,
@@ -227,15 +243,8 @@ export const CreateMeetingModal = ({
   useEffect(() => {
     if (visible) {
       if (post) {
-        const {
-          postTitle,
-          contents,
-          mentions,
-          status,
-          peopleLimit,
-          tags,
-          meetDate,
-        } = JSON.parse(post.title) as IPostTitleCustom;
+        const { postTitle, contents, mentions, peopleLimit, tags, meetDate } =
+          JSON.parse(post.title) as IPostTitleCustom;
 
         const [startDateISO, endDateISO]: string[] = [
           meetDate[0],
@@ -249,7 +258,6 @@ export const CreateMeetingModal = ({
         setCount(peopleLimit);
         setStartDate(startDateFormatted);
         setEndDate(endDateFormatted);
-        setIsUndetermined(status === 'Opened' ? true : false);
         setMentions(mentions);
         setTags(tags);
         setLabel('수정하기');
@@ -257,14 +265,12 @@ export const CreateMeetingModal = ({
         // post 값이 없을 때 초기값 설정
         setPostTitle('');
         setContents('');
-        setIsUndetermined(false);
         setStartDate(today);
         setEndDate(today);
         setMentionInput('');
         setFilteredUsers([]);
         setDisplayImage(null);
         setUploadImage(null);
-        // setAllUserList([]);
         setCount(1);
         setMentions([]);
         setTags([]);
@@ -278,7 +284,6 @@ export const CreateMeetingModal = ({
   return (
     <StBackgroundDim style={{ display: visible ? 'block' : 'none' }}>
       <StClose>
-        {/* TODO: 추후 수정 */}
         {/* <Icon
           name="x"
           showBackground={true}
@@ -319,35 +324,18 @@ export const CreateMeetingModal = ({
           </StRangeContainer>
           <StCalendarContainer>
             <Calendar
-              title="시작"
+              title="투표 시작"
               value={startDate}
               onChange={(e) => {
                 setStartDate(e.target.value);
-                if (isUndetermined) {
-                  setEndDate(e.target.value);
-                }
               }}
             />
             <StDivider />
             <Calendar
-              title="끝"
+              title="투표 끝"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              readOnly={isUndetermined ? true : false}
             />
-            <StCheckboxContainer>
-              <StCheckbox
-                type="checkbox"
-                checked={isUndetermined}
-                onChange={() => {
-                  if (!isUndetermined) {
-                    setEndDate(startDate);
-                  }
-                  setIsUndetermined(!isUndetermined);
-                }}
-              />
-              <StCheckboxLabel>미정</StCheckboxLabel>
-            </StCheckboxContainer>
           </StCalendarContainer>
           <StInputContainerWithDropdown>
             <InputContainer style={{ width: '350px' }}>
@@ -472,7 +460,7 @@ const StModalContainer = styled.div`
   top: 50%;
   left: 50%;
   height: 85%;
-  width: 450px;
+  width: 500px;
   border-radius: 8px;
 
   transform: translate(-50%, -50%);
@@ -547,27 +535,6 @@ const StDivider = styled.div`
   width: 1px;
   background-color: ${theme.colors.grey.dark};
   transform: rotate(15deg);
-`;
-
-const StCheckboxContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-`;
-
-const StCheckbox = styled.input`
-  width: 24px;
-  height: 24px;
-  background-color: ${theme.colors.primaryBlue};
-  color: white;
-  margin-right: 8px;
-  border-radius: 8px;
-`;
-
-const StCheckboxLabel = styled.span`
-  font-size: 16px;
-  color: ${theme.colors.primaryBlue};
 `;
 
 const StInputContainerWithDropdown = styled.div`
