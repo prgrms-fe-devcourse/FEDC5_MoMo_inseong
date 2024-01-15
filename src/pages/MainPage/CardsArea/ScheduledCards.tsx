@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreateMeetingModal } from '../Modal/CreateMeetingModal';
+import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
 import { Card } from '@common/Card/Card';
 import { Icon } from '@common/Icon/Icon';
@@ -15,6 +16,14 @@ export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
   const days = ['월', '화', '수', '목', '금', '토', '일'];
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const userInfo = useSelector((state) => state.userInfo.user);
+  const handleModalOpen = () => {
+    if (!userInfo) {
+      const isMoveLogin = confirm('로그인이 필요한 서비스입니다.');
+      return isMoveLogin && navigate('/login');
+    }
+    setIsModalOpen(true);
+  };
 
   return (
     <>
@@ -41,7 +50,7 @@ export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
                 <Icon
                   name="plus"
                   size={20}
-                  onIconClick={() => setIsModalOpen(true)}
+                  onIconClick={handleModalOpen}
                 />
               </StAddWrapper>
             </StCardsWrapper>

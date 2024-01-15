@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { CreateMeetingModal } from '../Modal/CreateMeetingModal';
 import { unscheduledChannelId } from '../channelId';
 import { StSpinnerWrapper } from '../mainPageStyled.ts';
+import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useAxios from '@/api/useAxios';
@@ -19,6 +20,14 @@ export const UnsheduledCards = () => {
     getApi(`/posts/channel/${unscheduledChannelId}`),
   );
   const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.userInfo.user);
+  const handleModalOpen = () => {
+    if (!userInfo) {
+      const isMoveLogin = confirm('로그인이 필요한 서비스입니다.');
+      return isMoveLogin && navigate('/login');
+    }
+    setIsModalOpen(true);
+  };
 
   return (
     <>
@@ -43,9 +52,7 @@ export const UnsheduledCards = () => {
             <Icon
               name="plus"
               size={20}
-              onIconClick={() => {
-                setIsModalOpen(true);
-              }}
+              onIconClick={handleModalOpen}
             />
           </StAddWrapper>
         </StCardsWrapper>
