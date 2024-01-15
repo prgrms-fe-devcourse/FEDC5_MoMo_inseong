@@ -77,11 +77,11 @@ export const CreateMeetingModal = ({
     event.preventDefault();
     if (user == null) return alert('로그인이 필요한 서비스입니다.');
 
-    if (postTitle.length === 0) {
+    if (postTitle.trim().length === 0) {
       alert('제목을 입력해야 합니다.');
       return false;
     }
-    if (contents.length === 0) {
+    if (contents.trim().length === 0) {
       alert('설명을 입력해야 합니다.');
       return false;
     }
@@ -104,9 +104,9 @@ export const CreateMeetingModal = ({
         status: 'Opened',
         tags: tags,
         mentions: mentions,
-        meetDate: props.meetDate,
+        meetDate: meetDates,
         peopleLimit: count,
-        vote: props.vote,
+        vote: createIVote(meetDates, props.vote),
         author: props.author,
         participants: props.participants,
       };
@@ -327,14 +327,24 @@ export const CreateMeetingModal = ({
               title="투표 시작"
               value={startDate}
               onChange={(e) => {
-                setStartDate(e.target.value);
+                const value = e.target.value;
+                setStartDate(value);
+                if (new Date(value) > new Date(endDate)) {
+                  setEndDate(value);
+                }
               }}
             />
             <StDivider />
             <Calendar
               title="투표 끝"
               value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setEndDate(value);
+                if (new Date(startDate) > new Date(value)) {
+                  setStartDate(value);
+                }
+              }}
             />
           </StCalendarContainer>
           <StInputContainerWithDropdown>
