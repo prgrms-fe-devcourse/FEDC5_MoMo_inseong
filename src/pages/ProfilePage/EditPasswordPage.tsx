@@ -56,6 +56,7 @@ export const EditPasswordPage = () => {
         });
 
         if (res.status === 200) {
+          alert('수정되었습니다.');
           navigate('/');
         }
       } else {
