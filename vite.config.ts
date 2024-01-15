@@ -14,20 +14,4 @@ export default defineConfig({
       },
     },
   },
-  build: {
-    rollupOptions: {
-      external: [
-        '',
-        fileURLToPath(
-          new URL(
-            'src/components/_common/Header/Menu/utils/getNotificationsInterval.ts',
-            import.meta.url,
-          ),
-        ),
-      ],
-    },
-  },
 });
-function fileURLToPath(arg0: URL): string | RegExp {
-  throw new Error('Function not implemented.');
-}
