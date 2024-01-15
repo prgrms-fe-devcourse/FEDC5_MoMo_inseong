@@ -23,6 +23,9 @@ export const EditProfilePage = () => {
 
   const userInfo = useSelector((state) => state.userInfo.user);
 
+  const { allUsers } = useSelector((state) => state.allUsers);
+  const [userNickNameList, setUserNickNameList] = useState<string[]>([]);
+
   useEffect(() => {
     setFullName(userInfo?.fullName || '');
     setUsername(userInfo?.username || '');
@@ -30,6 +33,14 @@ export const EditProfilePage = () => {
       setDisplayImage(userInfo.image);
     }
   }, [userInfo]);
+
+  useEffect(() => {
+    const userNickNameList = allUsers
+      .map((user) => user.username)
+      .filter((username) => typeof username === 'string' && username !== '');
+
+    setUserNickNameList(userNickNameList as string[]);
+  }, [allUsers]);
 
   const navigate = useNavigate();
 
@@ -39,6 +50,11 @@ export const EditProfilePage = () => {
   };
 
   const handleUpdateProfile = async () => {
+    if (userNickNameList.includes(username)) {
+      setUsernameError('중복된 닉네임 입니다.');
+      return false;
+    }
+
     const errorChecks = [
       { ref: fullNameRef, error: fullNameError },
       { ref: usernameRef, error: usernameError },
