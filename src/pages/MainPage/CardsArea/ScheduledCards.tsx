@@ -51,10 +51,7 @@ export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
                 <Icon
                   name="plus"
                   size={20}
-                  onIconClick={() => {
-                    handleModalOpen;
-                    setDateToPass(date);
-                  }}
+                  onIconClick={() => setDateToPass(date)}
                 />
               </StAddWrapper>
             </StCardsWrapper>
