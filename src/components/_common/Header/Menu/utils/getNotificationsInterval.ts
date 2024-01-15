@@ -1,6 +1,10 @@
+import {
+  INotification,
+  IPost,
+  IPostTitleCustom,
+} from '../../../../../api/_types/apiModels';
+import { parseTitle } from '../../../../../utils/parseTitle';
 import { NotificationExtractType } from '../Notification';
-import { INotification, IPost, IPostTitleCustom } from '@/api/_types/apiModels';
-import { parseTitle } from '@/utils/parseTitle';
 import axios from 'axios';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
