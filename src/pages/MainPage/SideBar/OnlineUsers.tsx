@@ -7,22 +7,29 @@ import { getApi } from '@/api/apis';
 import useForm from '@/hooks/useForm';
 import { theme } from '@/style/theme';
 import { Icon, InputCompound, Profile } from '@common/index';
-import { isEqual } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 
 export const OnlineUsers = () => {
-  const { allUsers } = useSelector((state) => state.allUsers);
+  const { allUsers, isLoading: isAllUsersLoading } = useSelector(
+    (state) => state.allUsers,
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    void dispatch(setAllUsersList());
+  }, []);
+  console.log(allUsers);
   const [searchedUsers, setSearchedUsers] = useState<IUser[]>([]);
 
   const [willDebounce, setWillDebounce] = useState(false);
-  const dispatch = useDispatch();
   useEffect(() => {
     setTimeout(() => {
       setWillDebounce((prev) => !prev);
-      dispatch(setAllUsersList);
+      void dispatch(setAllUsersList());
     }, 10000);
   }, [willDebounce]);
 
-  const { values, isLoading, errors, handleChange, handleSubmit } = useForm({
+  const { values, errors, handleChange, handleSubmit } = useForm({
     initialState: {
       inputValue: '',
     },
@@ -39,11 +46,14 @@ export const OnlineUsers = () => {
   });
 
   useEffect(() => {
-    if (values.trim() === '' && allUsers && !isLoading) {
-      allUsers.sort((a, b) => Number(b.isOnline) - Number(a.isOnline));
-      setSearchedUsers((prev) => (isEqual(prev, allUsers) ? prev : allUsers));
+    if (values.trim() === '' && allUsers.length > 0 && !isAllUsersLoading) {
+      const sortedUsers = cloneDeep(allUsers);
+      sortedUsers.sort((a, b) => Number(b.isOnline) - Number(a.isOnline));
+      setSearchedUsers((prev) =>
+        isEqual(prev, sortedUsers) ? prev : sortedUsers,
+      );
     }
-  }, [values, allUsers, isLoading]);
+  }, [values, allUsers, isAllUsersLoading]);
 
   return (
     <StSideBlockWrapper>

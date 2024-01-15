@@ -14,6 +14,7 @@ const initialState: IAllUsersSlice = {
 
 export const setAllUsersList = createAsyncThunk('setAllUsersList', async () => {
   const response = await getApi<IUser[]>('/users/get-users');
+  console.log(response);
   return response?.data;
 });
 
