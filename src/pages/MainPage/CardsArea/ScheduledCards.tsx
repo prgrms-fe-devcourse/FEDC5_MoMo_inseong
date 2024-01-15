@@ -15,6 +15,7 @@ export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
   const days = ['월', '화', '수', '목', '금', '토', '일'];
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dateToPass, setDateToPass] = useState('');
 
   return (
     <>
@@ -41,7 +42,10 @@ export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
                 <Icon
                   name="plus"
                   size={20}
-                  onIconClick={() => setIsModalOpen(true)}
+                  onIconClick={() => {
+                    setIsModalOpen(true);
+                    setDateToPass(date);
+                  }}
                 />
               </StAddWrapper>
             </StCardsWrapper>
@@ -50,7 +54,8 @@ export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
       </StScheduledWrapper>
       <CreateMeetingModal
         visible={isModalOpen}
-        onClose={() => setIsModalOpen(false)}>
+        onClose={() => setIsModalOpen(false)}
+        dateToPass={dateToPass}>
         <button onClick={() => setIsModalOpen(false)}>Close</button>
       </CreateMeetingModal>
     </>
