@@ -48,11 +48,10 @@ export const UnsheduledCards = () => {
                 />
               );
             })}
-          <StAddWrapper>
+          <StAddWrapper onClick={handleModalOpen}>
             <Icon
               name="plus"
               size={20}
-              onIconClick={handleModalOpen}
             />
           </StAddWrapper>
         </StCardsWrapper>
