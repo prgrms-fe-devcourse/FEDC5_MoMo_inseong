@@ -72,9 +72,20 @@ const StCardsWrapper = styled.div`
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
   justify-items: center;
+  align-items: center;
 `;
 const StAddWrapper = styled.button`
+  box-shadow: 0 0 4px 0px ${({ theme }) => theme.colors.grey.default};
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
   margin: 0 auto;
   padding: 20px;
   margin-bottom: 20px;
+  background: inherit;
+  transition: all 200ms ease-in-out;
+
+  &:hover {
+    transform: translateY(-6%);
+  }
 `;
