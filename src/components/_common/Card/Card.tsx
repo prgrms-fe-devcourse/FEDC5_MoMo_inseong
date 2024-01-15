@@ -30,6 +30,12 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
   const { likes, _id: cardId, image, author: postAuthor } = cardData;
   const { postTitle, status, tags, meetDate, author } = parsedTitle;
 
+  const statusCheck =
+    meetDate.length === 1 &&
+    meetDate[0].split('T')[0] < new Date().toISOString().split('T')[0]
+      ? 'Closed'
+      : 'Opened';
+
   let isLiked = '';
   likes?.forEach((each) => {
     if (typeof each !== 'string' && each.user === userInfo?._id) {
@@ -88,7 +94,7 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
         onClick={() => handleCardClick(cardId)}
         status={status}>
         <StCardStatus className="card-status">
-          {statusValue[status]}
+          {statusValue[statusCheck]}
         </StCardStatus>
         <StCardProfileWrapper>
           <Profile
@@ -113,7 +119,7 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
                     : theme.colors.secondaryNavy.default
                 }
               />
-              {meetDate[0].slice(0, 16)}
+              {meetDate[0].split('T')[0].slice(0, 16)}
             </>
           )}
         </StCardDate>
