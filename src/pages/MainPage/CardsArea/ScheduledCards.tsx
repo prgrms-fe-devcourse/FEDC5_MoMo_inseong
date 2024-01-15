@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreateMeetingModal } from '../Modal/CreateMeetingModal';
+import todaySlice from '@/_redux/slices/todaySlice';
 import { IPost } from '@/api/_types/apiModels';
 import { Card } from '@common/Card/Card';
 import { Icon } from '@common/Icon/Icon';
@@ -15,7 +16,8 @@ export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
   const days = ['월', '화', '수', '목', '금', '토', '일'];
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const today = new Date().toISOString().split('T')[0];
+  console.log(today);
   return (
     <>
       <StScheduledWrapper>
@@ -37,13 +39,15 @@ export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
                   />
                 );
               })}
-              <StAddWrapper>
-                <Icon
-                  name="plus"
-                  size={20}
-                  onIconClick={() => setIsModalOpen(true)}
-                />
-              </StAddWrapper>
+              {date.slice(0, 10) >= today.slice(0, 10) && (
+                <StAddWrapper>
+                  <Icon
+                    name="plus"
+                    size={20}
+                    onIconClick={() => setIsModalOpen(true)}
+                  />
+                </StAddWrapper>
+              )}
             </StCardsWrapper>
           </div>
         ))}
