@@ -10,18 +10,17 @@ import { Icon, InputCompound, Profile } from '@common/index';
 import { cloneDeep, isEqual } from 'lodash';
 
 export const OnlineUsers = () => {
+  const dispatch = useDispatch();
   const { allUsers, isLoading: isAllUsersLoading } = useSelector(
     (state) => state.allUsers,
   );
-  const dispatch = useDispatch();
+  const [searchedUsers, setSearchedUsers] = useState<IUser[]>([]);
+  const [willDebounce, setWillDebounce] = useState(false);
 
   useEffect(() => {
     void dispatch(setAllUsersList());
   }, []);
-  console.log(allUsers);
-  const [searchedUsers, setSearchedUsers] = useState<IUser[]>([]);
 
-  const [willDebounce, setWillDebounce] = useState(false);
   useEffect(() => {
     setTimeout(() => {
       setWillDebounce((prev) => !prev);
