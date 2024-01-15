@@ -119,7 +119,7 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
                     : theme.colors.secondaryNavy.default
                 }
               />
-              {meetDate[0].slice(0, 16)}
+              {meetDate[0].split('T')[0].slice(0, 16)}
             </>
           )}
         </StCardDate>
