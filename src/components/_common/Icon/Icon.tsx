@@ -48,7 +48,6 @@ export const Icon = ({
   const shapeStyle = {
     width: size,
     height: size,
-    borderRadius: '50%',
     backgroundColor: showBackground ? theme.colors.grey.light : 'transparent',
   };
   const iconStyle = {
