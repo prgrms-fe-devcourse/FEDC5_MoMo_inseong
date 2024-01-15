@@ -1,15 +1,10 @@
 import { ITimeVote, IVote } from '@/api/_types/apiModels';
 
-export const createIVote = (meetDates: string[], voted?: IVote) => {
+export const createIVote = (meetDates: string[]) => {
   const result: IVote = {};
 
   for (const meetDate of meetDates) {
     const date = meetDate.split('T')[0];
-
-    if (voted && date in voted) {
-      result[date] = voted[date];
-      continue;
-    }
 
     result[date] = {} as ITimeVote;
 

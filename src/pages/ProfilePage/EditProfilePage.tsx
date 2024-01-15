@@ -67,7 +67,6 @@ export const EditProfilePage = () => {
       });
 
       if (nameResponse.status === 200) {
-        alert('수정되었습니다.');
         navigate('/');
       }
     } catch (err) {

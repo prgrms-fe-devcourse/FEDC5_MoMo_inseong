@@ -41,7 +41,7 @@ const StCalendarForm = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  width: 200px;
+  width: 150px;
   cursor: pointer;
 `;
 const StCalendarTitle = styled.div``;
