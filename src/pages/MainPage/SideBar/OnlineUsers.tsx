@@ -1,40 +1,28 @@
 import styled from '@emotion/styled';
 import { FormEvent, useEffect, useState } from 'react';
-import { useDispatch } from '@/_redux/hooks';
+import { useDispatch, useSelector } from '@/_redux/hooks';
 import { setAllUsersList } from '@/_redux/slices/allUsersSlice';
 import { IUser } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
-import useAxios from '@/api/useAxios';
 import useForm from '@/hooks/useForm';
 import { theme } from '@/style/theme';
 import { Icon } from '@common/Icon/Icon';
 import { InputCompound } from '@common/Input/InputCompound';
 import { Profile } from '@common/Profile/Profile';
+import { isEqual } from 'lodash';
 
 export const OnlineUsers = () => {
-  const [allUsers, setAllUsers] = useState<IUser[]>([]);
-  const {
-    response: allUserResp,
-    error: allUserError,
-    isLoading: isAllUserLoading,
-  } = useAxios<IUser[]>(() => getApi('/users/get-users'));
-
-  useEffect(() => {
-    if (!isAllUserLoading && !allUserError) {
-      setAllUsers(allUserResp);
-      dispatch(setAllUsersList(allUserResp));
-    }
-  }, [isAllUserLoading]);
+  const { allUsers } = useSelector((state) => state.allUsers);
+  const [searchedUsers, setSearchedUsers] = useState<IUser[]>([]);
 
   const [willDebounce, setWillDebounce] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
     setTimeout(() => {
       setWillDebounce((prev) => !prev);
+      dispatch(setAllUsersList);
     }, 10000);
   }, [willDebounce]);
-
-  const [onlineUsers, setOnlineUsers] = useState<IUser[]>([]);
 
   const { values, isLoading, errors, handleChange, handleSubmit } = useForm({
     initialState: {
@@ -42,7 +30,7 @@ export const OnlineUsers = () => {
     },
     onSubmit: async () => {
       const res = await getApi<IUser[]>(`/search/users/${values}`);
-      setOnlineUsers(res.data);
+      setSearchedUsers(res.data);
     },
     validate: (values: string) => {
       if (values.trim() === '') {
@@ -54,7 +42,8 @@ export const OnlineUsers = () => {
 
   useEffect(() => {
     if (values.trim() === '' && allUsers && !isLoading) {
-      setOnlineUsers(allUsers);
+      allUsers.sort((a, b) => Number(b.isOnline) - Number(a.isOnline));
+      setSearchedUsers((prev) => (isEqual(prev, allUsers) ? prev : allUsers));
     }
   }, [values, allUsers, isLoading]);
 
@@ -81,8 +70,8 @@ export const OnlineUsers = () => {
         </form>
       </div>
       <StOnlineUserUl>
-        {onlineUsers &&
-          onlineUsers.map((user, idx) => (
+        {searchedUsers &&
+          searchedUsers.map((user, idx) => (
             <Profile
               key={idx}
               image={user.image || ''}

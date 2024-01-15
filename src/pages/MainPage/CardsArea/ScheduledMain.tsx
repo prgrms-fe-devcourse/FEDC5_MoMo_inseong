@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { StSpinnerWrapper } from '../mainPageStyled.ts';
 import { ScheduledCards } from './ScheduledCards';
-import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import { dateFormat } from '@/utils/dateFormat';
@@ -13,7 +12,8 @@ import { Spinner } from '@common/Spinner/Spinner';
 export const ScheduledMain = () => {
   const [page, setPage] = useState(0); // 오늘주0, 이후 +7, -7 씩
 
-  const today = new Date(useSelector((state) => state.today.today));
+  // const today = new Date(useSelector((state) => state.today.today));
+  const today = new Date();
   const thisWeek = new Array(7)
     .fill(0)
     .map((_, i) =>
