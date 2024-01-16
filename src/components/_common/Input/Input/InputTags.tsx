@@ -46,7 +46,6 @@ export const InputTags = ({
 };
 
 const StTagsContainer = styled.div<{ hasTags: boolean }>`
-  border: 2px solid red;
   display: flex;
   flex-wrap: wrap;
   padding-top: ${({ hasTags }) => (hasTags ? '10px' : '0')};
