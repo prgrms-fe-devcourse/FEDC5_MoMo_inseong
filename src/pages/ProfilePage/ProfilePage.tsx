@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from '@/_redux/hooks';
 import { getUserInfo } from '@/_redux/slices/userSlice';
 import { IUser } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
-import useAxios from '@/api/useAxios';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
 import { Button, Profile } from '@common/index';
 
@@ -21,15 +20,30 @@ export const ProfilePage = () => {
   const dispatch = useDispatch();
   const [tabNumber, setTabNumber] = useState(id === userInfo?._id ? 1 : 4);
   const navigate = useNavigate();
+
   useEffect(() => {
     void dispatch(getUserInfo());
   }, [tabNumber]);
-  const { response, error } = useAxios<IUser>(() => getApi(`/users/${id}`));
+
+  const [response, setResponse] = useState<IUser>({} as IUser);
+  const fetching = async () => {
+    const res = await getApi<IUser>(`/users/${id}`);
+    setResponse(res.data);
+  };
+  useEffect(() => {
+    void fetching();
+    if (userInfo?._id !== id) {
+      setTabNumber(4);
+    } else {
+      setTabNumber(1);
+    }
+  }, [id]);
+
   return (
     <StSideMarginWrapper>
       <StProfileWrapper>
         <StProfileActionsContainer>
-          {!error && response && (
+          {response && (
             <Profile
               image={response.image || ''}
               fullName={
