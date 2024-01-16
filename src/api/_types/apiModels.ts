@@ -9,7 +9,7 @@ export interface IUser {
   isOnline: boolean;
   posts: IPost[] | string[]; //
   likes: ILike[]; //
-  comments: string[] | [];
+  comments: string[] | IComment[];
   followers: string[] | [];
   following: string[] | [];
   notifications: INotification[] | string[]; //
