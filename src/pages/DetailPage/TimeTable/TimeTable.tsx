@@ -3,12 +3,12 @@ import { useMemo, useState } from 'react';
 import { useVotingTimeTable } from '../hooks/useVotingTimeTable';
 import { VoteTable } from './VoteTable/VoteTable';
 import { useDispatch, useSelector } from '@/_redux/hooks';
-import { modifyVoteState } from '@/_redux/slices/postSlices/getPostSlice';
-import { IPost, IPostTitleCustom, IUser } from '@/api/_types/apiModels';
-import { putApiJWT } from '@/api/apis';
-import { createFormData } from '@/utils/createFormData';
+import { getPostDetail } from '@/_redux/slices/postSlices/getPostSlice';
+import { IComment, IPost, IUser } from '@/api/_types/apiModels';
+import { deleteApiJWT, postApiJWT } from '@/api/apis';
+import { createIVote } from '@/utils/createIVote';
 import { parseTitle } from '@/utils/parseTitle';
-import { Button, Spinner } from '@common/index';
+import { Button } from '@common/index';
 
 export interface IVotedUser {
   id: string;
@@ -31,10 +31,6 @@ export const TimeTable = ({ post }: TimeTableType) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userInfo);
 
-  const { isLoading, isError, error } = useSelector(
-    (state) => state.getPostDetail,
-  );
-
   const { _id: userId, fullName } = useSelector(
     (state) => state.userInfo.user as IUser,
   );
@@ -43,12 +39,31 @@ export const TimeTable = ({ post }: TimeTableType) => {
 
   const { vote, meetDate, voteEntries, times } = useMemo(() => {
     const parsedTitle = parseTitle(post.title);
-    const vote = parsedTitle.vote;
+    const meetDate = parsedTitle.meetDate;
+
+    const receivedComments = post.comments as IComment[];
+    const currentVote = receivedComments
+      .filter(({ comment }) => comment.startsWith('@VOTE'))
+      .sort(
+        ({ createdAt: prev }, { createdAt: cur }) =>
+          new Date(cur).getTime() - new Date(prev).getTime(),
+      )[0];
+
+    let vote: IVote;
+
+    if (currentVote) {
+      const splitedMyVote = currentVote.comment.split('@VOTE ')[1];
+      const parsedMyVote = JSON.parse(splitedMyVote) as IVote;
+      vote = parsedMyVote;
+    } else {
+      vote = createIVote(meetDate);
+    }
+
     const voteEntries = Object.entries(vote);
 
     return {
       vote,
-      meetDate: parsedTitle.meetDate,
+      meetDate,
       voteEntries,
       times: Object.keys(voteEntries[0][1]),
     };
@@ -60,41 +75,37 @@ export const TimeTable = ({ post }: TimeTableType) => {
     isVoting,
   });
 
-  const modifyVoteOfPost = () => {
-    const parsedTitle = parseTitle(post.title);
+  const modifyVoteComment = async () => {
+    const deleteCommentId =
+      (post.comments as IComment[]).find(
+        (comment) =>
+          comment.author._id === userId && comment.comment.startsWith('@VOTE'),
+      )?._id ?? (post.comments as string[]).find((id) => id === userId);
+
     const modifiedMyVote = modifyMyVote(userId, fullName);
+    const stringifiedVote = JSON.stringify(modifiedMyVote);
+    const modifiedVoteComment = `@VOTE ${stringifiedVote}`;
 
-    const modifiedParticipants = new Set([...parsedTitle.participants, userId]);
+    try {
+      if (deleteCommentId)
+        await deleteApiJWT<IComment>('/comments/delete', {
+          id: deleteCommentId,
+        });
 
-    const modifiedTitle: IPostTitleCustom = {
-      ...parsedTitle,
-      vote: modifiedMyVote,
-      participants: [...modifiedParticipants],
-    };
+      await postApiJWT<IComment>('/comments/create', {
+        comment: modifiedVoteComment,
+        postId: post._id,
+      });
 
-    return modifiedTitle;
-  };
-
-  const putPostWithModifiedVote = () => {
-    const resultVote = modifyVoteOfPost();
-    const formData = createFormData({
-      postId: post._id,
-      title: JSON.stringify(resultVote),
-      image: post.image ?? 'null',
-      channelId:
-        typeof post.channel === 'string' ? post.channel : post.channel._id,
-    });
-
-    void putApiJWT<IPost, FormData>('/posts/update', formData);
-
-    void dispatch(modifyVoteState(resultVote.vote));
-
-    alert('일정투표가 정상적으로 완료되었습니다!');
+      void dispatch(getPostDetail(post._id));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleConfirmClick = () => {
     if (isVoting) {
-      void putPostWithModifiedVote();
+      void modifyVoteComment();
     }
     setIsVoting((old) => !old);
   };
@@ -102,9 +113,6 @@ export const TimeTable = ({ post }: TimeTableType) => {
   const handleCancelClick = () => {
     setIsVoting(false);
   };
-
-  if (isLoading) return <Spinner />;
-  if (isError) throw error;
 
   return (
     <StWrapper>

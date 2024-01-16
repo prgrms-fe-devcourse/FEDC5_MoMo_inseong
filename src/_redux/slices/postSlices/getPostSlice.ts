@@ -4,7 +4,6 @@ import {
   IMessage,
   IPost,
   IPostTitleCustom,
-  IVote,
 } from '@/api/_types/apiModels';
 import { deleteApiJWT, getApi, postApiJWT, putApiJWT } from '@/api/apis';
 import { createNotification } from '@/api/createNotification';
@@ -117,20 +116,7 @@ export const deleteComment = createAsyncThunk(
 const getPostDetailSlice = createSlice({
   name: 'getPostDetailSlice',
   initialState,
-  reducers: {
-    modifyVoteState: (state, action: PayloadAction<IVote>) => {
-      if (state.post != null) {
-        const modifiedPostTitle: IPostTitleCustom = {
-          ...parseTitle(state.post.title),
-          vote: action.payload,
-        };
-        state.post = {
-          ...state.post,
-          title: JSON.stringify(modifiedPostTitle),
-        };
-      }
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(createPost.pending, (state) => {
       state.isLoading = true;
@@ -211,7 +197,5 @@ const getPostDetailSlice = createSlice({
     });
   },
 });
-
-export const { modifyVoteState } = getPostDetailSlice.actions;
 
 export const postSlice = getPostDetailSlice.reducer;
