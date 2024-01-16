@@ -58,6 +58,7 @@ export const InputImage = ({
               <Icon
                 name="x"
                 showBackground={true}
+                style={{ borderRadius: '15px' }}
               />
             </StImage>
           </StyledUpload>
