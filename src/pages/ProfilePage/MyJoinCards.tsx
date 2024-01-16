@@ -16,7 +16,6 @@ export const MyJoinCards = () => {
   const { response, error, isLoading } = useAxios<IUser>(() =>
     getApi(`/users/${userInfo?._id}`),
   );
-  console.log(response);
 
   useEffect(() => {
     setAllJoinedPosts([] as IPost[]);
