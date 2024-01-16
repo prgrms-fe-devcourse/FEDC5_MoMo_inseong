@@ -97,7 +97,9 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
         <StCardProfileWrapper>
           <Profile
             image={image || ''}
-            fullName={author}
+            fullName={
+              typeof postAuthor === 'string' ? author : postAuthor.fullName
+            }
             status="Profile"
             fontSize={12}
             imageSize={14}
