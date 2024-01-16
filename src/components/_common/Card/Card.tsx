@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { MouseEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from '@/_redux/hooks';
-import { ILike, IPost, IPostTitleCustom } from '@/api/_types/apiModels';
+import { ILike, IPost, IPostTitleCustom, IUser } from '@/api/_types/apiModels';
 import { deleteApiJWT, postApiJWT } from '@/api/apis';
 import { createNotification } from '@/api/createNotification';
 import { theme } from '@/style/theme';
@@ -25,7 +25,7 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
 
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.userInfo.user);
-  const { likes, _id: cardId, image, author: postAuthor } = cardData;
+  const { likes, _id: cardId, author: postAuthor } = cardData;
   const { postTitle, status, tags, meetDate, author } = parsedTitle;
 
   const statusCheck =
@@ -96,7 +96,7 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
         </StCardStatus>
         <StCardProfileWrapper>
           <Profile
-            image={image || ''}
+            image={(postAuthor as IUser).image ?? ''}
             fullName={author}
             status="Profile"
             fontSize={12}
