@@ -21,9 +21,11 @@ export const UserJoinCards = ({ userId }: { userId: string }) => {
     if (!error && !isLoading && response) {
       response.comments.map((res) => {
         if (typeof res !== 'string') {
-          void getPostData(res.post).then((resPost) => {
-            setAllJoinedPosts((prev) => [...prev, resPost]);
-          });
+          if (res.comment.includes('@VOTE') && res.comment.includes(userId)) {
+            void getPostData(res.post).then((resPost) => {
+              setAllJoinedPosts((prev) => [...prev, resPost]);
+            });
+          }
         }
       });
     }

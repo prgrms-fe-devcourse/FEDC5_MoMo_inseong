@@ -16,6 +16,7 @@ export const MyJoinCards = () => {
   const { response, error, isLoading } = useAxios<IUser>(() =>
     getApi(`/users/${userInfo?._id}`),
   );
+  console.log(response);
 
   useEffect(() => {
     setAllJoinedPosts([] as IPost[]);
@@ -23,9 +24,14 @@ export const MyJoinCards = () => {
     if (!error && !isLoading && response) {
       response.comments.map((res) => {
         if (typeof res !== 'string') {
-          void getPostData(res.post).then((resPost) => {
-            setAllJoinedPosts((prev) => [...prev, resPost]);
-          });
+          if (
+            res.comment.includes('@VOTE') &&
+            res.comment.includes(userInfo._id)
+          ) {
+            void getPostData(res.post).then((resPost) => {
+              setAllJoinedPosts((prev) => [...prev, resPost]);
+            });
+          }
         }
       });
     }
