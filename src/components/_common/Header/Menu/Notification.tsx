@@ -60,15 +60,12 @@ interface NotificationProps {
 export const Notification = memo(
   ({ setIsVisible, setIsRedDot }: NotificationProps) => {
     const [isBlur, setIsBlur] = useState(false);
-
     const notifications = useNotification();
-
     const handleSeenAlert = () => {
       void putApiJWT(`/notifications/seen`);
       setIsBlur(true);
       setIsRedDot(false);
     };
-
     const handleVisibility = () => {
       setIsVisible && setIsVisible(false);
     };
@@ -156,8 +153,6 @@ const StContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
-  overflow: hidden;
 `;
 
 const StHeaderContainer = styled.header`
@@ -182,8 +177,8 @@ const StConfirmButton = styled.button`
 
 const StContentScrollWrapper = styled.article`
   display: block;
-  overflow: hidden;
-  max-height: calc(100% - ${({ theme }) => theme.sizes.notificationHeader});
+  height: 260px;
+  min-height: calc(100% - ${({ theme }) => theme.sizes.notificationHeader});
 `;
 
 const StContents = styled.ul`
@@ -233,11 +228,12 @@ const StSummary = styled.p`
 `;
 
 const StContent = styled.p`
+  margin-top: 2px;
   font-size: 12px;
   color: ${({ theme }) => theme.colors.primaryBlue.default};
 
   overflow: hidden;
-  white-space: normal;
+  white-space: nowrap;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
