@@ -4,7 +4,6 @@ import {
   ReactElement,
   FormEvent as ReactFormEvent,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -67,8 +66,6 @@ export const CreateMeetingModal = ({
   const [selectedMentionIndex, setSelectedMentionIndex] = useState<number>(-1);
   const today = new Date().toISOString().split('T')[0];
 
-  const modalRef = useRef<HTMLDivElement | null>(null);
-
   const handleOnSubmit = (event: ReactFormEvent) => {
     event.preventDefault();
     if (user == null) return alert('로그인이 필요한 서비스입니다.');
@@ -116,7 +113,7 @@ export const CreateMeetingModal = ({
             ? post.imagePublicId
             : '',
       };
-
+      alert('수정이 완료 되었습니다.');
       void dispatch(putPost(data));
       if (onClose) onClose();
     } else {
@@ -139,6 +136,7 @@ export const CreateMeetingModal = ({
         channelId:
           endDate === startDate ? scheduledChannelId : unscheduledChannelId,
       };
+      alert('등록이 완료 되었습니다.');
       void dispatch(createPost(data));
       if (onClose) onClose();
 
@@ -190,25 +188,6 @@ export const CreateMeetingModal = ({
   }, [isCreated, isPostLoading]);
 
   useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
-        if (onClose) onClose();
-      }
-    };
-
-    if (visible) {
-      document.addEventListener('mousedown', handleOutsideClick);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, [visible, onClose]);
-
-  useEffect(() => {
     if (user == null) {
       void dispatch(getUserInfo());
     }
@@ -219,7 +198,6 @@ export const CreateMeetingModal = ({
       _id: user._id,
       fullName: user.username ? user.username : user.fullName,
     }));
-
     setAllUserList(updatedUserList);
   }, [allUsers]);
 
@@ -275,11 +253,12 @@ export const CreateMeetingModal = ({
 
   return (
     <StBackgroundDim style={{ display: visible ? 'block' : 'none' }}>
-      <StModalContainer
-        ref={modalRef}
-        {...props}>
+      <StModalContainer {...props}>
         <StClose>
-          <Icon name="x" />
+          <Icon
+            name="x"
+            onIconClick={onClose}
+          />
         </StClose>
         <StTitle>모임 {label}</StTitle>
         <StForm onSubmit={handleOnSubmit}>
