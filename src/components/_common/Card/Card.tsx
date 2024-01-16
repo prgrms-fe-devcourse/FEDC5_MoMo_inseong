@@ -25,8 +25,8 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
 
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.userInfo.user);
-  const { likes, _id: cardId, image, author: postAuthor } = cardData;
-  const { postTitle, status, tags, meetDate, author } = parsedTitle;
+  const { likes, _id: cardId, author: postAuthor } = cardData;
+  const { postTitle, status, tags, meetDate } = parsedTitle;
 
   const statusCheck =
     meetDate.length === 1 &&
@@ -95,14 +95,16 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
           {statusValue[statusCheck]}
         </StCardStatus>
         <StCardProfileWrapper>
-          <Profile
-            image={image || ''}
-            fullName={author}
-            status="Profile"
-            fontSize={12}
-            imageSize={14}
-            maxWidth={50}
-          />
+          {typeof postAuthor === 'string' ? null : (
+            <Profile
+              image={postAuthor.image ?? ''}
+              fullName={postAuthor.username || postAuthor.fullName}
+              status="Profile"
+              fontSize={12}
+              imageSize={14}
+              maxWidth={50}
+            />
+          )}
         </StCardProfileWrapper>
 
         <StCardTitle style={colorStyle}>{postTitle}</StCardTitle>

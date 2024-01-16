@@ -65,7 +65,7 @@ export const Icon = ({
   return (
     <StIconWrapper
       onClick={onIconClick}
-      onMouseOver={() => setIsMouseHover(true)}
+      onMouseOver={() => name !== 'calendar' && setIsMouseHover(true)}
       onMouseLeave={() => setIsMouseHover(false)}
       onMouseUp={() => iconName === 'heart' && handleHeartMouseUp()}
       size={size}
