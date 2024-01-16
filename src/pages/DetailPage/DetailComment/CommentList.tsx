@@ -28,21 +28,23 @@ export const CommentList = ({ comments, loginUser }: CommentListProps) => {
     isIComment(comments) &&
     comments.map((comment, idx) => {
       return (
-        <Comment
-          key={idx}
-          _id={comment.author._id}
-          image={comment.author.image as string}
-          author={comment.author.fullName}
-          createdAt={comment.createdAt}
-          isMine={
-            loginUser === null ? false : comment.author._id === loginUser._id
-          }
-          mode={mode}
-          comment={comment.comment}
-          nickname={comment.author.username}
-          handleEditChange={handleEditChange}
-          handleDeleteClick={() => handleDeleteClick(comment._id)}
-        />
+        !comment.comment.startsWith('@VOTE') && (
+          <Comment
+            key={idx}
+            _id={comment.author._id}
+            image={comment.author.image as string}
+            author={comment.author.fullName}
+            createdAt={comment.createdAt}
+            isMine={
+              loginUser === null ? false : comment.author._id === loginUser._id
+            }
+            mode={mode}
+            comment={comment.comment}
+            nickname={comment.author.username}
+            handleEditChange={handleEditChange}
+            handleDeleteClick={() => handleDeleteClick(comment._id)}
+          />
+        )
       );
     })
   );
