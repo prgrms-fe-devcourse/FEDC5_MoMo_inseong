@@ -10,11 +10,14 @@ interface BadgeProps {
 
 export const Badge = ({ kind, data }: BadgeProps) => {
   const navigate = useNavigate();
+  const refineTags = (tags: string[]) => {
+    return tags.filter((tag) => tag.trim() !== '');
+  };
 
   return (
     <StBadgeContainer>
       {kind === 'tag' &&
-        (data as string[]).map((tag, index) => (
+        refineTags(data as string[]).map((tag, index) => (
           <StBadge key={`tag-${index}`}>
             <Tag
               name={`#${tag}`}
