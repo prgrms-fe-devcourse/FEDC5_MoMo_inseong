@@ -1,26 +1,30 @@
 import styled from '@emotion/styled';
-import { CSSProperties } from 'react';
-import { IVotedUser } from '../TimeTable';
+import { CSSProperties, memo } from 'react';
+import { IVotedUser } from '@/api/_types/apiModels';
 
 interface VotedUserListProps {
   userList: IVotedUser[];
   style?: CSSProperties;
 }
 
-export const VotedUserList = ({ userList, ...props }: VotedUserListProps) => {
-  return (
-    <StWrapper {...props}>
-      <StContainer>
-        <StTitle>참여자</StTitle>
-        <StContentBox>
-          {userList.map(({ fullName }) => (
-            <StUser key={self.crypto.randomUUID()}>{fullName}</StUser>
-          ))}
-        </StContentBox>
-      </StContainer>
-    </StWrapper>
-  );
-};
+export const VotedUserList = memo(
+  ({ userList, ...props }: VotedUserListProps) => {
+    return (
+      <StWrapper {...props}>
+        <StContainer>
+          <StTitle>참여자</StTitle>
+          <StContentBox>
+            {userList.map(({ fullName, username }) => (
+              <StUser key={self.crypto.randomUUID()}>
+                {username ?? fullName}
+              </StUser>
+            ))}
+          </StContentBox>
+        </StContainer>
+      </StWrapper>
+    );
+  },
+);
 
 const StWrapper = styled.div`
   z-index: 19;
