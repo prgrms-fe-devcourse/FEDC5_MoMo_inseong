@@ -8,7 +8,14 @@ import { isEqual } from 'lodash';
 export const useNotification = () => {
   const { user } = useSelector((state) => state.userInfo);
   const getNotifications: Worker = useMemo(
-    () => new GetNotificationsWorker(),
+    // () => new GetNotificationsWorker(),
+    () =>
+      new Worker(
+        new URL('../utils/getNotificationsInterval.ts', import.meta.url),
+        {
+          type: 'module',
+        },
+      ),
     [],
   );
 
