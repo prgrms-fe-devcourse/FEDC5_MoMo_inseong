@@ -18,12 +18,15 @@ export const InputTags = ({
   const handleTagRemove = (indexToRemove: number) => {
     setTags(tags.filter((_, index) => index !== indexToRemove));
   };
+  const refineTags = (tags: string[]) => {
+    return tags.filter((tag) => tag.trim() !== '');
+  };
 
   return (
     <StTagsContainer
       hasTags={tags.length > 0}
       style={{ ...props.style }}>
-      {tags.map((tag, index) => (
+      {refineTags(tags).map((tag, index) => (
         <StTag key={`tag-${index}`}>
           <Tag
             key={index}

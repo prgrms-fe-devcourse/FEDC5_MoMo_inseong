@@ -7,6 +7,7 @@ import {
   validateFullName,
   validatePassword,
 } from './validation';
+import { useSelector } from '@/_redux/hooks';
 import { postApi } from '@/api/apis';
 import logo from '@/assets/logo.png';
 import { StSideMarginWrapper } from '@/style/StSideMarginWrapper';
@@ -32,9 +33,16 @@ export const SignUpPage = () => {
   const confirmRef = useRef<HTMLInputElement>(null);
   const fullNameRef = useRef<HTMLInputElement>(null);
 
+  const { allUsers } = useSelector((state) => state.allUsers);
+  const [userIdList, setUserIdList] = useState<string[]>([]);
+
   const handleSignUp = (e: FormEvent | KeyboardEvent) => {
     e.preventDefault();
 
+    if (userIdList.includes(email)) {
+      setEmailError('중복된 email 입니다.');
+      return false;
+    }
     emailCheckHandler(email);
     passwordCheckHandler(password);
     confirmCheckHandler(confirm);
@@ -72,6 +80,12 @@ export const SignUpPage = () => {
       navigate('/');
     }
   }, [navigate]);
+
+  useEffect(() => {
+    const userIdList = allUsers.map((user) => user.email);
+
+    setUserIdList(userIdList);
+  }, [allUsers]);
 
   const handleOnKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -163,7 +177,7 @@ export const SignUpPage = () => {
           <StInputText>
             <InputCompound style={{ width: '300px' }}>
               <InputCompound.Text
-                placeholder="닉네임"
+                placeholder="이름"
                 value={fullName}
                 onChange={(e) => {
                   setFullName(e.target.value);
@@ -181,6 +195,7 @@ export const SignUpPage = () => {
               type="submit"
             />
           </div>
+          <StLoginLink onClick={() => navigate('/login')}>로그인</StLoginLink>
         </StSignUpFormContainer>
       </StSignUpContainer>
     </StSideMarginWrapper>
@@ -236,4 +251,10 @@ const StDescriptionText = styled.div`
   font-weight: 500;
   font-size: 20px;
   font-family: 'seolleimcool-SemiBold';
+`;
+
+const StLoginLink = styled.div`
+  color: ${theme.colors.grey.default};
+  cursor: pointer;
+  padding-top: 30px;
 `;

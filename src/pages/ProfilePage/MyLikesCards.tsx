@@ -1,20 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getPostData } from './getPostData';
 import { StCardsWrapper } from './profilePageStyles';
 import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
-import { getApi } from '@/api/apis';
 import { Card, Spinner } from '@common/index';
 
 export const MyLikesCards = () => {
   const navigate = useNavigate();
-
   const userInfo = useSelector((state) => state.userInfo.user);
   const [allLikedPosts, setAllLikedPosts] = useState<IPost[]>([]);
 
-  const getPostData = async (url: string) => {
-    return (await getApi<IPost>(`/posts/${url}`)).data;
-  };
   useEffect(() => {
     setAllLikedPosts([]);
     if (!userInfo) return;

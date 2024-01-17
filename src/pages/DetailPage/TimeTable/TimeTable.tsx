@@ -1,14 +1,25 @@
 import styled from '@emotion/styled';
-import { useMemo, useState } from 'react';
-import { useVotingTimeTable } from '../hooks/useVotingTimeTable';
-import { VoteTable } from './VoteTable/VoteTable';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { VoteCellContainer } from './VoteTable/VoteCellContainer';
+import {
+  IScrollMethods,
+  VoteScrollWrapper,
+} from './VoteTable/VoteScrollWrapper';
 import { useDispatch, useSelector } from '@/_redux/hooks';
-import { modifyVoteState } from '@/_redux/slices/postSlices/getPostSlice';
-import { IPost, IPostTitleCustom, IUser } from '@/api/_types/apiModels';
-import { putApiJWT } from '@/api/apis';
-import { createFormData } from '@/utils/createFormData';
+import { getPostDetail } from '@/_redux/slices/postSlices/getPostSlice';
+import {
+  ICellsType,
+  cancelVote,
+  reset,
+  updateInit,
+} from '@/_redux/slices/timeTableSlice';
+import { IComment, IPost, IUser } from '@/api/_types/apiModels';
+import { deleteApiJWT, postApiJWT } from '@/api/apis';
+import { createIVote } from '@/utils/createIVote';
 import { parseTitle } from '@/utils/parseTitle';
-import { Button, Spinner } from '@common/index';
+import { transpose } from '@/utils/transpose';
+import { Button } from '@common/index';
 
 export interface IVotedUser {
   id: string;
@@ -28,111 +39,230 @@ export type TimeTableType = {
 };
 
 export const TimeTable = ({ post }: TimeTableType) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userInfo);
-
-  const { isLoading, isError, error } = useSelector(
-    (state) => state.getPostDetail,
-  );
 
   const { _id: userId, fullName } = useSelector(
     (state) => state.userInfo.user as IUser,
   );
 
   const [isVoting, setIsVoting] = useState(false);
+  const myTableScroll = useRef<IScrollMethods>(null);
+  const votedTableScroll = useRef<IScrollMethods>(null);
 
-  const { vote, meetDate, voteEntries, times } = useMemo(() => {
-    const parsedTitle = parseTitle(post.title);
-    const vote = parsedTitle.vote;
-    const voteEntries = Object.entries(vote);
+  const { vote, transposedVote, meetDate, participants, timeColumn, dateRow } =
+    useMemo(() => {
+      const parsedTitle = parseTitle(post.title);
+      const meetDate = parsedTitle.meetDate;
 
-    return {
-      vote,
-      meetDate: parsedTitle.meetDate,
-      voteEntries,
-      times: Object.keys(voteEntries[0][1]),
-    };
-  }, [post]);
+      const receivedComments = post.comments as IComment[];
+      const allVotes = receivedComments.filter(({ comment }) =>
+        comment.startsWith('@VOTE'),
+      );
+      const participants = allVotes.map(({ author }) => ({
+        id: author._id,
+        fullName: author.fullName,
+      }));
+      const currentVote = [...allVotes];
+      currentVote.sort(
+        ({ createdAt: prev }, { createdAt: cur }) =>
+          new Date(cur).getTime() - new Date(prev).getTime(),
+      );
 
-  const { dragAreaRef, totalVoteAreaRef, modifyMyVote } = useVotingTimeTable({
-    vote,
-    userId,
-    isVoting,
-  });
+      let vote: IVote;
 
-  const modifyVoteOfPost = () => {
-    const parsedTitle = parseTitle(post.title);
+      if (currentVote.length > 0) {
+        const splitedMyVote = currentVote[0].comment.split('@VOTE ')[1];
+        const parsedMyVote = JSON.parse(splitedMyVote) as IVote;
+        const tempVote = createIVote(meetDate);
+
+        for (const src of meetDate) {
+          const date = src.split('T')[0];
+          if (parsedMyVote[date]) tempVote[date] = parsedMyVote[date];
+        }
+        vote = tempVote;
+      } else {
+        vote = createIVote(meetDate);
+      }
+
+      const voteEntries = Object.entries(vote);
+      const dateRow = transpose(voteEntries)[0] as string[];
+      const transposedVote = transpose(
+        transpose(voteEntries)[1].map((time) =>
+          Object.values(time as ITimeVote),
+        ),
+      );
+      const timeColumn = transpose(voteEntries)[1].map((time) =>
+        Object.keys(time as ITimeVote),
+      )[0];
+
+      return {
+        vote,
+        meetDate,
+        voteEntries,
+        participants,
+        times: Object.keys(voteEntries[0][1]),
+        transposedVote,
+        timeColumn,
+        dateRow,
+      };
+    }, [post, user]);
+
+  const { prevVotedCells } = useSelector((state) => state.cells);
+
+  const modifyMyVote = useCallback(
+    (id: string, fullName: string) => {
+      const currentCells = prevVotedCells as ICellsType[][];
+      const modifiedVote = createIVote(meetDate);
+      const dates = Object.keys(modifiedVote);
+
+      for (const [i, date] of dates.entries()) {
+        for (const [j, time] of timeColumn.entries()) {
+          let modified = [...currentCells[j][i].votedUser];
+
+          if (
+            currentCells[j][i].classList.includes('voted-mine') &&
+            currentCells[j][i].votedUser.every(({ id }) => id !== userId)
+          ) {
+            modified.push({ id, fullName } as IVotedUser);
+          } else if (
+            !currentCells[j][i].classList.includes('voted-mine') &&
+            currentCells[j][i].votedUser.some(({ id }) => id === userId)
+          ) {
+            modified = modified.filter(({ id }) => id !== userId);
+          }
+          modifiedVote[date][time] = modified;
+        }
+      }
+
+      return modifiedVote;
+    },
+    [vote, prevVotedCells],
+  );
+
+  const modifyVoteComment = async () => {
+    const deleteCommentId =
+      (post.comments as IComment[]).find(
+        (comment) =>
+          comment.author._id === userId && comment.comment.startsWith('@VOTE'),
+      )?._id ?? (post.comments as string[]).find((id) => id === userId);
+
     const modifiedMyVote = modifyMyVote(userId, fullName);
 
-    const modifiedParticipants = new Set([...parsedTitle.participants, userId]);
+    const stringifiedVote = JSON.stringify(modifiedMyVote);
 
-    const modifiedTitle: IPostTitleCustom = {
-      ...parsedTitle,
-      vote: modifiedMyVote,
-      participants: [...modifiedParticipants],
-    };
+    const modifiedVoteComment = `@VOTE ${stringifiedVote}`;
 
-    return modifiedTitle;
-  };
+    try {
+      if (deleteCommentId)
+        await deleteApiJWT<IComment>('/comments/delete', {
+          id: deleteCommentId,
+        });
 
-  const putPostWithModifiedVote = () => {
-    const resultVote = modifyVoteOfPost();
-    const formData = createFormData({
-      postId: post._id,
-      title: JSON.stringify(resultVote),
-      image: post.image ?? 'null',
-      channelId:
-        typeof post.channel === 'string' ? post.channel : post.channel._id,
-    });
+      await postApiJWT<IComment>('/comments/create', {
+        comment: modifiedVoteComment,
+        postId: post._id,
+      });
 
-    void putApiJWT<IPost, FormData>('/posts/update', formData);
-
-    void dispatch(modifyVoteState(resultVote.vote));
-
-    alert('일정투표가 정상적으로 완료되었습니다!');
+      void dispatch(getPostDetail(post._id));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleConfirmClick = () => {
+    if (!user) {
+      return navigate('/login');
+    }
     if (isVoting) {
-      void putPostWithModifiedVote();
+      void modifyVoteComment();
     }
     setIsVoting((old) => !old);
   };
 
   const handleCancelClick = () => {
     setIsVoting(false);
+    void dispatch(cancelVote());
   };
 
-  if (isLoading) return <Spinner />;
-  if (isError) throw error;
+  const handleMyTableScrollTop = (scrollTop: number) => {
+    if (votedTableScroll.current) {
+      votedTableScroll.current.setScrollTop(scrollTop);
+    }
+  };
+  const handleMyTableScrollLeft = (scrollLeft: number) => {
+    if (votedTableScroll.current) {
+      votedTableScroll.current.setScrollLeft(scrollLeft);
+    }
+  };
+
+  const handleVotedTableScrollTop = (scrollTop: number) => {
+    if (myTableScroll.current) myTableScroll.current.setScrollTop(scrollTop);
+  };
+  const handleVotedTableScrollLeft = (scrollLeft: number) => {
+    if (myTableScroll.current) myTableScroll.current.setScrollLeft(scrollLeft);
+  };
+
+  useEffect(() => {
+    if (!user) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/login');
+    }
+
+    const myVote = transposedVote.map((row) =>
+      row.map((users) => {
+        const didVoted = users.some(({ id }) => id === user?._id);
+
+        return didVoted ? ['selected'] : [];
+      }),
+    );
+
+    const totalVote = transposedVote.map((row) =>
+      row.map((users) => {
+        const didVoted = users.some(({ id }) => id === user?._id);
+
+        return {
+          votedUser: users,
+          classList: didVoted ? ['voted-mine'] : [],
+        };
+      }),
+    );
+
+    void dispatch(updateInit([myVote, totalVote]));
+
+    return () => void dispatch(reset());
+  }, [user]);
 
   return (
-    <StWrapper>
+    <StContainer>
       <StTableContainer>
         {isVoting && (
-          <VoteTable>
-            <VoteTable.ScrollWrapper
-              times={times}
-              meetDate={meetDate}>
-              <VoteTable.CellContainer
-                ref={dragAreaRef}
-                voteEntries={voteEntries}
-                isMyTable={true}
-              />
-            </VoteTable.ScrollWrapper>
-          </VoteTable>
-        )}
-        <VoteTable>
-          <VoteTable.ScrollWrapper
-            times={times}
-            meetDate={meetDate}>
-            <VoteTable.CellContainer
-              ref={totalVoteAreaRef}
-              voteEntries={voteEntries}
-              isMyTable={false}
+          <VoteScrollWrapper
+            ref={myTableScroll}
+            onScrollTop={handleMyTableScrollTop}
+            onScrollLeft={handleMyTableScrollLeft}>
+            <VoteCellContainer
+              dateRow={dateRow}
+              transposedVote={transposedVote}
+              timeColumn={timeColumn}
+              participants={participants}
+              isMyTable={true}
             />
-          </VoteTable.ScrollWrapper>
-        </VoteTable>
+          </VoteScrollWrapper>
+        )}
+        <VoteScrollWrapper
+          ref={votedTableScroll}
+          onScrollTop={handleVotedTableScrollTop}
+          onScrollLeft={handleVotedTableScrollLeft}>
+          <VoteCellContainer
+            dateRow={dateRow}
+            transposedVote={transposedVote}
+            timeColumn={timeColumn}
+            participants={participants}
+            isMyTable={false}
+          />
+        </VoteScrollWrapper>
       </StTableContainer>
       <StButtonContainer>
         {isVoting && (
@@ -144,23 +274,20 @@ export const TimeTable = ({ post }: TimeTableType) => {
             handleButtonClick={handleCancelClick}
           />
         )}
-        {user && (
-          <Button
-            label={isVoting ? '완료하기' : '투표하기'}
-            width={100}
-            height={30}
-            handleButtonClick={handleConfirmClick}
-          />
-        )}
+        <Button
+          label={isVoting ? '완료하기' : '투표하기'}
+          width={100}
+          height={30}
+          handleButtonClick={handleConfirmClick}
+        />
       </StButtonContainer>
-    </StWrapper>
+    </StContainer>
   );
 };
 
-const StWrapper = styled.div`
+const StContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   gap: 16px;
 `;
@@ -168,6 +295,7 @@ const StWrapper = styled.div`
 const StTableContainer = styled.div`
   display: flex;
   gap: 16px;
+  align-items: center;
 `;
 
 const StButtonContainer = styled.div`

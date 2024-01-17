@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { IVote } from '../TimeTable/TimeTable';
-import { useDragArea } from '@/hooks/useDragArea';
 
 interface IuseVotingTimeTable {
   userId: string;
@@ -13,6 +12,8 @@ export const useVotingTimeTable = ({
   userId,
   isVoting,
 }: IuseVotingTimeTable) => {
+  const dragAreaRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
   const totalVoteAreaRef = useRef<HTMLDivElement>(null);
   const startDragPoint = useRef<number[]>([-1, -1]);
   const prevDragPoint = useRef<number[]>([-1, -1]);
@@ -66,10 +67,11 @@ export const useVotingTimeTable = ({
     return modifiedVote;
   }, []);
 
-  const onMouseMove = (event: MouseEvent) => {
+  const handleMouseMove = useCallback((event: MouseEvent) => {
     if (
       isTargetContains(event, dragAreaRef.current) &&
-      totalVoteAreaRef.current
+      totalVoteAreaRef.current &&
+      isDragging.current
     ) {
       const y = Number(event.target.dataset.col);
       const x = Number(event.target.dataset.row);
@@ -116,10 +118,15 @@ export const useVotingTimeTable = ({
 
       prevDragPoint.current = [y, x];
     }
-  };
+  }, []);
 
-  const onMouseDown = useCallback((event: MouseEvent) => {
-    if (isTargetContains(event, dragAreaRef.current)) {
+  const handleMouseDown = useCallback((event: MouseEvent) => {
+    if (
+      isTargetContains(event, dragAreaRef.current) &&
+      isDragging.current === false
+    ) {
+      isDragging.current = true;
+
       const y = Number(event.target.dataset.col);
       const x = Number(event.target.dataset.row);
 
@@ -129,30 +136,33 @@ export const useVotingTimeTable = ({
 
       isVoted.current = !prevMyVotes.current[y][x];
 
-      onMouseMove(event);
+      handleMouseMove(event);
     }
   }, []);
 
-  const onMouseUp = useCallback((event: MouseEvent) => {
-    prevDragPoint.current = [-1, -1];
+  const handleMouseUp = useCallback((event: MouseEvent) => {
+    if (isDragging.current) {
+      isDragging.current = false;
+      prevDragPoint.current = [-1, -1];
 
-    if (isTargetContains(event, dragAreaRef.current)) {
-      prevMyVotes.current = [...currentMyVotes.current];
+      if (isTargetContains(event, dragAreaRef.current)) {
+        prevMyVotes.current = [...currentMyVotes.current];
+      }
+
+      myCells.current.forEach((col, i) =>
+        col.forEach((cell, j) => {
+          cell?.classList.remove('selecting');
+          cell?.classList.remove('unselecting');
+          cell?.classList.toggle('selected', prevMyVotes.current[i][j]);
+          votedCells.current[i][j]?.classList.remove('voting');
+          votedCells.current[i][j]?.classList.remove('unvoting');
+          votedCells.current[i][j]?.classList.toggle(
+            'voted-mine',
+            prevMyVotes.current[i][j],
+          );
+        }),
+      );
     }
-
-    myCells.current.forEach((col, i) =>
-      col.forEach((cell, j) => {
-        cell?.classList.remove('selecting');
-        cell?.classList.remove('unselecting');
-        cell?.classList.toggle('selected', prevMyVotes.current[i][j]);
-        votedCells.current[i][j]?.classList.remove('voting');
-        votedCells.current[i][j]?.classList.remove('unvoting');
-        votedCells.current[i][j]?.classList.toggle(
-          'voted-mine',
-          prevMyVotes.current[i][j],
-        );
-      }),
-    );
   }, []);
 
   const setTableDataOf = useCallback((table: 'MyTable' | 'TotalVoteTable') => {
@@ -211,11 +221,22 @@ export const useVotingTimeTable = ({
     }
   }, [isVoting]);
 
-  const { dragAreaRef } = useDragArea({
-    onMouseDown,
-    onMouseMove,
-    onMouseUp,
-  });
+  useEffect(() => {
+    if (dragAreaRef.current) {
+      dragAreaRef.current.addEventListener('mousedown', handleMouseDown);
+
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      if (dragAreaRef.current) {
+        dragAreaRef.current.removeEventListener('mousedown', handleMouseDown);
+      }
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseDown, handleMouseUp, isDragging]);
 
   return { dragAreaRef, totalVoteAreaRef, modifyMyVote };
 };

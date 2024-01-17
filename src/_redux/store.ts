@@ -4,6 +4,7 @@ import heartsSlice from './slices/heartsSlice';
 import loginSlice from './slices/loginSlice';
 import { postSlice } from './slices/postSlices/getPostSlice';
 import { putPostSlice } from './slices/postSlices/putPostSlice';
+import timeTableSlice from './slices/timeTableSlice';
 import todaySlice from './slices/todaySlice';
 import userInfoSlice from './slices/userSlice';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   today: todaySlice,
   allUsers: allUsersSlice,
   userInfo: userInfoSlice,
+  cells: timeTableSlice,
 });
 const persistConfig = {
   key: 'root',

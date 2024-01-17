@@ -2,8 +2,8 @@ import styled from '@emotion/styled';
 import { MouseEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from '@/_redux/hooks';
-import { ILike, IPost, IPostTitleCustom } from '@/api/_types/apiModels';
-import { deleteApiJWT, postApiJWT } from '@/api/apis';
+import { ILike, IPost, IPostTitleCustom, IUser } from '@/api/_types/apiModels';
+import { deleteApiJWT, getApi, postApiJWT } from '@/api/apis';
 import { createNotification } from '@/api/createNotification';
 import { theme } from '@/style/theme';
 import { parseTitle } from '@/utils/parseTitle';
@@ -22,10 +22,10 @@ const statusValue = {
 
 export const Card = ({ cardData, handleCardClick }: ICardData) => {
   const parsedTitle: IPostTitleCustom = parseTitle(cardData.title);
-
+  const [user, setUser] = useState<IUser | void>();
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.userInfo.user);
-  const { likes, _id: cardId, image, author: postAuthor } = cardData;
+  const { likes, _id: cardId, author: postAuthor } = cardData;
   const { postTitle, status, tags, meetDate, author } = parsedTitle;
 
   const statusCheck =
@@ -41,10 +41,28 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
     }
   });
 
+  const fetchUser = async (id: string) => {
+    try {
+      const res = await getApi<IUser>(`/users/${id}`);
+      setUser(res.data);
+    } catch (err) {
+      console.error('Failed to fetch user:', err);
+    }
+  };
+
   const [isLike, setIsLike] = useState(isLiked);
   useEffect(() => {
     setIsLike(isLiked);
-  }, [isLiked]);
+    const getUserData = async () => {
+      if (typeof cardData.author !== 'string') return;
+      try {
+        await fetchUser(cardData.author);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    void getUserData();
+  }, [isLiked, cardData.author]);
 
   const handleIconClick = async (event: MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -95,14 +113,25 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
           {statusValue[statusCheck]}
         </StCardStatus>
         <StCardProfileWrapper>
-          <Profile
-            image={image || ''}
-            fullName={author}
-            status="Profile"
-            fontSize={12}
-            imageSize={14}
-            maxWidth={50}
-          />
+          {typeof postAuthor === 'string' ? (
+            <Profile
+              image={user?.image ?? ''}
+              fullName={user?.username ? user.username : author}
+              status="Profile"
+              fontSize={12}
+              imageSize={14}
+              maxWidth={50}
+            />
+          ) : (
+            <Profile
+              image={postAuthor.image ?? ''}
+              fullName={postAuthor.username || postAuthor.fullName}
+              status="Profile"
+              fontSize={12}
+              imageSize={14}
+              maxWidth={50}
+            />
+          )}
         </StCardProfileWrapper>
 
         <StCardTitle style={colorStyle}>{postTitle}</StCardTitle>

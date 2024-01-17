@@ -11,7 +11,7 @@ interface ScheduledCardsProps {
   thisWeek: string[];
 }
 export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
-  const days = ['월', '화', '수', '목', '금', '토', '일'];
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const today = new Date().toISOString().split('T')[0];
