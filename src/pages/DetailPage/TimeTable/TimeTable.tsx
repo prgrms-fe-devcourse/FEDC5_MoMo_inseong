@@ -78,7 +78,6 @@ export const TimeTable = ({ post }: TimeTableType) => {
           const date = src.split('T')[0];
           if (parsedMyVote[date]) tempVote[date] = parsedMyVote[date];
         }
-        console.log(tempVote);
         vote = tempVote;
       } else {
         vote = createIVote(meetDate);
