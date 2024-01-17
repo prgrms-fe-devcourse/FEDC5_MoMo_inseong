@@ -20,6 +20,7 @@ import { createIVote } from '@/utils/createIVote';
 import { parseTitle } from '@/utils/parseTitle';
 import { transpose } from '@/utils/transpose';
 import { Button } from '@common/index';
+import { isEqual } from 'lodash';
 
 export interface IVotedUser {
   id: string;
@@ -43,11 +44,14 @@ export const TimeTable = ({ post }: TimeTableType) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userInfo);
 
-  const { _id: userId, fullName } = useSelector(
-    (state) => state.userInfo.user as IUser,
-  );
+  const {
+    _id: userId,
+    fullName,
+    username,
+  } = useSelector((state) => state.userInfo.user as IUser);
 
   const [isVoting, setIsVoting] = useState(false);
+
   const myTableScroll = useRef<IScrollMethods>(null);
   const votedTableScroll = useRef<IScrollMethods>(null);
 
@@ -94,7 +98,7 @@ export const TimeTable = ({ post }: TimeTableType) => {
         ),
       );
       const timeColumn = transpose(voteEntries)[1].map((time) =>
-        Object.keys(time as ITimeVote),
+        Object.keys(time),
       )[0];
 
       return {
@@ -109,10 +113,10 @@ export const TimeTable = ({ post }: TimeTableType) => {
       };
     }, [post, user]);
 
-  const { prevVotedCells } = useSelector((state) => state.cells);
+  const { votedCells, prevVotedCells } = useSelector((state) => state.cells);
 
   const modifyMyVote = useCallback(
-    (id: string, fullName: string) => {
+    (id: string, fullName: string, username: string | undefined) => {
       const currentCells = prevVotedCells as ICellsType[][];
       const modifiedVote = createIVote(meetDate);
       const dates = Object.keys(modifiedVote);
@@ -125,7 +129,7 @@ export const TimeTable = ({ post }: TimeTableType) => {
             currentCells[j][i].classList.includes('voted-mine') &&
             currentCells[j][i].votedUser.every(({ id }) => id !== userId)
           ) {
-            modified.push({ id, fullName } as IVotedUser);
+            modified.push({ id, fullName, username });
           } else if (
             !currentCells[j][i].classList.includes('voted-mine') &&
             currentCells[j][i].votedUser.some(({ id }) => id === userId)
@@ -148,7 +152,7 @@ export const TimeTable = ({ post }: TimeTableType) => {
           comment.author._id === userId && comment.comment.startsWith('@VOTE'),
       )?._id ?? (post.comments as string[]).find((id) => id === userId);
 
-    const modifiedMyVote = modifyMyVote(userId, fullName);
+    const modifiedMyVote = modifyMyVote(userId, fullName, username);
 
     const stringifiedVote = JSON.stringify(modifiedMyVote);
 
@@ -175,7 +179,7 @@ export const TimeTable = ({ post }: TimeTableType) => {
     if (!user) {
       return navigate('/login');
     }
-    if (isVoting) {
+    if (isVoting && !isEqual(votedCells, prevVotedCells)) {
       void modifyVoteComment();
     }
     setIsVoting((old) => !old);
@@ -191,6 +195,7 @@ export const TimeTable = ({ post }: TimeTableType) => {
       votedTableScroll.current.setScrollTop(scrollTop);
     }
   };
+
   const handleMyTableScrollLeft = (scrollLeft: number) => {
     if (votedTableScroll.current) {
       votedTableScroll.current.setScrollLeft(scrollLeft);
@@ -200,6 +205,7 @@ export const TimeTable = ({ post }: TimeTableType) => {
   const handleVotedTableScrollTop = (scrollTop: number) => {
     if (myTableScroll.current) myTableScroll.current.setScrollTop(scrollTop);
   };
+
   const handleVotedTableScrollLeft = (scrollLeft: number) => {
     if (myTableScroll.current) myTableScroll.current.setScrollLeft(scrollLeft);
   };
@@ -221,7 +227,7 @@ export const TimeTable = ({ post }: TimeTableType) => {
     const totalVote = transposedVote.map((row) =>
       row.map((users) => {
         const didVoted = users.some(({ id }) => id === user?._id);
-
+        users;
         return {
           votedUser: users,
           classList: didVoted ? ['voted-mine'] : [],

@@ -117,6 +117,7 @@ export interface IMentionedUser {
 export interface IVotedUser {
   id: string;
   fullName: string;
+  username?: string;
 }
 
 export interface ITimeVote {

@@ -178,6 +178,7 @@ export const EditProfilePage = () => {
 };
 
 const StProfileForm = styled.div`
+  padding: 0 32px;
   display: flex;
   flex-direction: column;
   gap: 16px;

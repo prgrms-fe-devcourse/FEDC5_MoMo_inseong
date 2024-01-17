@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StSearchIconWrapper, StSideBlockWrapper } from './OnlineUsers';
 import { IPost, IUser } from '@/api/_types/apiModels';
@@ -10,9 +10,9 @@ import { parseTitle } from '@/utils/parseTitle';
 import { Icon, InputCompound, Profile, Spinner } from '@common/index';
 
 export const SearchBox = () => {
-  const [searcedResults, setSearchedResults] = useState<IUser[] | IPost[]>([]);
-
-  const { values, isLoading, errors, handleChange, handleSubmit } = useForm({
+  const [searchedResults, setSearchedResults] = useState<IUser[] | IPost[]>([]);
+  const [refineResults, setRefineResults] = useState<IUser[]>([]);
+  const { values, errors, handleChange, handleSubmit } = useForm({
     initialState: {
       inputValue: '',
     },
@@ -28,6 +28,36 @@ export const SearchBox = () => {
     },
   });
   const navigate = useNavigate();
+
+  const fetchUser = async (id: string) => {
+    try {
+      const { data } = await getApi<IUser>(`/users/${id}`);
+      return data;
+    } catch (err) {
+      console.error('Failed to fetch user:', err);
+    }
+  };
+  useEffect(() => {
+    const fetchUsersForPosts = async () => {
+      const userPromises = searchedResults
+        .filter(
+          (v): v is IPost => 'author' in v && typeof v.author === 'string',
+        )
+        .map((v) => fetchUser(v.author as string));
+
+      const users = await Promise.all(userPromises);
+
+      const newTest = [
+        ...searchedResults.filter((v): v is IUser => 'fullName' in v),
+        ...users.filter((user): user is IUser => Boolean(user)),
+      ];
+
+      setRefineResults(newTest);
+    };
+
+    void fetchUsersForPosts();
+  }, [searchedResults]);
+
   return (
     <StSideBlockWrapper style={{ marginTop: '15px' }}>
       <div style={{ position: 'relative' }}>
@@ -52,11 +82,13 @@ export const SearchBox = () => {
         </form>
       </div>
       <StSearchResults>
-        {isLoading ? (
-          <Spinner />
+        {refineResults.length !== searchedResults.length ? (
+          <StSpinnerWrapper>
+            <Spinner />
+          </StSpinnerWrapper>
         ) : (
-          searcedResults &&
-          searcedResults.map(
+          searchedResults &&
+          searchedResults.map(
             (result, idx) =>
               'title' in result && (
                 <StSearchResultWrapper
@@ -68,21 +100,28 @@ export const SearchBox = () => {
                     {parseTitle(result.title).postTitle}
                   </StSearchResultTitle>
                   <Profile
-                    image={result.image || ''}
-                    fullName={parseTitle(result.title).author}
+                    image={refineResults[idx]?.image || ''}
+                    imageSize={16}
+                    fullName={
+                      refineResults[idx]?.username ??
+                      refineResults[idx]?.fullName
+                    }
                     _id={
                       typeof result.author === 'string'
                         ? result.author
                         : result.author._id
                     }
-                    status="ProfileName"
+                    status="Profile"
                     fontSize={12}
                     style={{
                       color: theme.colors.secondaryNavy.hover,
                       backgroundColor: theme.colors.grey.bright,
                       width: 'fit-content',
-                      padding: '0px 10px',
-                      borderRadius: '5px',
+                      padding: '0px 4px',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
                     }}
                   />
                 </StSearchResultWrapper>
@@ -105,7 +144,7 @@ const StSearchResultWrapper = styled.div`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  padding: 10px 0px;
+  padding: 10px 2px;
   cursor: pointer;
   &:not(:last-child) {
     border-bottom: 1px solid ${({ theme }) => theme.colors.grey.light};
@@ -117,4 +156,10 @@ const StSearchResultWrapper = styled.div`
 const StSearchResultTitle = styled.div`
   font-size: 14px;
   margin-bottom: 5px;
+`;
+const StSpinnerWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh;
 `;

@@ -53,15 +53,8 @@ export const Card = ({ cardData, handleCardClick }: ICardData) => {
   const [isLike, setIsLike] = useState(isLiked);
   useEffect(() => {
     setIsLike(isLiked);
-    const getUserData = async () => {
-      if (typeof cardData.author !== 'string') return;
-      try {
-        await fetchUser(cardData.author);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    void getUserData();
+    if (typeof cardData.author !== 'string') return;
+    void fetchUser(cardData.author);
   }, [isLiked, cardData.author]);
 
   const handleIconClick = async (event: MouseEvent<HTMLElement>) => {

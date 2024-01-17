@@ -82,7 +82,7 @@ export const OnlineUsers = () => {
             <Profile
               key={idx}
               image={user.image || ''}
-              fullName={user.fullName}
+              fullName={user.username || user.fullName}
               _id={user._id}
               status="Profile"
               fontSize={14}
