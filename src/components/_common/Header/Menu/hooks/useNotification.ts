@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { NotificationExtractType } from '../Notification';
-import GetNotificationsWorker from '../utils/getNotificationsInterval?worker';
 import { useSelector } from '@/_redux/hooks';
 import { getItem } from '@/utils/storage';
 import { isEqual } from 'lodash';
@@ -8,7 +7,6 @@ import { isEqual } from 'lodash';
 export const useNotification = () => {
   const { user } = useSelector((state) => state.userInfo);
   const getNotifications: Worker = useMemo(
-    // () => new GetNotificationsWorker(),
     () =>
       new Worker(
         new URL('../utils/getNotificationsInterval.ts', import.meta.url),
