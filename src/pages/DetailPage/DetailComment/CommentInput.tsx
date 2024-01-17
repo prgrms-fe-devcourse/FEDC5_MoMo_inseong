@@ -83,6 +83,7 @@ const StCommentInputContainer = styled.div`
     border-radius: 8px;
     padding: 16px;
     box-sizing: content-box;
+    overflow: hidden;
   }
   & .commentTextarea::placeholder {
     color: ${theme.colors.grey.dark};
