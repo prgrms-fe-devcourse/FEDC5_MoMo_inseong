@@ -48,9 +48,11 @@ export const EditProfilePage = () => {
     setUploadImage(uploadedFile);
     setDisplayImage(URL.createObjectURL(uploadedFile));
   };
-
   const handleUpdateProfile = async () => {
-    if (userNickNameList.includes(username)) {
+    if (
+      username.trim() !== userInfo?.username &&
+      userNickNameList.includes(username)
+    ) {
       setUsernameError('중복된 닉네임 입니다.');
       return false;
     }
