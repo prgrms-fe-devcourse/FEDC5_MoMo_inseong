@@ -20,6 +20,7 @@ export const EditProfilePage = () => {
 
   const fullNameRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const userInfo = useSelector((state) => state.userInfo.user);
 
@@ -98,6 +99,17 @@ export const EditProfilePage = () => {
 
   return (
     <StSideMarginWrapper>
+      {isModalOpen && (
+        <StModalBackdrop onClick={() => setModalOpen(false)}>
+          <StModalContent onClick={(e) => e.stopPropagation()}>
+            <img
+              src={displayImage || ''}
+              alt="Zoomed"
+              style={{ maxWidth: '100%', height: 'auto' }}
+            />
+          </StModalContent>
+        </StModalBackdrop>
+      )}
       <StProfileActionsContainer>
         <Icon
           name="arrow-left"
@@ -105,12 +117,14 @@ export const EditProfilePage = () => {
           onIconClick={() => navigate(-1)}
         />
         <StImageContainer>
-          <Profile
-            status="ProfileImage"
-            image={displayImage || ''}
-            fullName=""
-            imageSize={110}
-          />
+          <div onClick={() => setModalOpen(true)}>
+            <Profile
+              status="ProfileImage"
+              image={displayImage || ''}
+              fullName=""
+              imageSize={110}
+            />
+          </div>
           <InputUpload onChange={handleImageChange}>
             <StEditIcon
               name="edit"
@@ -197,4 +211,23 @@ const StInputForm = styled.div`
   height: 85px;
   font-size: 14px;
   color: ${theme.colors.red};
+`;
+
+const StModalBackdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1055;
+`;
+
+const StModalContent = styled.div`
+  padding: 20px;
+  border-radius: 5px;
+  position: relative;
 `;
