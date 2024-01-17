@@ -7,10 +7,11 @@ import { IUser } from '@/api/_types/apiModels';
 import { Icon, Profile, Tooltip } from '@common/index';
 
 export const Menu = () => {
-  const { fullName, image } = useSelector(
+  const { fullName, image, username } = useSelector(
     (state) => state.userInfo.user as IUser,
   );
   const [isRedDot, setIsRedDot] = useState(false);
+  console.log(username);
 
   return (
     <StContainer>
@@ -37,7 +38,7 @@ export const Menu = () => {
           offset={-90}>
           <Profile
             image={image || ''}
-            fullName={fullName}
+            fullName={username ?? fullName}
             status="Profile"
             fontSize={14}
             imageSize={32}
