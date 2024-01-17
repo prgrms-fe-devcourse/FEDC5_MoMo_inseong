@@ -34,7 +34,7 @@ const StMainWrapper = styled.div`
 `;
 const StMainSide = styled.div`
   width: 300px;
-  height: calc(100vh - 150px);
+  height: calc(100vh - 100px);
   max-height: 800px;
   overflow-y: scroll;
   -ms-overflow-style: none;
