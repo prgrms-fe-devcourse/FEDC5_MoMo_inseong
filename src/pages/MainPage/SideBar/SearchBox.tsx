@@ -141,7 +141,6 @@ const StSearchResults = styled.div`
   ${({ theme }) => theme.scrollBar.default}
 `;
 const StSearchResultWrapper = styled.div`
-  /* border: 2px solid red; */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
