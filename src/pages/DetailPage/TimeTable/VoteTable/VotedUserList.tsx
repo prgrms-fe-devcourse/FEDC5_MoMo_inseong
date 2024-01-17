@@ -1,13 +1,15 @@
 import styled from '@emotion/styled';
+import { CSSProperties } from 'react';
 import { IVotedUser } from '../TimeTable';
 
 interface VotedUserListProps {
   userList: IVotedUser[];
+  style?: CSSProperties;
 }
 
-export const VotedUserList = ({ userList }: VotedUserListProps) => {
+export const VotedUserList = ({ userList, ...props }: VotedUserListProps) => {
   return (
-    <StWrapper>
+    <StWrapper {...props}>
       <StContainer>
         <StTitle>참여자</StTitle>
         <StContentBox>
@@ -21,12 +23,9 @@ export const VotedUserList = ({ userList }: VotedUserListProps) => {
 };
 
 const StWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: calc(100% + 10px);
-  z-index: 199;
+  z-index: 19;
 
-  transform: translateY(-20%);
+  transform: translate(8px, -5px);
   pointer-events: none;
 
   ::before {
@@ -67,12 +66,17 @@ const StContentBox = styled.div`
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 6px;
   padding: 0px 6px 6px 6px;
-  width: fit-content;
 `;
 
 const StUser = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 12px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
