@@ -61,6 +61,7 @@ export const VoteCellContainer = ({
 
   const handleMouseEnter = useCallback(
     (e: MouseEvent, i: number, j: number) => {
+      if (i === hoverIndex[0] && j === hoverIndex[1]) return;
       const rect = e.currentTarget.getBoundingClientRect();
       const top = rect.top;
       const left =
@@ -115,6 +116,7 @@ export const VoteCellContainer = ({
                       <StMyCell
                         key={Date.now() + j + ''}
                         className={cx(classList)}
+                        dateRowLength={dateRow.length}
                         onMouseDown={(e) =>
                           handleMouseDown(e as MouseEvent, i, j)
                         }
@@ -134,6 +136,7 @@ export const VoteCellContainer = ({
                         className={cx(classList)}
                         onMouseEnter={(e) => handleMouseEnter(e, i, j)}
                         onMouseLeave={handleMouseLeave}
+                        dateRowLength={dateRow.length}
                         userNum={votedUser.length > 0 ? votedUser.length : ' '}
                         percentage={
                           participants.length > 0
@@ -171,6 +174,7 @@ const StCell = styled.td`
   position: sticky;
   width: 36px;
   height: 24px;
+  text-align: center;
 
   &.curtain {
     top: 0;
@@ -195,7 +199,7 @@ const StCell = styled.td`
   }
 `;
 
-const StMyCell = styled.td`
+const StMyCell = styled.td<{ dateRowLength: number }>`
   padding: 0 1px 1px 0;
   white-space: pre-wrap;
 
@@ -209,7 +213,8 @@ const StMyCell = styled.td`
     white-space: pre-wrap;
     cursor: pointer;
 
-    padding: 6px 2px 6px 36px;
+    padding: 6px 2px 6px
+      ${({ dateRowLength }) => (dateRowLength < 5 ? 120 / dateRowLength : 36)}px;
 
     &:hover {
       background-color: ${({ theme }) => theme.colors.beige};
@@ -267,6 +272,7 @@ const StTableBody = styled.tbody``;
 interface IStVotedCell {
   userNum: number | string;
   percentage: number;
+  dateRowLength: number;
 }
 
 const StVotedCell = styled.td<IStVotedCell>`
@@ -282,7 +288,8 @@ const StVotedCell = styled.td<IStVotedCell>`
     border-radius: 4px;
     cursor: pointer;
 
-    padding: 6px 2px 6px 36px;
+    padding: 6px 2px 6px
+      ${({ dateRowLength }) => (dateRowLength < 5 ? 120 / dateRowLength : 36)}px;
 
     &:hover {
       filter: brightness(120%);

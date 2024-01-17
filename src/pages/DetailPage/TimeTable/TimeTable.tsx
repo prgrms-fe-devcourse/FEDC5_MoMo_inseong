@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { VoteCellContainer } from './VoteTable/VoteCellContainer';
 import {
   IScrollMethods,
@@ -10,6 +11,7 @@ import { getPostDetail } from '@/_redux/slices/postSlices/getPostSlice';
 import {
   ICellsType,
   cancelVote,
+  reset,
   updateInit,
 } from '@/_redux/slices/timeTableSlice';
 import { IComment, IPost, IUser } from '@/api/_types/apiModels';
@@ -37,6 +39,7 @@ export type TimeTableType = {
 };
 
 export const TimeTable = ({ post }: TimeTableType) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userInfo);
 
@@ -104,7 +107,7 @@ export const TimeTable = ({ post }: TimeTableType) => {
         timeColumn,
         dateRow,
       };
-    }, [post]);
+    }, [post, user]);
 
   const { prevVotedCells } = useSelector((state) => state.cells);
 
@@ -169,6 +172,9 @@ export const TimeTable = ({ post }: TimeTableType) => {
   };
 
   const handleConfirmClick = () => {
+    if (!user) {
+      return navigate('/login');
+    }
     if (isVoting) {
       void modifyVoteComment();
     }
@@ -199,28 +205,33 @@ export const TimeTable = ({ post }: TimeTableType) => {
   };
 
   useEffect(() => {
-    if (user) {
-      const myVote = transposedVote.map((row) =>
-        row.map((users) => {
-          const didVoted = users.some(({ id }) => id === user._id);
-
-          return didVoted ? ['selected'] : [];
-        }),
-      );
-
-      const totalVote = transposedVote.map((row) =>
-        row.map((users) => {
-          const didVoted = users.some(({ id }) => id === user._id);
-
-          return {
-            votedUser: users,
-            classList: didVoted ? ['voted-mine'] : [],
-          };
-        }),
-      );
-
-      void dispatch(updateInit([myVote, totalVote]));
+    if (!user) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/login');
     }
+
+    const myVote = transposedVote.map((row) =>
+      row.map((users) => {
+        const didVoted = users.some(({ id }) => id === user?._id);
+
+        return didVoted ? ['selected'] : [];
+      }),
+    );
+
+    const totalVote = transposedVote.map((row) =>
+      row.map((users) => {
+        const didVoted = users.some(({ id }) => id === user?._id);
+
+        return {
+          votedUser: users,
+          classList: didVoted ? ['voted-mine'] : [],
+        };
+      }),
+    );
+
+    void dispatch(updateInit([myVote, totalVote]));
+
+    return () => void dispatch(reset());
   }, [user]);
 
   return (
@@ -267,8 +278,6 @@ export const TimeTable = ({ post }: TimeTableType) => {
           label={isVoting ? '완료하기' : '투표하기'}
           width={100}
           height={30}
-          disabled={user ? false : true}
-          color={user ? 'BLUE' : 'NAVY'}
           handleButtonClick={handleConfirmClick}
         />
       </StButtonContainer>
