@@ -176,9 +176,6 @@ export const TimeTable = ({ post }: TimeTableType) => {
   };
 
   const handleConfirmClick = () => {
-    if (!user) {
-      return navigate('/login');
-    }
     if (isVoting && !isEqual(votedCells, prevVotedCells)) {
       void modifyVoteComment();
     }
@@ -243,22 +240,22 @@ export const TimeTable = ({ post }: TimeTableType) => {
   return (
     <StContainer>
       <StTableContainer>
-        {isVoting && (
-          <VoteScrollWrapper
-            ref={myTableScroll}
-            onScrollTop={handleMyTableScrollTop}
-            onScrollLeft={handleMyTableScrollLeft}>
-            <VoteCellContainer
-              dateRow={dateRow}
-              transposedVote={transposedVote}
-              timeColumn={timeColumn}
-              participants={participants}
-              isMyTable={true}
-            />
-          </VoteScrollWrapper>
-        )}
+        <VoteScrollWrapper
+          ref={myTableScroll}
+          className={`myScrollWrapper ${isVoting ? 'isVoting' : ''}`}
+          onScrollTop={handleMyTableScrollTop}
+          onScrollLeft={handleMyTableScrollLeft}>
+          <VoteCellContainer
+            dateRow={dateRow}
+            transposedVote={transposedVote}
+            timeColumn={timeColumn}
+            participants={participants}
+            isMyTable={true}
+          />
+        </VoteScrollWrapper>
         <VoteScrollWrapper
           ref={votedTableScroll}
+          className={`voteScrollWrapper ${isVoting ? 'isVoting' : ''}`}
           onScrollTop={handleVotedTableScrollTop}
           onScrollLeft={handleVotedTableScrollLeft}>
           <VoteCellContainer

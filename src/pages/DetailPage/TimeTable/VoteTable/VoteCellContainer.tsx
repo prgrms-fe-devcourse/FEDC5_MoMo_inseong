@@ -1,9 +1,10 @@
 import { cx } from '@emotion/css';
 import styled from '@emotion/styled';
-import { MouseEvent, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { MyCell } from './MyCell';
 import { VoteCell } from './VoteCell';
 import { useDispatch, useSelector } from '@/_redux/hooks';
-import { draggingMyCell, setDragPoint } from '@/_redux/slices/timeTableSlice';
+import { setDragPoint } from '@/_redux/slices/timeTableSlice';
 import { IVotedUser } from '@/api/_types/apiModels';
 
 const days = ['일', '월', '화', '수', '목', '금', '토'];
@@ -26,33 +27,12 @@ export const VoteCellContainer = ({
   const { prevMyCells, prevVotedCells } = useSelector((state) => state.cells);
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleMouseEnterMyVote = useCallback(
-    (rowIndex: number, columnIndex: number) => {
-      if (isDragging) {
-        void dispatch(draggingMyCell({ rowIndex, columnIndex }));
-      }
-    },
-    [isDragging],
-  );
-
   const handleMouseUp = useCallback(() => {
     if (isDragging) {
       void dispatch(setDragPoint(null));
       setIsDragging(false);
     }
   }, [isDragging]);
-
-  const handleMouseDown = useCallback(
-    (e: MouseEvent, rowIndex: number, columnIndex: number) => {
-      e.stopPropagation();
-      if (!isDragging) {
-        setIsDragging(true);
-        const startPoint = `${rowIndex}/${columnIndex}`;
-        void dispatch(setDragPoint(startPoint));
-      }
-    },
-    [isDragging],
-  );
 
   useEffect(() => {
     window.addEventListener('mouseup', handleMouseUp);
@@ -65,11 +45,11 @@ export const VoteCellContainer = ({
       {prevMyCells !== null && prevVotedCells !== null && (
         <StCellTable aria-label="table container">
           <StTableHeader>
-            <tr>
+            <tr style={{ backgroundColor: 'white', boxShadow: '0 ' }}>
               <StCell className="curtain" />
               {dateRow.map((date, i) => (
                 <StCell
-                  key={Date.now() + i}
+                  key={`StTableHeader${i}`}
                   className="header-fix"
                   style={{ borderRight: '1px solid #EEEAE2' }}>
                   {`${new Date(date).getDate()}(${
@@ -82,31 +62,31 @@ export const VoteCellContainer = ({
           <StTableBody>
             {isMyTable
               ? prevMyCells.map((row, i) => (
-                  <StBodyRow key={Date.now() + i}>
+                  <StBodyRow key={`BodyRow${i}`}>
                     <StCell className="column-fix">
                       {i % 2 === 0 ? timeColumn[i] : ' '}
                     </StCell>
                     {row.map((classList, j) => (
-                      <StMyCell
-                        key={Date.now() + j + ''}
+                      <MyCell
+                        key={`MyCell${i}/${j}`}
+                        rowIndex={i}
+                        columnIndex={j}
                         className={cx(classList)}
                         dateRowLength={dateRow.length}
-                        onMouseDown={(e) =>
-                          handleMouseDown(e as MouseEvent, i, j)
-                        }
-                        onMouseEnter={() => handleMouseEnterMyVote(i, j)}
+                        isDragging={isDragging}
+                        setIsDragging={setIsDragging}
                       />
                     ))}
                   </StBodyRow>
                 ))
               : prevVotedCells.map((row, i) => (
-                  <StBodyRow key={self.crypto.randomUUID()}>
+                  <StBodyRow key={`StBodyRow${i}`}>
                     <StCell className="column-fix">
                       {i % 2 === 0 ? timeColumn[i] : ' '}
                     </StCell>
                     {row.map(({ votedUser, classList }, j) => (
                       <VoteCell
-                        key={self.crypto.randomUUID()}
+                        key={`VoteCell${i}/${j}`}
                         i={i}
                         j={j}
                         classList={classList}
@@ -135,6 +115,10 @@ const StCell = styled.td`
   height: 24px;
   text-align: center;
 
+  &:first-child {
+    box-shadow: 0 0 4px 2px white;
+  }
+
   &.curtain {
     top: 0;
     left: 0;
@@ -155,70 +139,7 @@ const StCell = styled.td`
     z-index: 8;
     font-size: 12px;
     background-color: white;
-  }
-`;
-
-const StMyCell = styled.td<{ dateRowLength: number }>`
-  padding: 0 1px 1px 0;
-  white-space: pre-wrap;
-
-  &::before {
-    position: relative;
-    content: ' ';
-    display: block;
-    font-size: 10px;
-    background-color: #eeeae2;
-    border-radius: 4px;
-    white-space: pre-wrap;
-    cursor: pointer;
-
-    padding: 6px 2px 6px
-      ${({ dateRowLength }) => (dateRowLength < 5 ? 120 / dateRowLength : 36)}px;
-
-    &:hover {
-      background-color: ${({ theme }) => theme.colors.beige};
-      box-shadow: 0 0 2px 1px olive;
-    }
-
-    &::before {
-      position: absolute;
-      content: ' ';
-      font-size: 10px;
-      text-align: end;
-    }
-  }
-
-  &.selected {
-    &::before {
-      background-color: #88ccff;
-
-      &:hover {
-        filter: brightness(120%);
-        border-color: ${({ theme }) => theme.colors.beige};
-      }
-    }
-  }
-
-  &.selecting {
-    &::before {
-      background-color: #228bb4;
-
-      &:hover {
-        filter: brightness(120%);
-        border-color: ${({ theme }) => theme.colors.beige};
-      }
-    }
-  }
-
-  &.unselecting {
-    &::before {
-      background-color: #eeeae2;
-
-      &:hover {
-        filter: brightness(120%);
-        border-color: ${({ theme }) => theme.colors.beige};
-      }
-    }
+    padding-right: 6px;
   }
 `;
 
