@@ -1,6 +1,7 @@
 import { cx } from '@emotion/css';
 import styled from '@emotion/styled';
 import { MouseEvent, memo, useCallback, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { VotedUserList } from './VotedUserList';
 import { IVotedUser } from '@/api/_types/apiModels';
 
@@ -45,6 +46,15 @@ export const VoteCell = memo(
       [],
     );
 
+    const isHover = useCallback(
+      (i: number, j: number) => {
+        return (
+          votedUser.length > 0 && hoverIndex[0] === i && hoverIndex[1] === j
+        );
+      },
+      [hoverIndex],
+    );
+
     const handleMouseLeave = useCallback(() => {
       setHoverPosition({ top: null, left: null });
       setHoverIndex([-1, -1]);
@@ -58,18 +68,18 @@ export const VoteCell = memo(
         dateRowLength={dateRowLength}
         userNum={votedUser.length > 0 ? votedUser.length : ' '}
         percentage={participants > 0 ? votedUser.length / participants : 0}>
-        <VotedUserList
-          userList={votedUser}
-          style={{
-            position: 'fixed',
-            top: hoverPosition.top as number,
-            left: hoverPosition.left as number,
-            display:
-              votedUser.length > 0 && hoverIndex[0] === i && hoverIndex[1] === j
-                ? 'block'
-                : 'none',
-          }}
-        />
+        {createPortal(
+          <VotedUserList
+            userList={votedUser}
+            style={{
+              position: 'fixed',
+              top: hoverPosition.top as number,
+              left: hoverPosition.left as number,
+              opacity: isHover(i, j) ? '1' : '0',
+            }}
+          />,
+          document.body,
+        )}
       </StVotedCell>
     );
   },

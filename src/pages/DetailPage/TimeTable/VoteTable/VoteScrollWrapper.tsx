@@ -13,6 +13,7 @@ export interface IScrollMethods {
 }
 
 interface VoteScrollWrapperProps extends PropsWithChildren {
+  className?: string;
   onScrollTop: (scrollTop: number) => void;
   onScrollLeft: (scrollLeft: number) => void;
 }
@@ -20,7 +21,7 @@ interface VoteScrollWrapperProps extends PropsWithChildren {
 export const VoteScrollWrapper = forwardRef<
   IScrollMethods,
   VoteScrollWrapperProps
->(({ children, onScrollTop, onScrollLeft }, ref) => {
+>(({ children, onScrollTop, onScrollLeft, className }, ref) => {
   const divRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = (e: UIEvent<HTMLDivElement>) => {
@@ -45,6 +46,7 @@ export const VoteScrollWrapper = forwardRef<
   return (
     <StScrollWrapper
       ref={divRef}
+      className={className}
       onScroll={handleScroll}>
       {children}
     </StScrollWrapper>
@@ -52,15 +54,30 @@ export const VoteScrollWrapper = forwardRef<
 });
 
 const StScrollWrapper = styled.div`
+  position: relative;
   max-width: 300px;
   max-height: 464px;
   width: fit-content;
   height: fit-content;
   margin: 0 auto;
   overflow: auto;
+  transition: all 0.5s ease;
+
+  &.myScrollWrapper {
+    position: absolute;
+    opacity: 0;
+  }
+
+  &.myScrollWrapper.isVoting {
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+
+  &.voteScrollWrapper.isVoting {
+    transform: translateX(50%);
+  }
 
   ${({ theme }) => theme.scrollBar.default}
-
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;

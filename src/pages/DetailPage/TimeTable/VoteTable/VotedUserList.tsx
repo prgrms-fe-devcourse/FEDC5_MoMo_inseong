@@ -29,6 +29,7 @@ export const VotedUserList = memo(
 const StWrapper = styled.div`
   z-index: 19;
 
+  transition: opacity 0.3s ease;
   transform: translate(8px, -5px);
   pointer-events: none;
 
