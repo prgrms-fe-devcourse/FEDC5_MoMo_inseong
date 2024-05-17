@@ -3,7 +3,9 @@ import { getPostData } from './getPostData';
 import { StCardsWrapper } from './profilePageStyles';
 import { useSelector } from '@/_redux/hooks';
 import { IPost, IUser } from '@/api/_types/apiModels';
-import { Card, Spinner } from '@common/index';
+import {  Spinner } from '@common/index';
+import { Card } from '@common/Card/Card';
+
 import { useUsersInfo } from '@/hooks/queryHooks';
 
 export const MyJoinCards = () => {

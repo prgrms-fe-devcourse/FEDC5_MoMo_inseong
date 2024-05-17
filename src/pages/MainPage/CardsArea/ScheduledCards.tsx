@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { CreateMeetingModal } from '../Modal/CreateMeetingModal';
 import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
-import { Card, Icon } from '@common/index';
+import { Icon } from '@common/index';
+import { Card } from '@common/Card/Card';
 
 interface ScheduledCardsProps {
   cards: IPost[][];

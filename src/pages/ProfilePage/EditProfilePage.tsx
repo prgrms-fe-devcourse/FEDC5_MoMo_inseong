@@ -8,7 +8,7 @@ import { theme } from '@/style/theme';
 import InputUpload from '@common/Input/InputUpload';
 import { Button, Icon, InputCompound, Profile } from '@common/index';
 
-export const EditProfilePage = () => {
+const EditProfilePage = () => {
   const [fullName, setFullName] = useState('');
   const [username, setUsername] = useState('');
   const [displayImage, setDisplayImage] = useState<string | null>(null);
@@ -175,6 +175,7 @@ export const EditProfilePage = () => {
     </>
   );
 };
+export default EditProfilePage;
 
 const StProfileForm = styled.div`
   padding: 0 32px;

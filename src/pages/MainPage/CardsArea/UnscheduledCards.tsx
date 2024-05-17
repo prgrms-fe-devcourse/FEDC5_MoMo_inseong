@@ -3,7 +3,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreateMeetingModal } from '../Modal/CreateMeetingModal';
 import { useSelector } from '@/_redux/hooks';
-import { Card, Icon } from '@common/index.ts';
+import {  Icon } from '@common/index.ts';
+import { Card } from '@common/Card/Card';
+
 import { useGetUnscheduledCards } from '@/hooks/query/useCards.ts';
 
 export const UnscheduledCards = () => {

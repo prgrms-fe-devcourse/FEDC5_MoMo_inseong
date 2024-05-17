@@ -1,5 +1,5 @@
 import { Button } from './Button/Button';
-import { Card } from './Card/Card';
+// import { Card } from './Card/Card';
 import { Comment } from './Comment/Comment';
 import { Header } from './Header/Header';
 import { Icon } from './Icon/Icon';
@@ -17,7 +17,7 @@ import { Tooltip } from './Tooltip/Tooltip';
 
 export {
   Button,
-  Card,
+  // Card,
   Comment,
   Header,
   Icon,

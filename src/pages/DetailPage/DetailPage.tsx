@@ -4,7 +4,7 @@ import { PostContainer } from './PostContainer';
 import { postIdContext } from './components/DetailPostContext';
 import { useGetPostDetail } from '@/hooks/query/usePost';
 
-export const DetailPage = () => {
+const DetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data, isError } = useGetPostDetail(id || '');
@@ -24,3 +24,4 @@ export const DetailPage = () => {
   );
 };
 
+export default DetailPage;

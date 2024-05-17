@@ -10,7 +10,7 @@ import { theme } from '@/style/theme';
 import { getItem, setItem } from '@/utils/storage';
 import { Button, InputCompound } from '@common/index';
 
-export const LoginPage = () => {
+const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -103,6 +103,7 @@ export const LoginPage = () => {
     </>
   );
 };
+export default LoginPage;
 
 const StLoginContainer = styled.div`
   height: 100vh;

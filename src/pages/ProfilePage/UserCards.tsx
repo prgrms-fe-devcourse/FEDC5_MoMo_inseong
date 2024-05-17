@@ -1,6 +1,8 @@
 import { StCardsWrapper } from './profilePageStyles';
 import { IPost } from '@/api/_types/apiModels';
-import { Card, Spinner } from '@common/index';
+import { Spinner } from '@common/index';
+import { Card } from '@common/Card/Card';
+
 import { usePostsAuthor } from '@/hooks/queryHooks';
 
 export const UserCards = ({ userId }: { userId: string }) => {

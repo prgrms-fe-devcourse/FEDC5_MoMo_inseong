@@ -14,7 +14,7 @@ import { Button, Profile } from '@common/index';
 import { useUsersInfo } from '@/hooks/queryHooks';
 import { FallbackSpinner } from '@common/Fallback/FallbackSpinner';
 
-export const ProfilePage = () => {
+const ProfilePage = () => {
   const { id } = useParams();
   const userInfo = useSelector((state) => state.userInfo.user);
   const dispatch = useDispatch();
@@ -104,6 +104,7 @@ export const ProfilePage = () => {
     </>
   );
 };
+export default ProfilePage;
 
 const StProfileWrapper = styled.div`
   display: flex;
