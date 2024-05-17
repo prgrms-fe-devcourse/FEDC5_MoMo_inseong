@@ -14,7 +14,7 @@ import { theme } from '@/style/theme';
 import { getItem } from '@/utils/storage';
 import { Button, InputCompound } from '@common/index';
 
-export const SignUpPage = () => {
+const SignUpPage = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -198,6 +198,7 @@ export const SignUpPage = () => {
       </StSignUpContainer>
   );
 };
+export default SignUpPage;
 
 const StSignUpContainer = styled.div`
   height: 100vh;

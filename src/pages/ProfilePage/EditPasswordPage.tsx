@@ -12,7 +12,7 @@ import useAxios from '@/api/useAxios';
 import { theme } from '@/style/theme';
 import { Button, Icon, InputCompound, Profile } from '@common/index';
 
-export const EditPasswordPage = () => {
+const EditPasswordPage = () => {
   const navigate = useNavigate();
 
   const [password, setPassword] = useState('');
@@ -151,6 +151,7 @@ export const EditPasswordPage = () => {
     </>
   );
 };
+export default EditPasswordPage;
 
 const StProfileForm = styled.div`
   display: flex;

@@ -18,10 +18,11 @@ module.exports = {
   },
   plugins: ['react-refresh', 'react', 'import'],
   rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
+    // 'react-refresh/only-export-components': [
+    //   'warn',
+    //   { allowConstantExport: true },
+    // ],
+    'react-refresh/only-export-components': "off",
     '@typescript-eslint/naming-convention': [
       'error',
       {

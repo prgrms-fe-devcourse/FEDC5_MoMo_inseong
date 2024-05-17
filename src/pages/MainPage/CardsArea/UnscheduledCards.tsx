@@ -1,10 +1,13 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CreateMeetingModal } from '../Modal/CreateMeetingModal';
 import { useSelector } from '@/_redux/hooks';
-import { Card, Icon } from '@common/index.ts';
+import {  Icon } from '@common/index.ts';
+import { Card } from '@common/Card/Card';
+
 import { useGetUnscheduledCards } from '@/hooks/query/useCards.ts';
+import { FallbackSpinner } from '@common/Fallback/FallbackSpinner';
+const CreateMeetingModal = lazy(() => import('@/pages/MainPage/Modal/CreateMeetingModal'));
 
 export const UnscheduledCards = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,11 +45,13 @@ export const UnscheduledCards = () => {
             />
           </StAddWrapper>
         </StCardsWrapper>
-      <CreateMeetingModal
-        visible={isModalOpen}
-        onClose={() => setIsModalOpen(false)}>
-        <button onClick={() => setIsModalOpen(false)}>Close</button>
-      </CreateMeetingModal>
+      <Suspense fallback={<FallbackSpinner />}>
+        <CreateMeetingModal
+          visible={isModalOpen}
+          onClose={() => setIsModalOpen(false)}>
+          <button onClick={() => setIsModalOpen(false)}>Close</button>
+        </CreateMeetingModal>
+      </Suspense>
     </>
   );
 };

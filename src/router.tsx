@@ -1,18 +1,20 @@
 import { Outlet, createBrowserRouter, redirect } from 'react-router-dom';
 import { App } from './App';
 import { store } from './_redux/store';
-import { DetailPage } from './pages/DetailPage/DetailPage';
+
 import { ErrorPage } from './pages/ErrorPage/ErrorPage';
-import { LoginPage } from './pages/LoginPage/LoginPage';
 import { MainPage } from './pages/MainPage/MainPage';
-import { EditPasswordPage } from './pages/ProfilePage/EditPasswordPage';
-import { EditProfilePage } from './pages/ProfilePage/EditProfilePage';
-import { ProfilePage } from './pages/ProfilePage/ProfilePage';
-import { SignUpPage } from './pages/SignupPage/SignupPage';
+import  SignUpPage from './pages/SignupPage/SignupPage';
 import { Header } from '@common/index';
-import { Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 import { FallbackSpinner } from '@common/Fallback/FallbackSpinner';
 import { StMainWrapper } from './style/StMainWrapper';
+
+const DetailPage = lazy(() => import('./pages/DetailPage/DetailPage.tsx'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage/ProfilePage.tsx'));
+const EditProfilePage = lazy(() => import('./pages/ProfilePage/EditProfilePage.tsx'));
+const EditPasswordPage = lazy(() => import('./pages/ProfilePage/EditPasswordPage.tsx'));
+const LoginPage = lazy(() => import('./pages/LoginPage/LoginPage.tsx'));
 
 const preventLoginLoader = () => {
   const {
@@ -35,7 +37,9 @@ export const router = createBrowserRouter([
           <>
             <Header />
             <StMainWrapper>
-              <Outlet />
+              <Suspense fallback={<FallbackSpinner />}>
+                <Outlet />
+              </Suspense>
             </StMainWrapper>
           </>
         ),
@@ -47,17 +51,14 @@ export const router = createBrowserRouter([
           {
             path: '/details/:id',
             element: (
-              <Suspense fallback={<FallbackSpinner />}>
-                <DetailPage />
-              </Suspense>
+              <DetailPage />
             ),
           },
           {
             path: '/profile/:id',
             element: (
-            <Suspense fallback={<FallbackSpinner />}>
               <ProfilePage />
-            </Suspense>),
+            )
           },
           {
             path: '/editProfile',

@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { getPostData } from './getPostData';
 import { StCardsWrapper } from './profilePageStyles';
 import { IPost, IUser } from '@/api/_types/apiModels';
-import { Card, Spinner } from '@common/index';
+import {  Spinner } from '@common/index';
+import { Card } from '@common/Card/Card';
+
 import { useUsersInfo } from '@/hooks/queryHooks';
 
 export const UserJoinCards = ({ userId }: { userId: string }) => {
