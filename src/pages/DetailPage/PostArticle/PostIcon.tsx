@@ -1,13 +1,15 @@
 import styled from '@emotion/styled';
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, Suspense, lazy, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ILike, IPost, IUser } from '@/api/_types/apiModels';
 import { deleteApiJWT, postApiJWT } from '@/api/apis';
-import { CreateMeetingModal } from '@/pages/MainPage/Modal/CreateMeetingModal';
 import { Icon } from '@common/index';
 import { useGetPostDetail } from '@/hooks/query/usePost';
 import { useSelector } from '@/_redux/hooks';
 import { RootStateType } from '@/_redux/store';
+import { FallbackSpinner } from '@common/Fallback/FallbackSpinner';
+
+const CreateMeetingModal = lazy(() => import('@/pages/MainPage/Modal/CreateMeetingModal'));
 
 interface PostIconProps {
   postId: string;
@@ -102,12 +104,14 @@ export const PostIcon = ({  postId }: PostIconProps) => {
           </StAdminIconsWrapper>
         )}
       </StIconContainer>
-      <CreateMeetingModal
-        post={data.data}
-        visible={isModalOpen}
-        onClose={() => setIsModalOpen(false)}>
-        <button onClick={() => setIsModalOpen(false)}>Close</button>
-      </CreateMeetingModal>
+      <Suspense fallback={<FallbackSpinner />}>
+        <CreateMeetingModal
+          post={data.data}
+          visible={isModalOpen}
+          onClose={() => setIsModalOpen(false)}>
+          <button onClick={() => setIsModalOpen(false)}>Close</button>
+        </CreateMeetingModal>
+      </Suspense>
     </>
   );
 };

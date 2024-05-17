@@ -31,7 +31,7 @@ interface IallUser {
   _id: string;
   fullName: string;
 }
-export const CreateMeetingModal = ({
+const CreateMeetingModal = ({
   post,
   visible = false,
   onClose,
@@ -418,6 +418,7 @@ export const CreateMeetingModal = ({
     </StBackgroundDim>
   );
 };
+export default CreateMeetingModal;
 
 const StBackgroundDim = styled.div`
   position: fixed;
