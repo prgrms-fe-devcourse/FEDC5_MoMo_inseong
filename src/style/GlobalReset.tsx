@@ -1,4 +1,4 @@
-import { Global, css } from "@emotion/react";
+import { Global, css } from '@emotion/react';
 
 export const GlobalReset = () => (
   <Global
@@ -97,7 +97,7 @@ export const GlobalReset = () => (
       }
       html {
         font-size: 62.5%;
-        font-family: "Noto Sans KR", "sans-serif";
+        font-family: 'Noto Sans KR', 'sans-serif';
         body {
           font-size: 1.6rem;
         }
@@ -117,6 +117,9 @@ export const GlobalReset = () => (
           color: inherit;
           outline: 0;
         }
+      }
+      textarea {
+        resize: vertical;
       }
       button {
         display: flex;
