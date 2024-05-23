@@ -2,9 +2,8 @@ import styled from '@emotion/styled';
 import { Suspense, lazy, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from '@/_redux/hooks';
-import {  Icon } from '@common/index.ts';
 import { Card } from '@common/Card/Card';
-
+import { FaPlus } from '@common/Icon/icons';
 import { useGetUnscheduledCards } from '@/hooks/query/useCards.ts';
 import { FallbackSpinner } from '@common/Fallback/FallbackSpinner';
 const CreateMeetingModal = lazy(() => import('@/pages/MainPage/Modal/CreateMeetingModal'));
@@ -39,10 +38,11 @@ export const UnscheduledCards = () => {
               );
             })}
           <StAddWrapper onClick={handleModalOpen}>
-            <Icon
+            {/* <Icon
               name="plus"
               size={20}
-            />
+            /> */}
+<FaPlus/>
           </StAddWrapper>
         </StCardsWrapper>
       <Suspense fallback={<FallbackSpinner />}>

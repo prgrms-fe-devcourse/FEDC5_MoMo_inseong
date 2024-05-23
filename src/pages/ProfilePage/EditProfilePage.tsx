@@ -7,6 +7,7 @@ import { postApiJWT, putApiJWT } from '@/api/apis';
 import { theme } from '@/style/theme';
 import InputUpload from '@common/Input/InputUpload';
 import { Button, Icon, InputCompound, Profile } from '@common/index';
+import { FaArrowLeft } from '@common/Icon/icons';
 
 const EditProfilePage = () => {
   const [fullName, setFullName] = useState('');
@@ -112,11 +113,12 @@ const EditProfilePage = () => {
         </StModalBackdrop>
       )}
       <StProfileActionsContainer>
-        <Icon
+        {/* <Icon
           name="arrow-left"
           size={24}
           onIconClick={() => navigate(-1)}
-        />
+        /> */}
+        <FaArrowLeft />
         <StImageContainer>
           <div onClick={() => setModalOpen(true)}>
             <Profile

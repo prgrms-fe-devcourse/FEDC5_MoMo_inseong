@@ -10,7 +10,8 @@ import { IUser } from '@/api/_types/apiModels';
 import { getApiJWT, postApi, putApiJWT } from '@/api/apis';
 import useAxios from '@/api/useAxios';
 import { theme } from '@/style/theme';
-import { Button, Icon, InputCompound, Profile } from '@common/index';
+import { Button, InputCompound, Profile } from '@common/index';
+import { FaArrowLeft } from '@common/Icon/icons';
 
 const EditPasswordPage = () => {
   const navigate = useNavigate();
@@ -85,11 +86,12 @@ const EditPasswordPage = () => {
   return (
     <>
       <StProfileActionsContainer>
-        <Icon
+        {/* <Icon
           name="arrow-left"
           size={24}
           onIconClick={() => navigate(-1)}
-        />
+        /> */}
+        <FaArrowLeft />
         <Profile
           status="ProfileImage"
           image={displayImage || ''}

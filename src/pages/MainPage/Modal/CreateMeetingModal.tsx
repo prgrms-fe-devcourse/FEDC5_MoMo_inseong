@@ -17,8 +17,9 @@ import type { IPost, IPostTitleCustom } from '@/api/_types/apiModels';
 import { theme } from '@/style/theme';
 import { createIVote } from '@/utils/createIVote';
 import { getDatesBetween } from '@/utils/getDatesBetween';
-import { Button, Icon, InputCompound } from '@common/index';
+import { Button, InputCompound } from '@common/index';
 import { usePutPostDetail } from '@/hooks/query/usePost';
+import { FaXmark } from '@common/Icon/icons';
 
 interface CreateMeetingModalProps extends HTMLAttributes<HTMLDivElement> {
   visible?: boolean;
@@ -256,10 +257,11 @@ const CreateMeetingModal = ({
     <StBackgroundDim style={{ display: visible ? 'block' : 'none' }}>
       <StModalContainer {...props}>
         <StClose>
-          <Icon
+          {/* <Icon
             name="x"
             onIconClick={onClose}
-          />
+          /> */}
+<FaXmark/>
         </StClose>
         <StTitle>모임 {label}</StTitle>
         <StForm onSubmit={handleOnSubmit}>

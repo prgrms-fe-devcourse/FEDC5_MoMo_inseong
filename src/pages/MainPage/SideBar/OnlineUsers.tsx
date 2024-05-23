@@ -6,8 +6,9 @@ import { IUser } from '@/api/_types/apiModels';
 import { getApi } from '@/api/apis';
 import useForm from '@/hooks/useForm';
 import { theme } from '@/style/theme';
-import { Icon, InputCompound, Profile } from '@common/index';
+import { InputCompound, Profile } from '@common/index';
 import { cloneDeep, isEqual } from 'lodash';
+import { FaMagnifyingGlass } from '@common/Icon/icons';
 
 export const OnlineUsers = () => {
   const dispatch = useDispatch();
@@ -58,7 +59,8 @@ export const OnlineUsers = () => {
     <StSideBlockWrapper>
       <div style={{ position: 'relative' }}>
         <StSearchIconWrapper>
-          <Icon name="search" />
+          {/* <Icon name="search" /> */}
+          <FaMagnifyingGlass />
         </StSearchIconWrapper>
         <form onSubmit={(e: FormEvent) => void handleSubmit(e)}>
           <InputCompound style={{ width: '100%', padding: 0 }}>

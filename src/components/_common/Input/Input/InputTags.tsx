@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { CSSProperties } from 'react';
-import { Icon, Tag } from '@common/index';
+import { Tag } from '@common/index';
+import { FaXmark } from '@common/Icon/icons';
 
 interface InputProps {
   tags: string[];
@@ -33,12 +34,13 @@ export const InputTags = ({
             name={`#${tag}`}
             marginRight={4}
           />
-          <Icon
+          <FaXmark onClick={() => onTagRemove ? onTagRemove(tag) : handleTagRemove(index)}/>
+          {/* <Icon
             name="x"
             onIconClick={() =>
               onTagRemove ? onTagRemove(tag) : handleTagRemove(index)
             }
-          />
+          /> */}
         </StTag>
       ))}
     </StTagsContainer>

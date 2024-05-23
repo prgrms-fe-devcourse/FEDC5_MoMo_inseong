@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { CSSProperties, useEffect, useState } from 'react';
 import InputUpload from '../InputUpload';
 import { theme } from '@/style/theme';
-import { Icon } from '@common/Icon/Icon';
+import { FaPlus, FaXmark } from '@common/Icon/icons';
 
 interface InputProps {
   image?: string;
@@ -55,11 +55,12 @@ export const InputImage = ({
               onClick={(e) => {
                 handleClick(e);
               }}>
-              <Icon
+              <FaXmark />
+              {/* <Icon
                 name="x"
                 showBackground={true}
                 style={{ borderRadius: '15px' }}
-              />
+              /> */}
             </StImage>
           </StyledUpload>
         </StImageContainer>
@@ -69,7 +70,8 @@ export const InputImage = ({
             <InputUpload
               name="image"
               onChange={handleImageChange}>
-              <Icon name="plus" />
+              <FaPlus />
+              {/* <Icon name="plus" /> */}
             </InputUpload>
           </StyledUpload>
         </StImageContainer>

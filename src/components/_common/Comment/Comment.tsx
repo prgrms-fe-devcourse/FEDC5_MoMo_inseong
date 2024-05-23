@@ -2,8 +2,9 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { theme } from '@/style/theme';
-import { Button, Icon, Profile } from '@common/index';
+import { Button, Profile } from '@common/index';
 import { FormatDate } from '@/pages/DetailPage/components/FormatDate';
+import { FaPenToSquare, FaXmark } from 'react-icons/fa6';
 
 interface CommentProps {
   _id: string;
@@ -56,17 +57,19 @@ export const Comment = ({
         {isMine && (
           <StCommentedManage>
             {false && mode !== 'edit' && (
-              <Icon
-                onIconClick={handleEditChange}
-                name="edit-3"
-                size={18}
-              />
+              <FaPenToSquare onClick={handleDeleteClick}/>
+              // <Icon
+              //   onIconClick={handleEditChange}
+              //   name="edit-3"
+              //   size={18}
+              // />
             )}
-            <Icon
+            <FaXmark/>
+            {/* <Icon
               onIconClick={handleDeleteClick}
               name="x"
               size={18}
-            />
+            /> */}
           </StCommentedManage>
         )}
       </StCommentWrapper>
