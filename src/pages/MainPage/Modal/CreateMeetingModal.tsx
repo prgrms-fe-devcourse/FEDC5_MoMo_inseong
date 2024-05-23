@@ -257,11 +257,7 @@ const CreateMeetingModal = ({
     <StBackgroundDim style={{ display: visible ? 'block' : 'none' }}>
       <StModalContainer {...props}>
         <StClose>
-          {/* <Icon
-            name="x"
-            onIconClick={onClose}
-          /> */}
-<FaXmark/>
+          <FaXmark onClick={onClose}/>
         </StClose>
         <StTitle>모임 {label}</StTitle>
         <StForm onSubmit={handleOnSubmit}>

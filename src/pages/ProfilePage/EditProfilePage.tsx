@@ -113,12 +113,7 @@ const EditProfilePage = () => {
         </StModalBackdrop>
       )}
       <StProfileActionsContainer>
-        {/* <Icon
-          name="arrow-left"
-          size={24}
-          onIconClick={() => navigate(-1)}
-        /> */}
-        <FaArrowLeft />
+        <FaArrowLeft onClick={() => navigate(-1)}/>
         <StImageContainer>
           <div onClick={() => setModalOpen(true)}>
             <Profile
@@ -129,11 +124,9 @@ const EditProfilePage = () => {
             />
           </div>
           <InputUpload onChange={handleImageChange}>
-            <FaPenToSquare />
-            {/* <StEditIcon
-              name="edit"
-              size={24}
-            /> */}
+            <StEditIcon>
+              <FaPenToSquare />
+            </StEditIcon>
           </InputUpload>
         </StImageContainer>
 
@@ -204,14 +197,14 @@ const StImageContainer = styled.div`
   justify-content: center;
 `;
 
-// const StEditIcon = styled(Icon)`
-//   position: absolute;
-//   bottom: 0;
-//   right: 0;
-//   transform: translate(50%, 50%);
-//   cursor: pointer;
-//   right: 10px;
-// `;
+const StEditIcon = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transform: translate(50%, 50%);
+  cursor: pointer;
+  right: 10px;
+`;
 
 const StInputForm = styled.div`
   height: 85px;

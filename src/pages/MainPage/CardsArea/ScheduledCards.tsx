@@ -49,11 +49,6 @@ export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
               })}
               {date.slice(0, 10) >= today.slice(0, 10) && (
                 <StAddWrapper onClick={handleModalOpen}>
-                  {/* <Icon
-                    name="plus"
-                    size={20}
-                    onIconClick={() => setDateToPass(date)}
-                  /> */}
                 <FaPlus onClick={()=>setDateToPass(date)}/>
                 </StAddWrapper>
               )}

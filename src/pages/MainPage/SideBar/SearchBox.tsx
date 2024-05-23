@@ -63,8 +63,7 @@ export const SearchBox = () => {
     <StSideBlockWrapper style={{ marginTop: '15px' }}>
       <div style={{ position: 'relative' }}>
         <StSearchIconWrapper>
-          {/* <Icon name="search" /> */}
-    <FaMagnifyingGlass />
+          <FaMagnifyingGlass />
         </StSearchIconWrapper>
         <form onSubmit={(e: FormEvent) => void handleSubmit(e)}>
           <InputCompound style={{ padding: 0 }}>

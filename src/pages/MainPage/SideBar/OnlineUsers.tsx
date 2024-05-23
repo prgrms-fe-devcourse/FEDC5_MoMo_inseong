@@ -20,14 +20,14 @@ export const OnlineUsers = () => {
 
   useEffect(() => {
     void dispatch(setAllUsersList());
-  }, []);
+  }, [ dispatch]);
 
   useEffect(() => {
     setTimeout(() => {
       setWillDebounce((prev) => !prev);
       void dispatch(setAllUsersList());
     }, 10000);
-  }, [willDebounce]);
+  }, [willDebounce, dispatch]);
 
   const { values, errors, handleChange, handleSubmit } = useForm({
     initialState: {
@@ -59,7 +59,6 @@ export const OnlineUsers = () => {
     <StSideBlockWrapper>
       <div style={{ position: 'relative' }}>
         <StSearchIconWrapper>
-          {/* <Icon name="search" /> */}
           <FaMagnifyingGlass />
         </StSearchIconWrapper>
         <form onSubmit={(e: FormEvent) => void handleSubmit(e)}>

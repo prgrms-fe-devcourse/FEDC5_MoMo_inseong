@@ -8,7 +8,7 @@ import { theme } from '@/style/theme';
 import { parseTitle } from '@/utils/parseTitle';
 import {  Profile, Tag } from '@common/index';
 import { useSelector } from '@/_redux/hooks';
-import { FaHeart, FaRegCalendarCheck } from '@common/Icon/icons';
+import { FaHeart, FaRegCalendarCheck, FaRegHeart } from '@common/Icon/icons';
 
 interface ICardData {
   cardData: IPost;
@@ -127,15 +127,11 @@ export const Card = ({ cardData }: ICardData) => {
         <StCardDate style={colorStyle}>
           {meetDate.length === 1 && (
             <>
-              <FaRegCalendarCheck />
-              {/* <Icon
-                name="calendar"
-                stroke={
-                  status === 'Opened'
-                    ? theme.colors.primaryBlue.default
-                    : theme.colors.secondaryNavy.default
-                }
-              /> */}
+              <FaRegCalendarCheck style={{width:'2rem', height:'2rem',
+               fill:`${status === 'Opened' 
+               ? theme.colors.primaryBlue.default
+               : theme.colors.secondaryNavy.default}` }}
+              />
               {meetDate[0].split('T')[0].slice(0, 16)}
             </>
           )}
@@ -150,14 +146,11 @@ export const Card = ({ cardData }: ICardData) => {
             />
             {tags.length > 1 && <span>...</span>}
           </StCardBottomTagsWrap>
-          <FaHeart onClick={(e:MouseEvent<SVGElement>) => void handleIconClick(e)}/>
-          {/* <Icon
-              name="heart"
-              isFill={!!isLike}
-              onIconClick={(e: MouseEvent<HTMLElement>) =>
-                void handleIconClick(e)
-              }
-            /> */}
+          
+          {isLike 
+          ? <FaHeart fill='#FF3040' onClick={(e:MouseEvent<SVGElement>) => void handleIconClick(e)} style={{width:'1.6rem', height:'1.6rem'}} /> 
+          : <FaRegHeart onClick={(e:MouseEvent<SVGElement>) => void handleIconClick(e)} style={{width:'1.6rem', height:'1.6rem'}}/> 
+          }
         </StCardBottom>
       </StCardContainer>
     </>

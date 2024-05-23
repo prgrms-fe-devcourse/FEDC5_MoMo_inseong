@@ -3,9 +3,10 @@ import { Suspense, lazy, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from '@/_redux/hooks';
 import { Card } from '@common/Card/Card';
-import { FaPlus } from '@common/Icon/icons';
 import { useGetUnscheduledCards } from '@/hooks/query/useCards.ts';
 import { FallbackSpinner } from '@common/Fallback/FallbackSpinner';
+import { FaPlus } from '@common/Icon/icons';
+
 const CreateMeetingModal = lazy(() => import('@/pages/MainPage/Modal/CreateMeetingModal'));
 
 export const UnscheduledCards = () => {
@@ -38,11 +39,7 @@ export const UnscheduledCards = () => {
               );
             })}
           <StAddWrapper onClick={handleModalOpen}>
-            {/* <Icon
-              name="plus"
-              size={20}
-            /> */}
-<FaPlus/>
+            <FaPlus />
           </StAddWrapper>
         </StCardsWrapper>
       <Suspense fallback={<FallbackSpinner />}>
@@ -70,7 +67,6 @@ const StAddWrapper = styled.button`
   width: 36px;
   height: 36px;
   margin: 0 auto;
-  padding: 20px;
   margin-bottom: 20px;
   background: inherit;
   transition: all 200ms ease-in-out;

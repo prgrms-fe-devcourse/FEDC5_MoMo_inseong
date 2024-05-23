@@ -57,11 +57,6 @@ export const PopupProfile = memo(({ setIsVisible }: PopupProfileProps) => {
         <StRouter onClick={handleOnLogout}>
           <StIconBox content={'"로그아웃"'}>
             <FaArrowRightFromBracket />
-            {/* <Icon
-              name="log-out"
-              strokeWidth={2}
-              showBackground={false}
-            /> */}
           </StIconBox>
         </StRouter>
       </Link>

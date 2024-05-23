@@ -7,7 +7,7 @@ import { useGetPostDetail } from '@/hooks/query/usePost';
 import { useSelector } from '@/_redux/hooks';
 import { RootStateType } from '@/_redux/store';
 import { FallbackSpinner } from '@common/Fallback/FallbackSpinner';
-import { FaHeart, FaPenToSquare, FaRegTrashCan } from '@common/Icon/icons';
+import { FaHeart, FaPenToSquare, FaRegHeart, FaRegTrashCan } from '@common/Icon/icons';
 
 const CreateMeetingModal = lazy(() => import('@/pages/MainPage/Modal/CreateMeetingModal'));
 
@@ -78,33 +78,15 @@ export const PostIcon = ({  postId }: PostIconProps) => {
     <>
       <StIconContainer>
         <StIconsWrapper>
-          <FaHeart onClick={(e: MouseEvent<SVGElement>) =>
-              void handleHeartClick(e)} />
-          {/* <Icon
-            name="heart"
-            size={24}
-            isFill={!!isHeart}
-            onIconClick={(e: MouseEvent<HTMLElement>) =>
-              void handleHeartClick(e)
-            }
-          /> */}
+          {isHeart 
+          ? <FaHeart fill='#FF3040' onClick={(e:MouseEvent<SVGElement>) => void handleHeartClick(e)}/> 
+          : <FaRegHeart onClick={(e:MouseEvent<SVGElement>) => void handleHeartClick(e)}/> 
+          }
         </StIconsWrapper>
         {isPostOwner && (
           <StAdminIconsWrapper>
             <FaPenToSquare onClick={(e: MouseEvent<SVGElement>) => handleEditClick(e)}/>
-            {/* <Icon
-              name="edit"
-              size={24}
-              onIconClick={(e: MouseEvent<HTMLElement>) => handleEditClick(e)}
-            /> */}
-            {/* <Icon
-              name="trash-2"
-              size={24}
-              onIconClick={(e: MouseEvent<HTMLElement>) =>
-                void handleDeleteClick(e)
-              }
-            /> */}
-            <FaRegTrashCan  onClick={(e: MouseEvent<SVGElement>) =>
+            <FaRegTrashCan onClick={(e: MouseEvent<SVGElement>) =>
                 void handleDeleteClick(e)
               }/>
           </StAdminIconsWrapper>
@@ -133,7 +115,7 @@ const StIconsWrapper = styled.div`
 `;
 
 const StAdminIconsWrapper = styled.div`
-  & > span:last-of-type {
+  & > svg:last-of-type {
     margin-left: 24px;
   }
 `;

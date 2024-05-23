@@ -35,12 +35,6 @@ export const InputTags = ({
             marginRight={4}
           />
           <FaXmark onClick={() => onTagRemove ? onTagRemove(tag) : handleTagRemove(index)}/>
-          {/* <Icon
-            name="x"
-            onIconClick={() =>
-              onTagRemove ? onTagRemove(tag) : handleTagRemove(index)
-            }
-          /> */}
         </StTag>
       ))}
     </StTagsContainer>

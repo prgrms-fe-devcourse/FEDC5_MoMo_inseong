@@ -86,12 +86,7 @@ const EditPasswordPage = () => {
   return (
     <>
       <StProfileActionsContainer>
-        {/* <Icon
-          name="arrow-left"
-          size={24}
-          onIconClick={() => navigate(-1)}
-        /> */}
-        <FaArrowLeft />
+        <FaArrowLeft onClick={() => navigate(-1)} />
         <Profile
           status="ProfileImage"
           image={displayImage || ''}

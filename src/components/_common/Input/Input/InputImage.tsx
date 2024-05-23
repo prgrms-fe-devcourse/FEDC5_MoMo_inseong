@@ -55,12 +55,7 @@ export const InputImage = ({
               onClick={(e) => {
                 handleClick(e);
               }}>
-              <FaXmark />
-              {/* <Icon
-                name="x"
-                showBackground={true}
-                style={{ borderRadius: '15px' }}
-              /> */}
+              <FaXmark style={{borderRadius: '15px', background:theme.colors.grey.light}} />
             </StImage>
           </StyledUpload>
         </StImageContainer>
@@ -71,7 +66,6 @@ export const InputImage = ({
               name="image"
               onChange={handleImageChange}>
               <FaPlus />
-              {/* <Icon name="plus" /> */}
             </InputUpload>
           </StyledUpload>
         </StImageContainer>

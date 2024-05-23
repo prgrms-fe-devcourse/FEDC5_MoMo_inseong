@@ -24,12 +24,6 @@ export const Menu = () => {
           offset={-100}>
           {isRedDot && <StRedDot />}
           <FaRegBell />
-          {/* <Icon
-            name="bell"
-            showBackground={false}
-            strokeWidth={3}
-            size={18}
-          /> */}
         </Tooltip>
       </StTooltipWrapper>
       <StTooltipWrapper>

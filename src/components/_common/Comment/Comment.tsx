@@ -57,19 +57,10 @@ export const Comment = ({
         {isMine && (
           <StCommentedManage>
             {false && mode !== 'edit' && (
-              <FaPenToSquare onClick={handleDeleteClick}/>
-              // <Icon
-              //   onIconClick={handleEditChange}
-              //   name="edit-3"
-              //   size={18}
-              // />
+              // api 상 댓글 수정 X
+              <FaPenToSquare onClick={handleEditChange}/>
             )}
-            <FaXmark/>
-            {/* <Icon
-              onIconClick={handleDeleteClick}
-              name="x"
-              size={18}
-            /> */}
+            <FaXmark onClick={handleDeleteClick}/>
           </StCommentedManage>
         )}
       </StCommentWrapper>
