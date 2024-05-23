@@ -6,8 +6,8 @@ import { useSelector } from '@/_redux/hooks';
 import { postApiJWT, putApiJWT } from '@/api/apis';
 import { theme } from '@/style/theme';
 import InputUpload from '@common/Input/InputUpload';
-import { Button, Icon, InputCompound, Profile } from '@common/index';
-import { FaArrowLeft } from '@common/Icon/icons';
+import { Button, InputCompound, Profile } from '@common/index';
+import { FaArrowLeft, FaPenToSquare } from '@common/Icon/icons';
 
 const EditProfilePage = () => {
   const [fullName, setFullName] = useState('');
@@ -129,10 +129,11 @@ const EditProfilePage = () => {
             />
           </div>
           <InputUpload onChange={handleImageChange}>
-            <StEditIcon
+            <FaPenToSquare />
+            {/* <StEditIcon
               name="edit"
               size={24}
-            />
+            /> */}
           </InputUpload>
         </StImageContainer>
 
@@ -203,14 +204,14 @@ const StImageContainer = styled.div`
   justify-content: center;
 `;
 
-const StEditIcon = styled(Icon)`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  transform: translate(50%, 50%);
-  cursor: pointer;
-  right: 10px;
-`;
+// const StEditIcon = styled(Icon)`
+//   position: absolute;
+//   bottom: 0;
+//   right: 0;
+//   transform: translate(50%, 50%);
+//   cursor: pointer;
+//   right: 10px;
+// `;
 
 const StInputForm = styled.div`
   height: 85px;

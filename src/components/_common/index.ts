@@ -2,7 +2,7 @@ import { Button } from './Button/Button';
 // import { Card } from './Card/Card';
 import { Comment } from './Comment/Comment';
 import { Header } from './Header/Header';
-import { Icon } from './Icon/Icon';
+// import { Icon } from './Icon/Icon';
 import { InputContainer } from './Input/Input/InputContainer';
 import { InputImage } from './Input/Input/InputImage';
 import { InputTags } from './Input/Input/InputTags';
@@ -20,7 +20,7 @@ export {
   // Card,
   Comment,
   Header,
-  Icon,
+  // Icon,
   Profile,
   Tab,
   Tag,
