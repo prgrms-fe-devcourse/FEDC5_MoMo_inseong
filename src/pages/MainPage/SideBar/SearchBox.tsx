@@ -7,7 +7,8 @@ import { getApi } from '@/api/apis';
 import useForm from '@/hooks/useForm';
 import { theme } from '@/style/theme';
 import { parseTitle } from '@/utils/parseTitle';
-import { Icon, InputCompound, Profile, Spinner } from '@common/index';
+import {  InputCompound, Profile, Spinner } from '@common/index';
+import { FaMagnifyingGlass } from '@common/Icon/icons';
 
 export const SearchBox = () => {
   const [searchedResults, setSearchedResults] = useState<IUser[] | IPost[]>([]);
@@ -62,7 +63,7 @@ export const SearchBox = () => {
     <StSideBlockWrapper style={{ marginTop: '15px' }}>
       <div style={{ position: 'relative' }}>
         <StSearchIconWrapper>
-          <Icon name="search" />
+          <FaMagnifyingGlass />
         </StSearchIconWrapper>
         <form onSubmit={(e: FormEvent) => void handleSubmit(e)}>
           <InputCompound style={{ padding: 0 }}>

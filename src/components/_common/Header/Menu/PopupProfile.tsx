@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from '@/_redux/hooks';
 import { initUserInfo } from '@/_redux/slices/userSlice';
 import { postApiJWT } from '@/api/apis';
-import { Icon, Profile, Spinner } from '@common/index';
+import { Profile, Spinner } from '@common/index';
+import { FaArrowRightFromBracket } from '@common/Icon/icons';
 
 export interface PopupProfileProps {
   setIsVisible?: (arg: boolean) => void;
@@ -55,11 +56,7 @@ export const PopupProfile = memo(({ setIsVisible }: PopupProfileProps) => {
       <Link to={'/'}>
         <StRouter onClick={handleOnLogout}>
           <StIconBox content={'"로그아웃"'}>
-            <Icon
-              name="log-out"
-              strokeWidth={2}
-              showBackground={false}
-            />
+            <FaArrowRightFromBracket />
           </StIconBox>
         </StRouter>
       </Link>

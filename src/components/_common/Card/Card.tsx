@@ -6,8 +6,9 @@ import { deleteApiJWT, postApiJWT } from '@/api/apis';
 import { createNotification } from '@/api/createNotification';
 import { theme } from '@/style/theme';
 import { parseTitle } from '@/utils/parseTitle';
-import { Icon, Profile, Tag } from '@common/index';
+import {  Profile, Tag } from '@common/index';
 import { useSelector } from '@/_redux/hooks';
+import { FaHeart, FaRegCalendarCheck, FaRegHeart } from '@common/Icon/icons';
 
 interface ICardData {
   cardData: IPost;
@@ -53,7 +54,7 @@ export const Card = ({ cardData }: ICardData) => {
     });
     // void fetchUser(cardData.author); // 왜하지??
   }, []);
-  const handleIconClick = async (event: MouseEvent<HTMLElement>) => {
+  const handleIconClick = async (event: MouseEvent<SVGElement>) => {
     event.stopPropagation();
     if (!userInfo?._id) {
       if (confirm('로그인이 필요한 서비스입니다.')) {
@@ -126,13 +127,10 @@ export const Card = ({ cardData }: ICardData) => {
         <StCardDate style={colorStyle}>
           {meetDate.length === 1 && (
             <>
-              <Icon
-                name="calendar"
-                stroke={
-                  status === 'Opened'
-                    ? theme.colors.primaryBlue.default
-                    : theme.colors.secondaryNavy.default
-                }
+              <FaRegCalendarCheck style={{width:'2rem', height:'2rem',
+               fill:`${status === 'Opened' 
+               ? theme.colors.primaryBlue.default
+               : theme.colors.secondaryNavy.default}` }}
               />
               {meetDate[0].split('T')[0].slice(0, 16)}
             </>
@@ -148,13 +146,11 @@ export const Card = ({ cardData }: ICardData) => {
             />
             {tags.length > 1 && <span>...</span>}
           </StCardBottomTagsWrap>
-          <Icon
-              name="heart"
-              isFill={!!isLike}
-              onIconClick={(e: MouseEvent<HTMLElement>) =>
-                void handleIconClick(e)
-              }
-            />
+          
+          {isLike 
+          ? <FaHeart fill='#FF3040' onClick={(e:MouseEvent<SVGElement>) => void handleIconClick(e)} style={{width:'1.6rem', height:'1.6rem'}} /> 
+          : <FaRegHeart onClick={(e:MouseEvent<SVGElement>) => void handleIconClick(e)} style={{width:'1.6rem', height:'1.6rem'}}/> 
+          }
         </StCardBottom>
       </StCardContainer>
     </>

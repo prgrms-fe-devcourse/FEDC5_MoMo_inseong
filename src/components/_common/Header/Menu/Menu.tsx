@@ -4,7 +4,8 @@ import { Notification } from './Notification';
 import { PopupProfile } from './PopupProfile';
 import { useSelector } from '@/_redux/hooks';
 import { IUser } from '@/api/_types/apiModels';
-import { Icon, Profile, Tooltip } from '@common/index';
+import { Profile, Tooltip } from '@common/index';
+import { FaRegBell } from '@common/Icon/icons';
 
 export const Menu = () => {
   const { fullName, image, username } = useSelector(
@@ -22,12 +23,7 @@ export const Menu = () => {
           maxHeight={300}
           offset={-100}>
           {isRedDot && <StRedDot />}
-          <Icon
-            name="bell"
-            showBackground={false}
-            strokeWidth={3}
-            size={18}
-          />
+          <FaRegBell />
         </Tooltip>
       </StTooltipWrapper>
       <StTooltipWrapper>

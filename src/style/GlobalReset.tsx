@@ -139,6 +139,12 @@ export const GlobalReset = () => (
       input {
         outline: none;
       }
-    `}
+      svg {
+        cursor: pointer;
+        width: 2rem;
+        height: 2rem;
+      }
+  `}
   />
 );
+      

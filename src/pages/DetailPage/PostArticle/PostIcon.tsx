@@ -3,11 +3,11 @@ import { MouseEvent, Suspense, lazy, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ILike, IPost, IUser } from '@/api/_types/apiModels';
 import { deleteApiJWT, postApiJWT } from '@/api/apis';
-import { Icon } from '@common/index';
 import { useGetPostDetail } from '@/hooks/query/usePost';
 import { useSelector } from '@/_redux/hooks';
 import { RootStateType } from '@/_redux/store';
 import { FallbackSpinner } from '@common/Fallback/FallbackSpinner';
+import { FaHeart, FaPenToSquare, FaRegHeart, FaRegTrashCan } from '@common/Icon/icons';
 
 const CreateMeetingModal = lazy(() => import('@/pages/MainPage/Modal/CreateMeetingModal'));
 
@@ -25,7 +25,7 @@ export const PostIcon = ({  postId }: PostIconProps) => {
   const {data} = useGetPostDetail(postId);
   const {_id, author, likes}=data.data
 
-  const handleHeartClick = async (e: MouseEvent<HTMLElement>) => {
+  const handleHeartClick = async (e: MouseEvent<SVGElement>) => {
     e.stopPropagation();
     if (!loginUser) {
       const isUserNeedLogin = confirm('로그인이 필요한 서비스입니다.');
@@ -49,7 +49,7 @@ export const PostIcon = ({  postId }: PostIconProps) => {
     }
   };
 
-  const handleDeleteClick = async (e: MouseEvent<HTMLElement>) => {
+  const handleDeleteClick = async (e: MouseEvent<SVGElement>) => {
     e.stopPropagation();
     const isPostDelete = confirm('정말 삭제하시겠습니까?');
     if (!isPostDelete) return;
@@ -60,7 +60,7 @@ export const PostIcon = ({  postId }: PostIconProps) => {
     navigate('/');
   };
 
-  const handleEditClick = (e: MouseEvent<HTMLElement>) => {
+  const handleEditClick = (e: MouseEvent<SVGElement>) => {
     e.stopPropagation();
     setIsModalOpen(true);
   };
@@ -78,29 +78,17 @@ export const PostIcon = ({  postId }: PostIconProps) => {
     <>
       <StIconContainer>
         <StIconsWrapper>
-          <Icon
-            name="heart"
-            size={24}
-            isFill={!!isHeart}
-            onIconClick={(e: MouseEvent<HTMLElement>) =>
-              void handleHeartClick(e)
-            }
-          />
+          {isHeart 
+          ? <FaHeart fill='#FF3040' onClick={(e:MouseEvent<SVGElement>) => void handleHeartClick(e)}/> 
+          : <FaRegHeart onClick={(e:MouseEvent<SVGElement>) => void handleHeartClick(e)}/> 
+          }
         </StIconsWrapper>
         {isPostOwner && (
           <StAdminIconsWrapper>
-            <Icon
-              name="edit"
-              size={24}
-              onIconClick={(e: MouseEvent<HTMLElement>) => handleEditClick(e)}
-            />
-            <Icon
-              name="trash-2"
-              size={24}
-              onIconClick={(e: MouseEvent<HTMLElement>) =>
+            <FaPenToSquare onClick={(e: MouseEvent<SVGElement>) => handleEditClick(e)}/>
+            <FaRegTrashCan onClick={(e: MouseEvent<SVGElement>) =>
                 void handleDeleteClick(e)
-              }
-            />
+              }/>
           </StAdminIconsWrapper>
         )}
       </StIconContainer>
@@ -127,7 +115,7 @@ const StIconsWrapper = styled.div`
 `;
 
 const StAdminIconsWrapper = styled.div`
-  & > span:last-of-type {
+  & > svg:last-of-type {
     margin-left: 24px;
   }
 `;

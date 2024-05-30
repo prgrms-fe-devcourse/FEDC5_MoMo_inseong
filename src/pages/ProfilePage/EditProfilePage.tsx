@@ -6,7 +6,8 @@ import { useSelector } from '@/_redux/hooks';
 import { postApiJWT, putApiJWT } from '@/api/apis';
 import { theme } from '@/style/theme';
 import InputUpload from '@common/Input/InputUpload';
-import { Button, Icon, InputCompound, Profile } from '@common/index';
+import { Button, InputCompound, Profile } from '@common/index';
+import { FaArrowLeft, FaPenToSquare } from '@common/Icon/icons';
 
 const EditProfilePage = () => {
   const [fullName, setFullName] = useState('');
@@ -112,11 +113,7 @@ const EditProfilePage = () => {
         </StModalBackdrop>
       )}
       <StProfileActionsContainer>
-        <Icon
-          name="arrow-left"
-          size={24}
-          onIconClick={() => navigate(-1)}
-        />
+        <FaArrowLeft onClick={() => navigate(-1)}/>
         <StImageContainer>
           <div onClick={() => setModalOpen(true)}>
             <Profile
@@ -127,10 +124,9 @@ const EditProfilePage = () => {
             />
           </div>
           <InputUpload onChange={handleImageChange}>
-            <StEditIcon
-              name="edit"
-              size={24}
-            />
+            <StEditIcon>
+              <FaPenToSquare />
+            </StEditIcon>
           </InputUpload>
         </StImageContainer>
 
@@ -201,7 +197,7 @@ const StImageContainer = styled.div`
   justify-content: center;
 `;
 
-const StEditIcon = styled(Icon)`
+const StEditIcon = styled.div`
   position: absolute;
   bottom: 0;
   right: 0;

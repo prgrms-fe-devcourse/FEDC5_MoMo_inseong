@@ -108,8 +108,8 @@ export const Tooltip = memo(
 const StWrapper = styled.div`
   position: relative;
   display: inline-block;
-
   cursor: pointer;
+  display: flex;
 `;
 
 const StTransitionBox = styled.div<{ isVisible: boolean }>`

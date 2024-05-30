@@ -1,9 +1,9 @@
+import { FaPlus } from '@common/Icon/icons';
 import styled from '@emotion/styled';
 import { Suspense, lazy, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from '@/_redux/hooks';
 import { IPost } from '@/api/_types/apiModels';
-import { Icon } from '@common/index';
 import { Card } from '@common/Card/Card';
 import { FallbackSpinner } from '@common/Fallback/FallbackSpinner';
 const CreateMeetingModal = lazy(() => import('@/pages/MainPage/Modal/CreateMeetingModal'));
@@ -49,11 +49,7 @@ export const ScheduledCards = ({ cards, thisWeek }: ScheduledCardsProps) => {
               })}
               {date.slice(0, 10) >= today.slice(0, 10) && (
                 <StAddWrapper onClick={handleModalOpen}>
-                  <Icon
-                    name="plus"
-                    size={20}
-                    onIconClick={() => setDateToPass(date)}
-                  />
+                <FaPlus onClick={()=>setDateToPass(date)}/>
                 </StAddWrapper>
               )}
             </StCardsWrapper>
